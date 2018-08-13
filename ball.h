@@ -9,5 +9,5 @@ class Ball : public Entity
 public:
     Ball();
     void updateMovement();
-    void collision();
+    void collision(int paddle1PosY, int paddle2PosY);
 };

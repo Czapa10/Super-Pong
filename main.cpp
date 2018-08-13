@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "entity.h"
 #include "ball.h"
+#include "paddle.h"
 
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
@@ -40,6 +41,8 @@ int main()
     Text menuT5("Exit",font2,50); menuT5.setPosition(Vector2f(button4.getPosition().x + 95,button4.getPosition().y + 10));
     CircleShape circle(20); circle.setFillColor(Color::Yellow); circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
     Ball ball;
+    Paddle paddle1;
+    Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
     ///end of the loading**************************************
 
     while (window.isOpen())
@@ -130,9 +133,19 @@ int main()
         ///state GAME******************************************
         if(state == Tstate::game)
         {
-            ball.collision();
+            if(Keyboard::isKeyPressed(Keyboard::Space))
+            {
+                window.setFramerateLimit(5);
+            }
+            else window.setFramerateLimit(60);
+
+            ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y);
             ball.updateMovement();
+            paddle1.movement(2);
+            paddle2.movement(1);
             window.draw(ball.circle);
+            window.draw(paddle1.rect);
+            window.draw(paddle2.rect);
         }
         ///******************************************state GAME
 
