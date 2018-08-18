@@ -2,6 +2,7 @@
 #include "entity.h"
 #include "ball.h"
 #include "paddle.h"
+#include "lane.h"
 
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
@@ -43,6 +44,7 @@ int main()
     Ball ball;
     Paddle paddle1;
     Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
+    Lane lane;
     ///end of the loading**************************************
 
     while (window.isOpen())
@@ -139,6 +141,14 @@ int main()
             }
             else window.setFramerateLimit(60);
 
+            if(Keyboard::isKeyPressed(Keyboard::R))
+            {
+                ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+                ball.setVelocity(8);
+                paddle1.rect.setPosition(Vector2f(10,400));
+                paddle2.rect.setPosition(Vector2f(1265,400));
+            }
+
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y);
             ball.updateMovement();
             paddle1.movement(2);
@@ -146,6 +156,17 @@ int main()
             window.draw(ball.circle);
             window.draw(paddle1.rect);
             window.draw(paddle2.rect);
+            window.draw(lane.rect);
+            window.draw(lane.Lspeed);
+            window.draw(lane.Lincrease);
+            window.draw(lane.Rspeed);
+            window.draw(lane.Rincrease);
+            window.draw(lane.LspeedSubtitle);
+            window.draw(lane.LincreaseSubtitle);
+            window.draw(lane.Lscore);
+            window.draw(lane.Rscore);
+            window.draw(lane.RspeedSubtitle);
+            window.draw(lane.RincreaseSubtitle);
         }
         ///******************************************state GAME
 

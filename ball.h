@@ -4,10 +4,11 @@ using namespace sf;
 
 class Ball : public Entity
 {
-    int UpDownVelocity{8};
-    int LeftRightVelocity{8};
+    float UpDownVelocity{8};
+    float LeftRightVelocity{8};
 public:
     Ball();
     void updateMovement();
     void collision(int paddle1PosY, int paddle2PosY);
+    void setVelocity(float vel);
 };

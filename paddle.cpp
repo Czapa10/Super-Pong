@@ -18,12 +18,12 @@ void Paddle::movement(int control)///1-arrows | 2-awsd| 3-mouse
 {
     if(control == 1)///arrows
     {
-        if((Keyboard::isKeyPressed(Keyboard::Up))&&(rect.getPosition().y > 0))UP
+        if((Keyboard::isKeyPressed(Keyboard::Up))&&(rect.getPosition().y > 100))UP
         else if((Keyboard::isKeyPressed(Keyboard::Down))&&(rect.getPosition().y + 100 < WINDOW_HEIGTH)) DOWN
     }
     else if(control == 2)///awsd
     {
-        if((Keyboard::isKeyPressed(Keyboard::W))&&(rect.getPosition().y > 0))UP
+        if((Keyboard::isKeyPressed(Keyboard::W))&&(rect.getPosition().y > 100))UP
         else if((Keyboard::isKeyPressed(Keyboard::S))&&(rect.getPosition().y + 100 < WINDOW_HEIGTH)) DOWN
     }
 }
