@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "entity.h"
 #include "ball.h"
 #include "paddle.h"
@@ -13,8 +14,10 @@ Tstate state{Tstate::logos};
 constexpr int WINDOW_WIDTH{1300};
 constexpr int WINDOW_HEIGTH{900};
 
-int counter;
-int counter2;
+int counter, counter2;
+int score1, score2;
+
+void getPoint(Ball& ball,Text& s1,Text& s2);
 
 int main()
 {
@@ -45,6 +48,11 @@ int main()
     Paddle paddle1;
     Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
     Lane lane;
+    Text score1T("0",font1,80);
+    score1T.setPosition(Vector2f(505,10));
+    Text score2T("0",font1,80);
+    score2T.setPosition(Vector2f(721,10));
+
     ///end of the loading**************************************
 
     while (window.isOpen())
@@ -122,6 +130,7 @@ int main()
                 {
                     state = Tstate::game;
                     window.setFramerateLimit(60);
+                    score1 = 0; score2 = 0;
                 }
                 else if(counter == 4)
                 {
@@ -147,8 +156,11 @@ int main()
                 ball.setVelocity(8);
                 paddle1.rect.setPosition(Vector2f(10,400));
                 paddle2.rect.setPosition(Vector2f(1265,400));
+                score1 = 0; score2 = 0;
+                score1T.setString("0"); score2T.setString("0");
             }
 
+            getPoint(ball,score1T,score2T);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y);
             ball.updateMovement();
             paddle1.movement(2);
@@ -167,6 +179,8 @@ int main()
             window.draw(lane.Rscore);
             window.draw(lane.RspeedSubtitle);
             window.draw(lane.RincreaseSubtitle);
+            window.draw(score1T);
+            window.draw(score2T);
         }
         ///******************************************state GAME
 
@@ -174,4 +188,26 @@ int main()
     }
 
     return 0;
+}
+
+void getPoint(Ball& ball,Text& s1,Text& s2)
+{
+    if(ball.circle.getPosition().x < - 45)
+    {
+        ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+
+        score1++;
+        if(score1 == 1) s2.setString("1");
+        else if(score1 == 2) s2.setString("2");
+        else if(score1 == 3) s2.setString("3");
+    }
+    else if(ball.circle.getPosition().x > 1345)
+    {
+        ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+
+        score2++;
+        if(score2 == 1) s1.setString("1");
+        else if(score2 == 2) s1.setString("2");
+        else if(score2 == 3) s1.setString("3");
+    }
 }

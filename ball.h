@@ -11,4 +11,5 @@ public:
     void updateMovement();
     void collision(int paddle1PosY, int paddle2PosY);
     void setVelocity(float vel);
+    int point();
 };

@@ -45,3 +45,8 @@ void Ball::setVelocity(float vel)
     LeftRightVelocity = vel;
     UpDownVelocity = vel;
 }
+
+int Ball::point()
+{
+
+}
