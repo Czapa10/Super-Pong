@@ -215,6 +215,18 @@ int main()
                 counter--;
                 if(counter == 1) gamePause = false;
             }
+            if(counter2 > 0)
+            {
+                window.draw(matchStartT);
+                counter2--;
+                if(counter2 < 55) gamePause = true;
+                if(counter2 == 1)
+                {
+                    state = Tstate::menu;
+                    circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
+                    counter = 0; counter2 = 0;
+                }
+            }
         }
         ///******************************************state GAME
 
@@ -240,6 +252,13 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
         if(score1 == 1) s2.setString("1");
         else if(score1 == 2) s2.setString("2");
         else if(score1 == 3) s2.setString("3");
+        else if(score1 == 4)
+        {
+            s2.setString("4");
+            matchStartT.setString("Player 1 won");
+            gamePause = true;
+            counter2 = 150;
+        }
     }
     else if(ball.circle.getPosition().x > 1345)
     {
@@ -255,6 +274,13 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
         if(score2 == 1) s1.setString("1");
         else if(score2 == 2) s1.setString("2");
         else if(score2 == 3) s1.setString("3");
+        else if(score2 == 4)
+        {
+            s1.setString("4");
+            matchStartT.setString("Player 2 won");
+            gamePause = true;
+            counter2 = 150;
+        }
     }
 }
 
