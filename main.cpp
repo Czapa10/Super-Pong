@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <time.h>
 #include "entity.h"
 #include "ball.h"
 #include "paddle.h"
@@ -16,13 +17,19 @@ constexpr int WINDOW_HEIGTH{900};
 
 int counter, counter2;
 int score1, score2;
+bool gamePause{true};
 
+///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2);
+int random(int x);
+///--------------------------------------------------
 
 int main()
 {
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGTH), "Super Pong");
     window.setFramerateLimit(100);
+
+    srand(time(NULL));
 
     ///loading*************************************************
     Font font1; font1.loadFromFile("resources/font1.ttf");
@@ -39,11 +46,12 @@ int main()
     RectangleShape button4(BUTTON_SIZE);button4.setPosition(WINDOW_WIDTH/2 - 150, 700);
     button4.setFillColor(Color(213,2,34)); button4.setOutlineThickness(5);
     Text menuT1("SUPER PONG",font1,160); menuT1.setPosition(Vector2f(20, 20));
-    Text menuT2("Campaign",font2,50); menuT2.setPosition(Vector2f(button1.getPosition().x + 25,button1.getPosition().y + 10));
+    Text menuT2("Career",font2,50); menuT2.setPosition(Vector2f(button1.getPosition().x + 55,button1.getPosition().y + 10));
     Text menuT3("Single match",font2,50); menuT3.setPosition(Vector2f(button2.getPosition().x + 5,button2.getPosition().y + 10));
     Text menuT4("Settings",font2,50); menuT4.setPosition(Vector2f(button3.getPosition().x + 60,button3.getPosition().y + 10));
     Text menuT5("Exit",font2,50); menuT5.setPosition(Vector2f(button4.getPosition().x + 95,button4.getPosition().y + 10));
     CircleShape circle(20); circle.setFillColor(Color::Yellow); circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
+    Text matchStartT("Player 1 will begin",font2,50); matchStartT.setPosition(Vector2f(WINDOW_WIDTH/2 - 200, WINDOW_HEIGTH/2 + 15));
     Ball ball;
     Paddle paddle1;
     Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
@@ -131,6 +139,20 @@ int main()
                     state = Tstate::game;
                     window.setFramerateLimit(60);
                     score1 = 0; score2 = 0;
+                    counter = 115; counter2 = 0;
+                    gamePause = true;
+
+                    if(random(2))//1
+                    {
+                        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+                        matchStartT.setString("Player 1 will began");
+                    }
+                    else//2
+                    {
+                        ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+                        matchStartT.setString("Player 2 will began");
+                    }
+
                 }
                 else if(counter == 4)
                 {
@@ -153,18 +175,22 @@ int main()
             if(Keyboard::isKeyPressed(Keyboard::R))
             {
                 ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
-                ball.setVelocity(8);
+                ball.setVelocity(10);
                 paddle1.rect.setPosition(Vector2f(10,400));
                 paddle2.rect.setPosition(Vector2f(1265,400));
                 score1 = 0; score2 = 0;
                 score1T.setString("0"); score2T.setString("0");
             }
 
+            if(!gamePause)
+            {
             getPoint(ball,score1T,score2T);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y);
             ball.updateMovement();
             paddle1.movement(2);
             paddle2.movement(1);
+            }
+
             window.draw(ball.circle);
             window.draw(paddle1.rect);
             window.draw(paddle2.rect);
@@ -181,6 +207,13 @@ int main()
             window.draw(lane.RincreaseSubtitle);
             window.draw(score1T);
             window.draw(score2T);
+
+            if(counter > 0)
+            {
+                window.draw(matchStartT);
+                counter--;
+                if(counter == 1) gamePause = false;
+            }
         }
         ///******************************************state GAME
 
@@ -195,6 +228,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2)
     if(ball.circle.getPosition().x < - 45)
     {
         ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+        ball.setVelocity(10);
 
         score1++;
         if(score1 == 1) s2.setString("1");
@@ -204,10 +238,18 @@ void getPoint(Ball& ball,Text& s1,Text& s2)
     else if(ball.circle.getPosition().x > 1345)
     {
         ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+        ball.setVelocity(10);
 
         score2++;
         if(score2 == 1) s1.setString("1");
         else if(score2 == 2) s1.setString("2");
         else if(score2 == 3) s1.setString("3");
     }
+}
+
+int random(int x)//how many lots
+{
+    int lot;
+    lot = rand()%x;
+    return lot;
 }

@@ -46,7 +46,7 @@ void Ball::setVelocity(float vel)
     UpDownVelocity = vel;
 }
 
-int Ball::point()
+void Ball::point()
 {
 
 }
