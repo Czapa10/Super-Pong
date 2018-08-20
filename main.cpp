@@ -15,12 +15,13 @@ Tstate state{Tstate::logos};
 constexpr int WINDOW_WIDTH{1300};
 constexpr int WINDOW_HEIGTH{900};
 
+Text matchStartT;
 int counter, counter2;
 int score1, score2;
 bool gamePause{true};
 
 ///------declarations of functions-------------------
-void getPoint(Ball& ball,Text& s1,Text& s2);
+void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle,Paddle& paddle2);
 int random(int x);
 ///--------------------------------------------------
 
@@ -51,7 +52,7 @@ int main()
     Text menuT4("Settings",font2,50); menuT4.setPosition(Vector2f(button3.getPosition().x + 60,button3.getPosition().y + 10));
     Text menuT5("Exit",font2,50); menuT5.setPosition(Vector2f(button4.getPosition().x + 95,button4.getPosition().y + 10));
     CircleShape circle(20); circle.setFillColor(Color::Yellow); circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
-    Text matchStartT("Player 1 will begin",font2,50); matchStartT.setPosition(Vector2f(WINDOW_WIDTH/2 - 200, WINDOW_HEIGTH/2 + 15));
+    matchStartT.setPosition(Vector2f(WINDOW_WIDTH/2 - 200, WINDOW_HEIGTH/2 + 15)); matchStartT.setFont(font2); matchStartT.setCharacterSize(50);// Text matchStartT("Player 1 will begin",font2,50);
     Ball ball;
     Paddle paddle1;
     Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
@@ -184,7 +185,7 @@ int main()
 
             if(!gamePause)
             {
-            getPoint(ball,score1T,score2T);
+            getPoint(ball,score1T,score2T,paddle1,paddle2);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y);
             ball.updateMovement();
             paddle1.movement(2);
@@ -223,12 +224,17 @@ int main()
     return 0;
 }
 
-void getPoint(Ball& ball,Text& s1,Text& s2)
+void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
 {
     if(ball.circle.getPosition().x < - 45)
     {
-        ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+        matchStartT.setString("Player 1 will serw");
+        paddle1.rect.setPosition(Vector2f(10,400));
+        paddle2.rect.setPosition(Vector2f(1265,400));
         ball.setVelocity(10);
+        counter =  100;
+        gamePause = true;
 
         score1++;
         if(score1 == 1) s2.setString("1");
@@ -237,8 +243,13 @@ void getPoint(Ball& ball,Text& s1,Text& s2)
     }
     else if(ball.circle.getPosition().x > 1345)
     {
-        ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+        ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+        matchStartT.setString("Player 2 will serw");
+        paddle1.rect.setPosition(Vector2f(10,400));
+        paddle2.rect.setPosition(Vector2f(1265,400));
         ball.setVelocity(10);
+        counter =  100;
+        gamePause = true;
 
         score2++;
         if(score2 == 1) s1.setString("1");
