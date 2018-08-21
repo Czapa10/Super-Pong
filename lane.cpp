@@ -70,21 +70,25 @@ void Lane::setSpeed1(int x){speed1 = x;}
 
 void Lane::setSpeed2(int x){speed2 = x;}
 
-void Lane::minusSpeed1(int x)
+bool Lane::minusSpeed1(int x)
 {
     if(speed1)
     {
         speed1 -= x;
         Lspeed.setSize(Vector2f(speed1,50));
+        return 1;
     }
+    else return 0;
 }
-void Lane::minusSpeed2(int x)
+bool Lane::minusSpeed2(int x)
 {
     if(speed2)
     {
         speed2 -= x;
         Rspeed.setSize(Vector2f(speed2,50));
+        return 1;
     }
+    else return 0;
 }
 
 void Lane::setIncrease1(int x){increase1 = x;}

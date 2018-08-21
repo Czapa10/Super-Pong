@@ -10,13 +10,12 @@ class Lane : public Entity
 public:
     RectangleShape LspeedSubtitle, LincreaseSubtitle, Lspeed, Lincrease, Lscore;
     RectangleShape RspeedSubtitle, RincreaseSubtitle, Rspeed, Rincrease, Rscore;
-    Text score1T;
 
     Lane();
     void setSpeed1(int);
     void setSpeed2(int);
-    void minusSpeed1(int);
-    void minusSpeed2(int);
+    bool minusSpeed1(int);
+    bool minusSpeed2(int);
     void setIncrease1(int);
     void setIncrease2(int);
     void minusIncrease1(int);

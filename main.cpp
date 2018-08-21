@@ -188,20 +188,30 @@ int main()
             }
 
             ///player 1 speed & increase
-            if(Keyboard::isKeyPressed(Keyboard::A))
+            if((Keyboard::isKeyPressed(Keyboard::A))&&(!gamePause))
             {
-                lane.minusSpeed1(1);
+                bool x = lane.minusSpeed1(1);
+                if(x) paddle1.setVelocity(12);
+                else paddle1.setVelocity(6);
             }
+            else paddle1.setVelocity(6);
+
             if(Keyboard::isKeyPressed(Keyboard::D))
             {
                 lane.minusIncrease1(1);
             }
 
             ///player 2 speed & increase
-            if(Keyboard::isKeyPressed(Keyboard::Left))
+            if((Keyboard::isKeyPressed(Keyboard::Left))&&(!gamePause))
             {
-                lane.minusSpeed2(1);
+                bool x = lane.minusSpeed2(1);
+                if(x) paddle2.setVelocity(12);
+                else paddle2.setVelocity(6);
             }
+            else paddle2.setVelocity(6);
+
+            std::cout<<"1:"<<paddle1.velocity<<" 2:"<<paddle2.velocity<<std::endl;
+
             if(Keyboard::isKeyPressed(Keyboard::Right))
             {
                 lane.minusIncrease2(1);

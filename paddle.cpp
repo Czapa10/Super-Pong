@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "paddle.h"
+#include <iostream>
 
 #define UP rect.move(Vector2f(0,-velocity));
 #define DOWN rect.move(Vector2f(0,velocity));
@@ -26,4 +27,9 @@ void Paddle::movement(int control)///1-arrows | 2-awsd| 3-mouse
         if((Keyboard::isKeyPressed(Keyboard::W))&&(rect.getPosition().y > 100))UP
         else if((Keyboard::isKeyPressed(Keyboard::S))&&(rect.getPosition().y + 100 < WINDOW_HEIGTH)) DOWN
     }
+}
+
+void Paddle::setVelocity(int x)
+{
+    velocity = x;
 }

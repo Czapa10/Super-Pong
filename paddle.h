@@ -4,8 +4,9 @@ using namespace sf;
 
 class Paddle : public Entity
 {
-    int velocity;
 public:
+    int velocity;
     Paddle(int=10, int=400, int=6);
     void movement(int = 1);
+    void setVelocity(int);
 };
