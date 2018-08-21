@@ -111,7 +111,7 @@ int main()
                         counter++;
                         circle.move(0,150);
                     }
-                    counter2 = 13;
+                    counter2 = 12;
                 }
                 else counter2--;
             }
@@ -128,7 +128,7 @@ int main()
                         counter--;
                         circle.move(0,-150);
                     }
-                    counter2 = 13;
+                    counter2 = 11;
                 }
                 else counter2--;
             }
@@ -139,7 +139,7 @@ int main()
                 {
                     state = Tstate::game;
                     window.setFramerateLimit(60);
-                    score1 = 0; score2 = 0;
+                    score1 = 0; score2 = 0; score1T.setString("0"); score2T.setString("0");
                     counter = 115; counter2 = 0;
                     gamePause = true;
 
@@ -224,7 +224,7 @@ int main()
                 {
                     state = Tstate::menu;
                     circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
-                    counter = 0; counter2 = 0;
+                    counter = 1; counter2 = 0;
                 }
             }
         }
