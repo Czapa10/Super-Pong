@@ -57,10 +57,12 @@ int main()
     Paddle paddle1;
     Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
     Lane lane;
-    Text score1T("0",font1,80);
-    score1T.setPosition(Vector2f(505,10));
-    Text score2T("0",font1,80);
-    score2T.setPosition(Vector2f(721,10));
+    Text score1T("0",font1,80);score1T.setPosition(Vector2f(505,10));
+    Text score2T("0",font1,80);score2T.setPosition(Vector2f(721,10));
+    Text gameSpeedL("SPEED",font2,20); gameSpeedL.setPosition(Vector2f(225,11));
+    Text gameIncreaseL("INCREASE",font2,14); gameIncreaseL.setPosition(Vector2f(222,65));
+    Text gameSpeedR("SPEED",font2,20); gameSpeedR.setPosition(Vector2f(1017,11));
+    Text gameIncreaseR("INCREASE",font2,14); gameIncreaseR.setPosition(Vector2f(1014,65));
 
     ///end of the loading**************************************
 
@@ -141,6 +143,8 @@ int main()
                     window.setFramerateLimit(60);
                     score1 = 0; score2 = 0; score1T.setString("0"); score2T.setString("0");
                     counter = 115; counter2 = 0;
+                    lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                    lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
                     gamePause = true;
 
                     if(random(2))//1
@@ -183,6 +187,26 @@ int main()
                 score1T.setString("0"); score2T.setString("0");
             }
 
+            ///player 1 speed & increase
+            if(Keyboard::isKeyPressed(Keyboard::A))
+            {
+                lane.minusSpeed1(1);
+            }
+            if(Keyboard::isKeyPressed(Keyboard::D))
+            {
+                lane.minusIncrease1(1);
+            }
+
+            ///player 2 speed & increase
+            if(Keyboard::isKeyPressed(Keyboard::Left))
+            {
+                lane.minusSpeed2(1);
+            }
+            if(Keyboard::isKeyPressed(Keyboard::Right))
+            {
+                lane.minusIncrease2(1);
+            }
+
             if(!gamePause)
             {
             getPoint(ball,score1T,score2T,paddle1,paddle2);
@@ -208,6 +232,10 @@ int main()
             window.draw(lane.RincreaseSubtitle);
             window.draw(score1T);
             window.draw(score2T);
+            window.draw(gameSpeedL);
+            window.draw(gameIncreaseL);
+            window.draw(gameIncreaseR);
+            window.draw(gameSpeedR);
 
             if(counter > 0)
             {
