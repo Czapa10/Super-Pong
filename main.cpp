@@ -238,15 +238,18 @@ int main()
 
 void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
 {
-    if(ball.circle.getPosition().x < - 45)
+    if((ball.circle.getPosition().x < - 45)||(ball.circle.getPosition().x > 1345))///if someone got point
     {
-        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
-        matchStartT.setString("Player 1 will serw");
         paddle1.rect.setPosition(Vector2f(10,400));
         paddle2.rect.setPosition(Vector2f(1265,400));
         ball.setVelocity(10);
         counter =  100;
         gamePause = true;
+    }
+    if(ball.circle.getPosition().x < - 45)///if player 2 got point
+    {
+        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+        matchStartT.setString("Player 1 will serw");
 
         score1++;
         if(score1 == 1) s2.setString("1");
@@ -255,20 +258,15 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
         else if(score1 == 4)
         {
             s2.setString("4");
-            matchStartT.setString("Player 1 won");
+            matchStartT.setString("Player 2 won");
             gamePause = true;
             counter2 = 150;
         }
     }
-    else if(ball.circle.getPosition().x > 1345)
+    else if(ball.circle.getPosition().x > 1345)///if player 1 got point
     {
         ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
         matchStartT.setString("Player 2 will serw");
-        paddle1.rect.setPosition(Vector2f(10,400));
-        paddle2.rect.setPosition(Vector2f(1265,400));
-        ball.setVelocity(10);
-        counter =  100;
-        gamePause = true;
 
         score2++;
         if(score2 == 1) s1.setString("1");
@@ -277,7 +275,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
         else if(score2 == 4)
         {
             s1.setString("4");
-            matchStartT.setString("Player 2 won");
+            matchStartT.setString("Player 1 won");
             gamePause = true;
             counter2 = 150;
         }
