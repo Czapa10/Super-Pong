@@ -33,3 +33,32 @@ void Paddle::setVelocity(int x)
 {
     velocity = x;
 }
+
+void Paddle::increase(int padNumber)
+{
+    if(!isIncreasing)
+    {
+        isIncreasing = true;
+        int y{rect.getPosition().y};
+        if(padNumber == 1)rect.setPosition(Vector2f(10, y - 50));
+        if(padNumber == 2)rect.setPosition(Vector2f(1265, y - 50));
+        rect.setSize(Vector2f(25,200));
+    }
+}
+
+void Paddle::increaseStop(int padNumber)
+{
+    if(isIncreasing)
+    {
+        isIncreasing = false;
+        int y{rect.getPosition().y};
+        if(padNumber == 1)rect.setPosition(Vector2f(10, y + 50));
+        if(padNumber == 2)rect.setPosition(Vector2f(1265, y + 50));
+        rect.setSize(Vector2f(25,100));
+    }
+}
+
+bool Paddle::getIncrease()
+{
+    return isIncreasing;
+}

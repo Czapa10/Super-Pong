@@ -18,6 +18,6 @@ public:
     bool minusSpeed2(int);
     void setIncrease1(int);
     void setIncrease2(int);
-    void minusIncrease1(int);
-    void minusIncrease2(int);
+    bool minusIncrease1(int);
+    bool minusIncrease2(int);
 };

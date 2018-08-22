@@ -185,6 +185,8 @@ int main()
                 paddle2.rect.setPosition(Vector2f(1265,400));
                 score1 = 0; score2 = 0;
                 score1T.setString("0"); score2T.setString("0");
+                lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
             }
 
             ///player 1 speed & increase
@@ -196,10 +198,12 @@ int main()
             }
             else paddle1.setVelocity(6);
 
-            if(Keyboard::isKeyPressed(Keyboard::D))
+            if((Keyboard::isKeyPressed(Keyboard::D))&&(!gamePause))
             {
-                lane.minusIncrease1(1);
+                if(lane.minusIncrease1(1))paddle1.increase(1);
+                else paddle1.increaseStop(1);
             }
+            else paddle1.increaseStop(1);
 
             ///player 2 speed & increase
             if((Keyboard::isKeyPressed(Keyboard::Left))&&(!gamePause))
@@ -210,15 +214,17 @@ int main()
             }
             else paddle2.setVelocity(6);
 
-            if(Keyboard::isKeyPressed(Keyboard::Right))
+            if((Keyboard::isKeyPressed(Keyboard::Right))&&(!gamePause))
             {
-                lane.minusIncrease2(1);
+                if(lane.minusIncrease2(1))paddle2.increase(2);
+                else paddle2.increaseStop(2);
             }
+            else paddle2.increaseStop(2);
 
             if(!gamePause)
             {
             getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2);
-            ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y);
+            ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease());
             ball.updateMovement();
             paddle1.movement(2);
             paddle2.movement(1);

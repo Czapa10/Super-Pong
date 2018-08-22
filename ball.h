@@ -9,7 +9,6 @@ class Ball : public Entity
 public:
     Ball();
     void updateMovement();
-    void collision(int paddle1PosY, int paddle2PosY);
+    void collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool isIncreasing2);
     void setVelocity(float vel);
-    void point();
 };

@@ -95,20 +95,24 @@ void Lane::setIncrease1(int x){increase1 = x;}
 
 void Lane::setIncrease2(int x){increase2 = x;}
 
-void Lane::minusIncrease1(int x)
+bool Lane::minusIncrease1(int x)
 {
     if(increase1)
     {
-    increase1 -= x;
-    Lincrease.setSize(Vector2f(increase1,50));
+        increase1 -= x;
+        Lincrease.setSize(Vector2f(increase1,50));
+        return 1;
     }
+    else return 0;
 }
 
-void Lane::minusIncrease2(int x)
+bool Lane::minusIncrease2(int x)
 {
     if(increase2)
     {
         increase2 -= x;
         Rincrease.setSize(Vector2f(increase2,50));
+        return 1;
     }
+    else return 0;
 }
