@@ -15,13 +15,12 @@ Tstate state{Tstate::logos};
 constexpr int WINDOW_WIDTH{1300};
 constexpr int WINDOW_HEIGTH{900};
 
-Text matchStartT;
 int counter, counter2;
 int score1, score2;
 bool gamePause{true};
 
 ///------declarations of functions-------------------
-void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle,Paddle& paddle2);
+void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
 int random(int x);
 ///--------------------------------------------------
 
@@ -52,7 +51,8 @@ int main()
     Text menuT4("Settings",font2,50); menuT4.setPosition(Vector2f(button3.getPosition().x + 60,button3.getPosition().y + 10));
     Text menuT5("Exit",font2,50); menuT5.setPosition(Vector2f(button4.getPosition().x + 95,button4.getPosition().y + 10));
     CircleShape circle(20); circle.setFillColor(Color::Yellow); circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
-    matchStartT.setPosition(Vector2f(WINDOW_WIDTH/2 - 200, WINDOW_HEIGTH/2 + 15)); matchStartT.setFont(font2); matchStartT.setCharacterSize(50);// Text matchStartT("Player 1 will begin",font2,50);
+    Text matchStartT("Player 1 will begin",font2,50); matchStartT.setPosition(Vector2f(WINDOW_WIDTH/2 - 200, WINDOW_HEIGTH/2 + 15));
+    Text matchWinT("player 1 won",font2,150); matchWinT.setFillColor(Color::Yellow); matchWinT.setPosition(Vector2f(WINDOW_WIDTH/2 - 400, WINDOW_HEIGTH/2 - 90));
     Ball ball;
     Paddle paddle1;
     Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
@@ -210,8 +210,6 @@ int main()
             }
             else paddle2.setVelocity(6);
 
-            std::cout<<"1:"<<paddle1.velocity<<" 2:"<<paddle2.velocity<<std::endl;
-
             if(Keyboard::isKeyPressed(Keyboard::Right))
             {
                 lane.minusIncrease2(1);
@@ -219,7 +217,7 @@ int main()
 
             if(!gamePause)
             {
-            getPoint(ball,score1T,score2T,paddle1,paddle2);
+            getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y);
             ball.updateMovement();
             paddle1.movement(2);
@@ -247,7 +245,7 @@ int main()
             window.draw(gameIncreaseR);
             window.draw(gameSpeedR);
 
-            if(counter > 0)
+            if((counter > 0)&&(!counter2))
             {
                 window.draw(matchStartT);
                 counter--;
@@ -255,7 +253,7 @@ int main()
             }
             if(counter2 > 0)
             {
-                window.draw(matchStartT);
+                window.draw(matchWinT);
                 counter2--;
                 if(counter2 < 55) gamePause = true;
                 if(counter2 == 1)
@@ -274,7 +272,7 @@ int main()
     return 0;
 }
 
-void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
+void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2)
 {
     if((ball.circle.getPosition().x < - 45)||(ball.circle.getPosition().x > 1345))///if someone got point
     {
@@ -287,7 +285,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
     if(ball.circle.getPosition().x < - 45)///if player 2 got point
     {
         ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
-        matchStartT.setString("Player 1 will serw");
+        t1.setString("Player 1 will serw");
 
         score1++;
         if(score1 == 1) s2.setString("1");
@@ -296,15 +294,15 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
         else if(score1 == 4)
         {
             s2.setString("4");
-            matchStartT.setString("Player 2 won");
+            t2.setString("Player 2 won");
             gamePause = true;
-            counter2 = 150;
+            counter2 = 230;
         }
     }
     else if(ball.circle.getPosition().x > 1345)///if player 1 got point
     {
         ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
-        matchStartT.setString("Player 2 will serw");
+        t1.setString("Player 2 will serw");
 
         score2++;
         if(score2 == 1) s1.setString("1");
@@ -313,9 +311,9 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Paddle& paddle1,Paddle& paddle2)
         else if(score2 == 4)
         {
             s1.setString("4");
-            matchStartT.setString("Player 1 won");
+            t2.setString("Player 1 won");
             gamePause = true;
-            counter2 = 150;
+            counter2 = 230;
         }
     }
 }
