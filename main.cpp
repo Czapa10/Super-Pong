@@ -9,7 +9,7 @@
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 
-enum class Tstate{logos,menu,game,singleOr2players};
+enum class Tstate{logos,menu,game,singleOr2players,characterChoise};
 Tstate state{Tstate::logos};
 
 constexpr int WINDOW_WIDTH{1300};
@@ -79,6 +79,20 @@ int main()
     Sprite sinOr2pSingleSprite(sinOr2pSingleTexture); sinOr2pSingleSprite.setScale(Vector2f(0.5,0.5)); sinOr2pSingleSprite.setPosition(Vector2f(300,345));
     Texture sinOr2pMultiTexture; sinOr2pMultiTexture.loadFromFile("resources/2player.png");
     Sprite sinOr2pMultiSprite(sinOr2pMultiTexture); sinOr2pMultiSprite.setScale(Vector2f(0.5,0.5)); sinOr2pMultiSprite.setPosition(Vector2f(700,345));
+    Text characterChoiseT("CHARACTER CHOISE",font1,90); characterChoiseT.setPosition(Vector2f(100,10));
+    Text characterChoiseT2("player 1",font2,85); characterChoiseT2.setPosition(Vector2f(480,105)); characterChoiseT2.setFillColor(Color(237,103,3));
+    Text characterChoiseT3("player 2",font2,85); characterChoiseT3.setPosition(Vector2f(900,105)); characterChoiseT3.setFillColor(Color(26,64,215));
+    RectangleShape characterChoiseRect1(Vector2f(120,120)); characterChoiseRect1.setPosition(Vector2f(565,245));
+    RectangleShape characterChoiseRect2(Vector2f(120,120)); characterChoiseRect2.setPosition(Vector2f(1015,245));
+    ///triangles will be here -->
+    Text characterChoiseName1T("el Gato",font2,65); characterChoiseName1T.setPosition(Vector2f(550,375)); characterChoiseName1T.setFillColor(Color::Yellow);
+    Text characterChoiseName2T("Frog",font2,65); characterChoiseName2T.setPosition(Vector2f(1000,375)); characterChoiseName2T.setFillColor(Color::Yellow);
+    Text characterChoiseSpeed1T("speed:",font2,50); characterChoiseSpeed1T.setPosition(Vector2f(15,465)); characterChoiseSpeed1T.setFillColor(Color(4,200,29));
+    Text characterChoisePower1T("power:",font2,50); characterChoisePower1T.setPosition(Vector2f(15,515)); characterChoisePower1T.setFillColor(Color(208,21,35));
+    Text characterChoiseSpeedUp1T("speed up:",font2,50); characterChoiseSpeedUp1T.setPosition(Vector2f(15,565)); characterChoiseSpeedUp1T.setFillColor(Color(11,107,149));
+    Text characterChoiseSpeedUpContainer1T("speed up container:",font2,50); characterChoiseSpeedUpContainer1T.setPosition(Vector2f(15,615)); characterChoiseSpeedUpContainer1T.setFillColor(Color(230,207,2));
+    Text characterChoiseIncrease1T("increase:",font2,50); characterChoiseIncrease1T.setPosition(Vector2f(15,665)); characterChoiseIncrease1T.setFillColor(Color(64,155,96));
+    Text characterChoiseIncreaseContainer1T("increase container:",font2,50); characterChoiseIncreaseContainer1T.setPosition(Vector2f(15,715)); characterChoiseIncreaseContainer1T.setFillColor(Color(12,243,232));
 
     ///end of the loading**************************************
 
@@ -104,7 +118,7 @@ int main()
 
 
         ///state MENU******************************************
-        if(state == Tstate::menu)
+        else if(state == Tstate::menu)
         {
             window.draw(menuT1);
             window.draw(button1);
@@ -169,7 +183,7 @@ int main()
 
 
         ///state GAME******************************************
-        if(state == Tstate::game)
+        else if(state == Tstate::game)
         {
             static bool pauseScreen{false};
 
@@ -337,7 +351,7 @@ int main()
 
 
         ///state singleOr2players******************************
-        if(state == Tstate::singleOr2players)
+        else if(state == Tstate::singleOr2players)
         {
             window.draw(sinOr2pSingle);
             window.draw(sinOr2pMulti);
@@ -379,7 +393,11 @@ int main()
 
             if(Keyboard::isKeyPressed(Keyboard::Enter))
             {
-                if(counter == 2)
+                if(counter == 1)
+                {
+                    state = Tstate::characterChoise;
+                }
+                else if(counter == 2)
                 {
                     state = Tstate::game;
                     window.setFramerateLimit(60);
@@ -388,6 +406,8 @@ int main()
                     lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
                     lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
                     gamePause = true;
+
+                    state = Tstate::characterChoise;
 
                     if(random(2))//1
                     {
@@ -400,7 +420,7 @@ int main()
                         matchStartT.setString("Player 2 will began");
                     }
                 }
-                if(counter == 3)
+                else if(counter == 3)
                 {
                     state = Tstate::menu;
                     circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
@@ -409,6 +429,26 @@ int main()
             }
         }
         ///******************************state singleOr2players
+
+
+        ///state character choise******************************
+        else if(state == Tstate::characterChoise)
+        {
+            window.draw(characterChoiseT);
+            window.draw(characterChoiseT2);
+            window.draw(characterChoiseT3);
+            window.draw(characterChoiseRect1);
+            window.draw(characterChoiseRect2);
+            window.draw(characterChoiseName1T);
+            window.draw(characterChoiseName2T);
+            window.draw(characterChoiseSpeed1T);
+            window.draw(characterChoisePower1T);
+            window.draw(characterChoiseSpeedUp1T);
+            window.draw(characterChoiseSpeedUpContainer1T);
+            window.draw(characterChoiseIncrease1T);
+            window.draw(characterChoiseIncreaseContainer1T);
+        }
+        ///******************************state character choise
 
         window.display();
     }
