@@ -5,6 +5,7 @@
 #include "ball.h"
 #include "paddle.h"
 #include "lane.h"
+#include "character.h"
 
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
@@ -93,6 +94,13 @@ int main()
     Text characterChoiseSpeedUpContainer1T("speed up container:",font2,50); characterChoiseSpeedUpContainer1T.setPosition(Vector2f(15,615)); characterChoiseSpeedUpContainer1T.setFillColor(Color(230,207,2));
     Text characterChoiseIncrease1T("increase:",font2,50); characterChoiseIncrease1T.setPosition(Vector2f(15,665)); characterChoiseIncrease1T.setFillColor(Color(64,155,96));
     Text characterChoiseIncreaseContainer1T("increase container:",font2,50); characterChoiseIncreaseContainer1T.setPosition(Vector2f(15,715)); characterChoiseIncreaseContainer1T.setFillColor(Color(12,243,232));
+    Character frog;
+    Character elGato;
+    Character kuszczak;
+    Character gandalf;
+    Character lennon;
+    Character blackMan;
+    Character alien;
 
     ///end of the loading**************************************
 
