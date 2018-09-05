@@ -85,7 +85,10 @@ int main()
     Text characterChoiseT3("player 2",font2,85); characterChoiseT3.setPosition(Vector2f(900,105)); characterChoiseT3.setFillColor(Color(26,64,215));
     RectangleShape characterChoiseRect1(Vector2f(120,120)); characterChoiseRect1.setPosition(Vector2f(565,245));
     RectangleShape characterChoiseRect2(Vector2f(120,120)); characterChoiseRect2.setPosition(Vector2f(1015,245));
-    ///triangles will be here -->
+    CircleShape triangle1(20,3); triangle1.setPosition(Vector2f(525,325)); triangle1.setRotation(-90);
+    CircleShape triangle2(20,3); triangle2.setPosition(Vector2f(725,285)); triangle2.setRotation(90);
+    CircleShape triangle3(20,3); triangle3.setPosition(Vector2f(975,325)); triangle3.setRotation(-90);
+    CircleShape triangle4(20,3); triangle4.setPosition(Vector2f(1180,285)); triangle4.setRotation(90);
     Text characterChoiseName1T("el Gato",font2,65); characterChoiseName1T.setPosition(Vector2f(550,375)); characterChoiseName1T.setFillColor(Color::Yellow);
     Text characterChoiseName2T("Frog",font2,65); characterChoiseName2T.setPosition(Vector2f(1000,375)); characterChoiseName2T.setFillColor(Color::Yellow);
     Text characterChoiseSpeed1T("speed:",font2,50); characterChoiseSpeed1T.setPosition(Vector2f(15,465)); characterChoiseSpeed1T.setFillColor(Color(4,200,29));
@@ -94,6 +97,19 @@ int main()
     Text characterChoiseSpeedUpContainer1T("speed up container:",font2,50); characterChoiseSpeedUpContainer1T.setPosition(Vector2f(15,615)); characterChoiseSpeedUpContainer1T.setFillColor(Color(230,207,2));
     Text characterChoiseIncrease1T("increase:",font2,50); characterChoiseIncrease1T.setPosition(Vector2f(15,665)); characterChoiseIncrease1T.setFillColor(Color(64,155,96));
     Text characterChoiseIncreaseContainer1T("increase container:",font2,50); characterChoiseIncreaseContainer1T.setPosition(Vector2f(15,715)); characterChoiseIncreaseContainer1T.setFillColor(Color(12,243,232));
+    Text characterChoiseSpeed2T("6",font2,50); characterChoiseSpeed2T.setPosition(Vector2f(600,465)); characterChoiseSpeed2T.setFillColor(Color(4,200,29));
+    Text characterChoiseSpeed3T("6",font2,50); characterChoiseSpeed3T.setPosition(Vector2f(1050,465)); characterChoiseSpeed3T.setFillColor(Color(4,200,29));
+    Text characterChoisePower2T("6",font2,50); characterChoisePower2T.setPosition(Vector2f(600,515)); characterChoisePower2T.setFillColor(Color(208,21,35));
+    Text characterChoisePower3T("6",font2,50); characterChoisePower3T.setPosition(Vector2f(1050,515)); characterChoisePower3T.setFillColor(Color(208,21,35));
+    Text characterChoiseSpeedUp2T("6",font2,50); characterChoiseSpeedUp2T.setPosition(Vector2f(600,565)); characterChoiseSpeedUp2T.setFillColor(Color(11,107,149));
+    Text characterChoiseSpeedUp3T("6",font2,50); characterChoiseSpeedUp3T.setPosition(Vector2f(1050,565)); characterChoiseSpeedUp3T.setFillColor(Color(11,107,149));
+    Text characterChoiseSpeedUpContainer2T("6",font2,50); characterChoiseSpeedUpContainer2T.setPosition(Vector2f(600,615)); characterChoiseSpeedUpContainer2T.setFillColor(Color(230,207,2));
+    Text characterChoiseSpeedUpContainer3T("6",font2,50); characterChoiseSpeedUpContainer3T.setPosition(Vector2f(1050,615)); characterChoiseSpeedUpContainer3T.setFillColor(Color(230,207,2));
+    Text characterChoiseIncrease2T("6",font2,50); characterChoiseIncrease2T.setPosition(Vector2f(600,665)); characterChoiseIncrease2T.setFillColor(Color(64,155,96));
+    Text characterChoiseIncrease3T("6",font2,50); characterChoiseIncrease3T.setPosition(Vector2f(1050,665)); characterChoiseIncrease3T.setFillColor(Color(64,155,96));
+    Text characterChoiseIncreaseContainer2T("6",font2,50); characterChoiseIncreaseContainer2T.setPosition(Vector2f(600,715)); characterChoiseIncreaseContainer2T.setFillColor(Color(12,243,232));
+    Text characterChoiseIncreaseContainer3T("6",font2,50); characterChoiseIncreaseContainer3T.setPosition(Vector2f(1050,715)); characterChoiseIncreaseContainer3T.setFillColor(Color(12,243,232));
+
     Character frog(5,4,3,5,6,5);
     Character elGato(8,3,7,2,6,5);
     Character kuszczak(4,6,4,4,8,10);
@@ -101,7 +117,6 @@ int main()
     Character lennon(5,7,7,6,2,5);
     Character blackMan(10,8,10,10,2,3);
     Character alien(9,9,9,9,9,9);
-
     ///end of the loading**************************************
 
     while (window.isOpen())
@@ -447,6 +462,10 @@ int main()
             window.draw(characterChoiseT3);
             window.draw(characterChoiseRect1);
             window.draw(characterChoiseRect2);
+            window.draw(triangle1);
+            window.draw(triangle2);
+            window.draw(triangle3);
+            window.draw(triangle4);
             window.draw(characterChoiseName1T);
             window.draw(characterChoiseName2T);
             window.draw(characterChoiseSpeed1T);
@@ -455,6 +474,18 @@ int main()
             window.draw(characterChoiseSpeedUpContainer1T);
             window.draw(characterChoiseIncrease1T);
             window.draw(characterChoiseIncreaseContainer1T);
+            window.draw(characterChoisePower2T);
+            window.draw(characterChoisePower3T);
+            window.draw(characterChoiseSpeed2T);
+            window.draw(characterChoiseSpeed3T);
+            window.draw(characterChoiseSpeedUp2T);
+            window.draw(characterChoiseSpeedUp3T);
+            window.draw(characterChoiseIncrease2T);
+            window.draw(characterChoiseIncrease3T);
+            window.draw(characterChoiseSpeedUpContainer2T);
+            window.draw(characterChoiseSpeedUpContainer3T);
+            window.draw(characterChoiseIncreaseContainer2T);
+            window.draw(characterChoiseIncreaseContainer3T);
         }
         ///******************************state character choise
 
