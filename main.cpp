@@ -9,6 +9,7 @@
 
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
+using namespace std;
 
 enum class Tstate{logos,menu,game,singleOr2players,characterChoise};
 Tstate state{Tstate::logos};
@@ -22,6 +23,8 @@ bool gamePause{true};
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
+void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
+string floatTostring(float x);
 int random(int x);
 ///--------------------------------------------------
 
@@ -89,34 +92,34 @@ int main()
     CircleShape triangle2(20,3); triangle2.setPosition(Vector2f(725,285)); triangle2.setRotation(90);
     CircleShape triangle3(20,3); triangle3.setPosition(Vector2f(975,325)); triangle3.setRotation(-90);
     CircleShape triangle4(20,3); triangle4.setPosition(Vector2f(1180,285)); triangle4.setRotation(90);
-    Text characterChoiseName1T("el Gato",font2,65); characterChoiseName1T.setPosition(Vector2f(550,375)); characterChoiseName1T.setFillColor(Color::Yellow);
-    Text characterChoiseName2T("Frog",font2,65); characterChoiseName2T.setPosition(Vector2f(1000,375)); characterChoiseName2T.setFillColor(Color::Yellow);
+    Text characterChoiseName1T("Frog",font2,65); characterChoiseName1T.setPosition(Vector2f(550,375)); characterChoiseName1T.setFillColor(Color::Yellow);
+    Text characterChoiseName2T("el Gato",font2,65); characterChoiseName2T.setPosition(Vector2f(1000,375)); characterChoiseName2T.setFillColor(Color::Yellow);
     Text characterChoiseSpeed1T("speed:",font2,50); characterChoiseSpeed1T.setPosition(Vector2f(15,465)); characterChoiseSpeed1T.setFillColor(Color(4,200,29));
     Text characterChoisePower1T("power:",font2,50); characterChoisePower1T.setPosition(Vector2f(15,515)); characterChoisePower1T.setFillColor(Color(208,21,35));
     Text characterChoiseSpeedUp1T("speed up:",font2,50); characterChoiseSpeedUp1T.setPosition(Vector2f(15,565)); characterChoiseSpeedUp1T.setFillColor(Color(11,107,149));
     Text characterChoiseSpeedUpContainer1T("speed up container:",font2,50); characterChoiseSpeedUpContainer1T.setPosition(Vector2f(15,615)); characterChoiseSpeedUpContainer1T.setFillColor(Color(230,207,2));
     Text characterChoiseIncrease1T("increase:",font2,50); characterChoiseIncrease1T.setPosition(Vector2f(15,665)); characterChoiseIncrease1T.setFillColor(Color(64,155,96));
     Text characterChoiseIncreaseContainer1T("increase container:",font2,50); characterChoiseIncreaseContainer1T.setPosition(Vector2f(15,715)); characterChoiseIncreaseContainer1T.setFillColor(Color(12,243,232));
-    Text characterChoiseSpeed2T("6",font2,50); characterChoiseSpeed2T.setPosition(Vector2f(600,465)); characterChoiseSpeed2T.setFillColor(Color(4,200,29));
-    Text characterChoiseSpeed3T("6",font2,50); characterChoiseSpeed3T.setPosition(Vector2f(1050,465)); characterChoiseSpeed3T.setFillColor(Color(4,200,29));
-    Text characterChoisePower2T("6",font2,50); characterChoisePower2T.setPosition(Vector2f(600,515)); characterChoisePower2T.setFillColor(Color(208,21,35));
-    Text characterChoisePower3T("6",font2,50); characterChoisePower3T.setPosition(Vector2f(1050,515)); characterChoisePower3T.setFillColor(Color(208,21,35));
-    Text characterChoiseSpeedUp2T("6",font2,50); characterChoiseSpeedUp2T.setPosition(Vector2f(600,565)); characterChoiseSpeedUp2T.setFillColor(Color(11,107,149));
-    Text characterChoiseSpeedUp3T("6",font2,50); characterChoiseSpeedUp3T.setPosition(Vector2f(1050,565)); characterChoiseSpeedUp3T.setFillColor(Color(11,107,149));
-    Text characterChoiseSpeedUpContainer2T("6",font2,50); characterChoiseSpeedUpContainer2T.setPosition(Vector2f(600,615)); characterChoiseSpeedUpContainer2T.setFillColor(Color(230,207,2));
-    Text characterChoiseSpeedUpContainer3T("6",font2,50); characterChoiseSpeedUpContainer3T.setPosition(Vector2f(1050,615)); characterChoiseSpeedUpContainer3T.setFillColor(Color(230,207,2));
+    Text characterChoiseSpeed2T("5",font2,50); characterChoiseSpeed2T.setPosition(Vector2f(600,465)); characterChoiseSpeed2T.setFillColor(Color(4,200,29));
+    Text characterChoiseSpeed3T("8",font2,50); characterChoiseSpeed3T.setPosition(Vector2f(1050,465)); characterChoiseSpeed3T.setFillColor(Color(4,200,29));
+    Text characterChoisePower2T("4",font2,50); characterChoisePower2T.setPosition(Vector2f(600,515)); characterChoisePower2T.setFillColor(Color(208,21,35));
+    Text characterChoisePower3T("3",font2,50); characterChoisePower3T.setPosition(Vector2f(1050,515)); characterChoisePower3T.setFillColor(Color(208,21,35));
+    Text characterChoiseSpeedUp2T("3",font2,50); characterChoiseSpeedUp2T.setPosition(Vector2f(600,565)); characterChoiseSpeedUp2T.setFillColor(Color(11,107,149));
+    Text characterChoiseSpeedUp3T("7",font2,50); characterChoiseSpeedUp3T.setPosition(Vector2f(1050,565)); characterChoiseSpeedUp3T.setFillColor(Color(11,107,149));
+    Text characterChoiseSpeedUpContainer2T("5",font2,50); characterChoiseSpeedUpContainer2T.setPosition(Vector2f(600,615)); characterChoiseSpeedUpContainer2T.setFillColor(Color(230,207,2));
+    Text characterChoiseSpeedUpContainer3T("2",font2,50); characterChoiseSpeedUpContainer3T.setPosition(Vector2f(1050,615)); characterChoiseSpeedUpContainer3T.setFillColor(Color(230,207,2));
     Text characterChoiseIncrease2T("6",font2,50); characterChoiseIncrease2T.setPosition(Vector2f(600,665)); characterChoiseIncrease2T.setFillColor(Color(64,155,96));
     Text characterChoiseIncrease3T("6",font2,50); characterChoiseIncrease3T.setPosition(Vector2f(1050,665)); characterChoiseIncrease3T.setFillColor(Color(64,155,96));
-    Text characterChoiseIncreaseContainer2T("6",font2,50); characterChoiseIncreaseContainer2T.setPosition(Vector2f(600,715)); characterChoiseIncreaseContainer2T.setFillColor(Color(12,243,232));
-    Text characterChoiseIncreaseContainer3T("6",font2,50); characterChoiseIncreaseContainer3T.setPosition(Vector2f(1050,715)); characterChoiseIncreaseContainer3T.setFillColor(Color(12,243,232));
+    Text characterChoiseIncreaseContainer2T("5",font2,50); characterChoiseIncreaseContainer2T.setPosition(Vector2f(600,715)); characterChoiseIncreaseContainer2T.setFillColor(Color(12,243,232));
+    Text characterChoiseIncreaseContainer3T("5",font2,50); characterChoiseIncreaseContainer3T.setPosition(Vector2f(1050,715)); characterChoiseIncreaseContainer3T.setFillColor(Color(12,243,232));
 
-    Character frog(5,4,3,5,6,5);
-    Character elGato(8,3,7,2,6,5);
-    Character kuszczak(4,6,4,4,8,10);
-    Character gandalf(3,10,4,4,6,6);
-    Character lennon(5,7,7,6,2,5);
-    Character blackMan(10,8,10,10,2,3);
-    Character alien(9,9,9,9,9,9);
+    Character frog(5,4,3,5,6,5,"Frog");
+    Character elGato(8,3,7,2,6,5,"el Gato");
+    Character kuszczak(4,6,4,4,8,10,"Kuszczak");
+    Character gandalf(3,10,4,4,6,6,"Gandalf");
+    Character lennon(5,7,7,6,2,5,"Lennon");
+    Character blackMan(10,8,10,10,2,3,"black Man");
+    Character alien(9,9,9,9,9,9,"Alien");
     ///end of the loading**************************************
 
     while (window.isOpen())
@@ -419,6 +422,8 @@ int main()
                 if(counter == 1)
                 {
                     state = Tstate::characterChoise;
+                    counter = 0;
+                    counter2 = 0;
                 }
                 else if(counter == 2)
                 {
@@ -429,6 +434,8 @@ int main()
                     lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
                     lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
                     gamePause = true;
+                    counter = 0;
+                    counter2 = 0;
 
                     state = Tstate::characterChoise;
 
@@ -457,6 +464,12 @@ int main()
         ///state character choise******************************
         else if(state == Tstate::characterChoise)
         {
+            changeCharacterStatistics(characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+                                      characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
+                                      characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
+                                      characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
+                                      frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+
             window.draw(characterChoiseT);
             window.draw(characterChoiseT2);
             window.draw(characterChoiseT3);
@@ -540,6 +553,232 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
             counter2 = 230;
         }
     }
+}
+
+void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2,
+                               Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,
+                               Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,
+                               Character frog,Character gato,Character kuszczak,
+                               Character gandalf,Character lennon,Character black,Character alien)
+{
+    /// frog = 0        kuszczak = 2    lennon = 4      alien = 6
+    /// el gato = 1     gandalf = 3     black man = 5
+
+    static int player1 = 0;
+    static int player2 = 1;
+    static int counter1{};
+    static int counter2{};
+    bool wasPressed = false;
+
+    if(!counter1)
+    {
+        ///player 1
+        if(Keyboard::isKeyPressed(Keyboard::A))
+        {
+            if(!player1) player1 = 6;
+            else player1--;
+            wasPressed = true;
+            counter1 = 12;
+        }
+        else if(Keyboard::isKeyPressed(Keyboard::D))
+        {
+            if(player1 == 6) player1 = 0;
+            else player1++;
+            wasPressed = true;
+            counter1 = 12;
+        }
+    }
+    else counter1--;
+
+    if(!counter2)
+    {
+        ///player 2
+        if(Keyboard::isKeyPressed(Keyboard::Left))
+        {
+            if(!player2) player2 = 6;
+            else player2--;
+            wasPressed = true;
+            counter2 = 12;
+        }
+        else if(Keyboard::isKeyPressed(Keyboard::Right))
+        {
+            if(player2 == 6) player2 = 0;
+            else player2++;
+            wasPressed = true;
+            counter2 = 12;
+        }
+    }
+    else counter2--;
+
+    if(wasPressed)
+    {
+        ///frog
+        if(player1 == 0)
+        {
+            name1.setString("Frog");
+            speed1.setString(floatTostring(frog.getSpeed()));
+            power1.setString(floatTostring(frog.getPower()));
+            speedUp1.setString(floatTostring(frog.getSpeedUp()));
+            speedUpContainer1.setString(floatTostring(frog.getSpeedUpContainer()));
+            increase1.setString(floatTostring(frog.getIncrease()));
+            increaseContainer1.setString(floatTostring(frog.getIncreaseContainer()));
+        }
+        if(player2 == 0)
+        {
+            name2.setString("Frog");
+            speed2.setString(floatTostring(frog.getSpeed()));
+            power2.setString(floatTostring(frog.getPower()));
+            speedUp2.setString(floatTostring(frog.getSpeedUp()));
+            speedUpContainer2.setString(floatTostring(frog.getSpeedUpContainer()));
+            increase2.setString(floatTostring(frog.getIncrease()));
+            increaseContainer2.setString(floatTostring(frog.getIncreaseContainer()));
+        }
+
+        ///el gato
+        if(player1 == 1)
+        {
+            name1.setString("el Gato");
+            speed1.setString(floatTostring(gato.getSpeed()));
+            power1.setString(floatTostring(gato.getPower()));
+            speedUp1.setString(floatTostring(gato.getSpeedUp()));
+            speedUpContainer1.setString(floatTostring(gato.getSpeedUpContainer()));
+            increase1.setString(floatTostring(gato.getIncrease()));
+            increaseContainer1.setString(floatTostring(gato.getIncreaseContainer()));
+        }
+        if(player2 == 1)
+        {
+            name2.setString("el Gato");
+            speed2.setString(floatTostring(gato.getSpeed()));
+            power2.setString(floatTostring(gato.getPower()));
+            speedUp2.setString(floatTostring(gato.getSpeedUp()));
+            speedUpContainer2.setString(floatTostring(gato.getSpeedUpContainer()));
+            increase2.setString(floatTostring(gato.getIncrease()));
+            increaseContainer2.setString(floatTostring(gato.getIncreaseContainer()));
+        }
+
+        ///kuszczak
+        if(player1 == 2)
+        {
+            name1.setString("Kuszczak");
+            speed1.setString(floatTostring(kuszczak.getSpeed()));
+            power1.setString(floatTostring(kuszczak.getPower()));
+            speedUp1.setString(floatTostring(kuszczak.getSpeedUp()));
+            speedUpContainer1.setString(floatTostring(kuszczak.getSpeedUpContainer()));
+            increase1.setString(floatTostring(kuszczak.getIncrease()));
+            increaseContainer1.setString(floatTostring(kuszczak.getIncreaseContainer()));
+        }
+        if(player2 == 2)
+        {
+            name2.setString("Kuszczak");
+            speed2.setString(floatTostring(kuszczak.getSpeed()));
+            power2.setString(floatTostring(kuszczak.getPower()));
+            speedUp2.setString(floatTostring(kuszczak.getSpeedUp()));
+            speedUpContainer2.setString(floatTostring(kuszczak.getSpeedUpContainer()));
+            increase2.setString(floatTostring(kuszczak.getIncrease()));
+            increaseContainer2.setString(floatTostring(kuszczak.getIncreaseContainer()));
+        }
+
+        ///gandalf
+        if(player1 == 3)
+        {
+            name1.setString("Gandalf");
+            speed1.setString(floatTostring(gandalf.getSpeed()));
+            power1.setString(floatTostring(gandalf.getPower()));
+            speedUp1.setString(floatTostring(gandalf.getSpeedUp()));
+            speedUpContainer1.setString(floatTostring(gandalf.getSpeedUpContainer()));
+            increase1.setString(floatTostring(gandalf.getIncrease()));
+            increaseContainer1.setString(floatTostring(gandalf.getIncreaseContainer()));
+        }
+        if(player2 == 3)
+        {
+            name2.setString("Gandalf");
+            speed2.setString(floatTostring(gandalf.getSpeed()));
+            power2.setString(floatTostring(gandalf.getPower()));
+            speedUp2.setString(floatTostring(gandalf.getSpeedUp()));
+            speedUpContainer2.setString(floatTostring(gandalf.getSpeedUpContainer()));
+            increase2.setString(floatTostring(gandalf.getIncrease()));
+            increaseContainer2.setString(floatTostring(gandalf.getIncreaseContainer()));
+        }
+
+        ///lennon
+        if(player1 == 4)
+        {
+            name1.setString("Lennon");
+            speed1.setString(floatTostring(lennon.getSpeed()));
+            power1.setString(floatTostring(lennon.getPower()));
+            speedUp1.setString(floatTostring(lennon.getSpeedUp()));
+            speedUpContainer1.setString(floatTostring(lennon.getSpeedUpContainer()));
+            increase1.setString(floatTostring(lennon.getIncrease()));
+            increaseContainer1.setString(floatTostring(lennon.getIncreaseContainer()));
+        }
+        if(player2 == 4)
+        {
+            name2.setString("Lennon");
+            speed2.setString(floatTostring(lennon.getSpeed()));
+            power2.setString(floatTostring(lennon.getPower()));
+            speedUp2.setString(floatTostring(lennon.getSpeedUp()));
+            speedUpContainer2.setString(floatTostring(lennon.getSpeedUpContainer()));
+            increase2.setString(floatTostring(lennon.getIncrease()));
+            increaseContainer2.setString(floatTostring(lennon.getIncreaseContainer()));
+        }
+
+        ///black man
+        if(player1 == 5)
+        {
+            name1.setString("black man");
+            speed1.setString(floatTostring(black.getSpeed()));
+            power1.setString(floatTostring(black.getPower()));
+            speedUp1.setString(floatTostring(black.getSpeedUp()));
+            speedUpContainer1.setString(floatTostring(black.getSpeedUpContainer()));
+            increase1.setString(floatTostring(black.getIncrease()));
+            increaseContainer1.setString(floatTostring(black.getIncreaseContainer()));
+        }
+        if(player2 == 5)
+        {
+            name2.setString("black man");
+            speed2.setString(floatTostring(black.getSpeed()));
+            power2.setString(floatTostring(black.getPower()));
+            speedUp2.setString(floatTostring(black.getSpeedUp()));
+            speedUpContainer2.setString(floatTostring(black.getSpeedUpContainer()));
+            increase2.setString(floatTostring(black.getIncrease()));
+            increaseContainer2.setString(floatTostring(black.getIncreaseContainer()));
+        }
+
+        ///alien
+        if(player1 == 6)
+        {
+            name1.setString("alien");
+            speed1.setString(floatTostring(alien.getSpeed()));
+            power1.setString(floatTostring(alien.getPower()));
+            speedUp1.setString(floatTostring(alien.getSpeedUp()));
+            speedUpContainer1.setString(floatTostring(alien.getSpeedUpContainer()));
+            increase1.setString(floatTostring(alien.getIncrease()));
+            increaseContainer1.setString(floatTostring(alien.getIncreaseContainer()));
+        }
+        if(player2 == 6)
+        {
+            name2.setString("alien");
+            speed2.setString(floatTostring(alien.getSpeed()));
+            power2.setString(floatTostring(alien.getPower()));
+            speedUp2.setString(floatTostring(alien.getSpeedUp()));
+            speedUpContainer2.setString(floatTostring(alien.getSpeedUpContainer()));
+            increase2.setString(floatTostring(alien.getIncrease()));
+            increaseContainer2.setString(floatTostring(alien.getIncreaseContainer()));
+        }
+    }
+}
+
+string floatTostring(float x)
+{
+    if(x == 2)return "2";
+    else if(x == 3)return "3";
+    else if(x == 4)return "4";
+    else if(x == 5)return "5";
+    else if(x == 6)return "6";
+    else if(x == 7)return "7";
+    else if(x == 8)return "8";
+    else if(x == 9)return "9";
+    else if(x == 10)return "10";
 }
 
 int random(int x)//how many lots
