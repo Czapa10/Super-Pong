@@ -20,10 +20,11 @@ constexpr int WINDOW_HEIGTH{900};
 int counter, counter2, counter3, counter4, counter5;
 int score1, score2;
 bool gamePause{true};
+Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
-void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
+void changeCharacterStatistics(Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
 string floatTostring(float x);
 int random(int x);
 ///--------------------------------------------------
@@ -86,6 +87,15 @@ int main()
     Text characterChoiseT("CHARACTER CHOISE",font1,90); characterChoiseT.setPosition(Vector2f(100,10));
     Text characterChoiseT2("player 1",font2,85); characterChoiseT2.setPosition(Vector2f(480,105)); characterChoiseT2.setFillColor(Color(237,103,3));
     Text characterChoiseT3("player 2",font2,85); characterChoiseT3.setPosition(Vector2f(900,105)); characterChoiseT3.setFillColor(Color(26,64,215));
+    frogT.loadFromFile("resources/frog.jpg");
+    gatoT.loadFromFile("resources/gato.png");
+    kuszczakT.loadFromFile("resources/kuszczak.jpg");
+    gandalfT.loadFromFile("resources/gandalf.jpg");
+    lennonT.loadFromFile("resources/lennon.jpg");
+    blackManT.loadFromFile("resources/black-man.jpg");
+    alienT.loadFromFile("resources/alien.jpg");
+    Sprite player1S(frogT); player1S.setPosition(Vector2f(565,245)); player1S.setTextureRect(IntRect(0,0,120,120));
+    Sprite player2S(gatoT); player2S.setPosition(Vector2f(1015,245)); player2S.setTextureRect(IntRect(0,0,120,120));
     RectangleShape characterChoiseRect1(Vector2f(120,120)); characterChoiseRect1.setPosition(Vector2f(565,245));
     RectangleShape characterChoiseRect2(Vector2f(120,120)); characterChoiseRect2.setPosition(Vector2f(1015,245));
     CircleShape triangle1(20,3); triangle1.setPosition(Vector2f(525,325)); triangle1.setRotation(-90);
@@ -115,7 +125,7 @@ int main()
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
-    Character kuszczak(4,6,4,4,8,10,"Kuszczak");
+    Character kuszczak(4,6,4,4,10,10,"Kuszczak");
     Character gandalf(3,10,4,4,6,6,"Gandalf");
     Character lennon(5,7,7,6,2,5,"Lennon");
     Character blackMan(10,8,10,10,2,3,"black Man");
@@ -464,7 +474,7 @@ int main()
         ///state character choise******************************
         else if(state == Tstate::characterChoise)
         {
-            changeCharacterStatistics(characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+            changeCharacterStatistics(player1S, player2S, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
@@ -475,6 +485,8 @@ int main()
             window.draw(characterChoiseT3);
             window.draw(characterChoiseRect1);
             window.draw(characterChoiseRect2);
+            window.draw(player1S);
+            window.draw(player2S);
             window.draw(triangle1);
             window.draw(triangle2);
             window.draw(triangle3);
@@ -555,8 +567,8 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     }
 }
 
-void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2,
-                               Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,
+void changeCharacterStatistics(Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,
+                               Text& power1,Text& power2,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,
                                Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,
                                Character frog,Character gato,Character kuszczak,
                                Character gandalf,Character lennon,Character black,Character alien)
@@ -615,6 +627,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         ///frog
         if(player1 == 0)
         {
+            sprite1.setTexture(frogT);
             name1.setString("Frog");
             speed1.setString(floatTostring(frog.getSpeed()));
             power1.setString(floatTostring(frog.getPower()));
@@ -625,6 +638,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         }
         if(player2 == 0)
         {
+            sprite2.setTexture(frogT);
             name2.setString("Frog");
             speed2.setString(floatTostring(frog.getSpeed()));
             power2.setString(floatTostring(frog.getPower()));
@@ -637,6 +651,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         ///el gato
         if(player1 == 1)
         {
+            sprite1.setTexture(gatoT);
             name1.setString("el Gato");
             speed1.setString(floatTostring(gato.getSpeed()));
             power1.setString(floatTostring(gato.getPower()));
@@ -647,6 +662,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         }
         if(player2 == 1)
         {
+            sprite2.setTexture(gatoT);
             name2.setString("el Gato");
             speed2.setString(floatTostring(gato.getSpeed()));
             power2.setString(floatTostring(gato.getPower()));
@@ -659,6 +675,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         ///kuszczak
         if(player1 == 2)
         {
+            sprite1.setTexture(kuszczakT);
             name1.setString("Kuszczak");
             speed1.setString(floatTostring(kuszczak.getSpeed()));
             power1.setString(floatTostring(kuszczak.getPower()));
@@ -669,6 +686,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         }
         if(player2 == 2)
         {
+            sprite2.setTexture(kuszczakT);
             name2.setString("Kuszczak");
             speed2.setString(floatTostring(kuszczak.getSpeed()));
             power2.setString(floatTostring(kuszczak.getPower()));
@@ -681,6 +699,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         ///gandalf
         if(player1 == 3)
         {
+            sprite1.setTexture(gandalfT);
             name1.setString("Gandalf");
             speed1.setString(floatTostring(gandalf.getSpeed()));
             power1.setString(floatTostring(gandalf.getPower()));
@@ -691,6 +710,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         }
         if(player2 == 3)
         {
+            sprite2.setTexture(gandalfT);
             name2.setString("Gandalf");
             speed2.setString(floatTostring(gandalf.getSpeed()));
             power2.setString(floatTostring(gandalf.getPower()));
@@ -703,6 +723,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         ///lennon
         if(player1 == 4)
         {
+            sprite1.setTexture(lennonT);
             name1.setString("Lennon");
             speed1.setString(floatTostring(lennon.getSpeed()));
             power1.setString(floatTostring(lennon.getPower()));
@@ -713,6 +734,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         }
         if(player2 == 4)
         {
+            sprite2.setTexture(lennonT);
             name2.setString("Lennon");
             speed2.setString(floatTostring(lennon.getSpeed()));
             power2.setString(floatTostring(lennon.getPower()));
@@ -725,6 +747,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         ///black man
         if(player1 == 5)
         {
+            sprite1.setTexture(blackManT);
             name1.setString("black man");
             speed1.setString(floatTostring(black.getSpeed()));
             power1.setString(floatTostring(black.getPower()));
@@ -735,6 +758,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         }
         if(player2 == 5)
         {
+            sprite2.setTexture(blackManT);
             name2.setString("black man");
             speed2.setString(floatTostring(black.getSpeed()));
             power2.setString(floatTostring(black.getPower()));
@@ -747,6 +771,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         ///alien
         if(player1 == 6)
         {
+            sprite1.setTexture(alienT);
             name1.setString("alien");
             speed1.setString(floatTostring(alien.getSpeed()));
             power1.setString(floatTostring(alien.getPower()));
@@ -757,6 +782,7 @@ void changeCharacterStatistics(Text& name1,Text& name2,Text& speed1,Text& speed2
         }
         if(player2 == 6)
         {
+            sprite2.setTexture(alienT);
             name2.setString("alien");
             speed2.setString(floatTostring(alien.getSpeed()));
             power2.setString(floatTostring(alien.getPower()));
