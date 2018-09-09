@@ -24,7 +24,7 @@ Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lenno
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
-void changeCharacterStatistics(Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
+void changeCharacterStatistics(bool additionalMode,Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
 string floatTostring(float x);
 int random(int x);
 ///--------------------------------------------------
@@ -96,8 +96,6 @@ int main()
     alienT.loadFromFile("resources/alien.jpg");
     Sprite player1S(frogT); player1S.setPosition(Vector2f(565,245)); player1S.setTextureRect(IntRect(0,0,120,120));
     Sprite player2S(gatoT); player2S.setPosition(Vector2f(1015,245)); player2S.setTextureRect(IntRect(0,0,120,120));
-    RectangleShape characterChoiseRect1(Vector2f(120,120)); characterChoiseRect1.setPosition(Vector2f(565,245));
-    RectangleShape characterChoiseRect2(Vector2f(120,120)); characterChoiseRect2.setPosition(Vector2f(1015,245));
     CircleShape triangle1(20,3); triangle1.setPosition(Vector2f(525,325)); triangle1.setRotation(-90);
     CircleShape triangle2(20,3); triangle2.setPosition(Vector2f(725,285)); triangle2.setRotation(90);
     CircleShape triangle3(20,3); triangle3.setPosition(Vector2f(975,325)); triangle3.setRotation(-90);
@@ -122,6 +120,8 @@ int main()
     Text characterChoiseIncrease3T("6",font2,50); characterChoiseIncrease3T.setPosition(Vector2f(1050,665)); characterChoiseIncrease3T.setFillColor(Color(64,155,96));
     Text characterChoiseIncreaseContainer2T("5",font2,50); characterChoiseIncreaseContainer2T.setPosition(Vector2f(600,715)); characterChoiseIncreaseContainer2T.setFillColor(Color(12,243,232));
     Text characterChoiseIncreaseContainer3T("5",font2,50); characterChoiseIncreaseContainer3T.setPosition(Vector2f(1050,715)); characterChoiseIncreaseContainer3T.setFillColor(Color(12,243,232));
+    Text characterChoiseExitT("Exit - ESC",font2,80); characterChoiseExitT.setPosition(Vector2f(150,780)); characterChoiseExitT.setFillColor(Color::Red);
+    Text characterChoiseNextT("Next - ENTER",font2,80); characterChoiseNextT.setPosition(Vector2f(800,780)); characterChoiseNextT.setFillColor(Color::Green);
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
@@ -207,7 +207,7 @@ int main()
                 {
                     state = Tstate::singleOr2players;
                     counter = 1;
-                    counter2 = 0;
+                    counter2 = 25;
                 }
                 else if(counter == 4)
                 {
@@ -424,49 +424,48 @@ int main()
                     if(Keyboard::isKeyPressed(Keyboard::Left)){counter = 1; counter2 = 12;}
                     if(Keyboard::isKeyPressed(Keyboard::Right)){counter = 2; counter2 = 12;}
                 }
-            }
-            if(counter2 > 0)counter2--;
 
-            if(Keyboard::isKeyPressed(Keyboard::Enter))
-            {
-                if(counter == 1)
+                if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    state = Tstate::characterChoise;
-                    counter = 0;
-                    counter2 = 0;
-                }
-                else if(counter == 2)
-                {
-                    state = Tstate::game;
-                    window.setFramerateLimit(60);
-                    score1 = 0; score2 = 0; score1T.setString("0"); score2T.setString("0");
-                    counter = 115; counter2 = 0;
-                    lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
-                    lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
-                    gamePause = true;
-                    counter = 0;
-                    counter2 = 0;
-
-                    state = Tstate::characterChoise;
-
-                    if(random(2))//1
+                    if(counter == 1)
                     {
-                        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
-                        matchStartT.setString("Player 1 will began");
+                        state = Tstate::characterChoise;
+                        counter = 0;
+                        counter2 = 0;
                     }
-                    else//2
+                    else if(counter == 2)
                     {
-                        ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
-                        matchStartT.setString("Player 2 will began");
+                        state = Tstate::game;
+                        window.setFramerateLimit(60);
+                        score1 = 0; score2 = 0; score1T.setString("0"); score2T.setString("0");
+                        counter = 115; counter2 = 0;
+                        lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                        lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
+                        gamePause = true;
+                        counter = 0;
+                        counter2 = 0;
+
+                        state = Tstate::characterChoise;
+
+                        if(random(2))//1
+                        {
+                            ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+                            matchStartT.setString("Player 1 will began");
+                        }
+                        else//2
+                        {
+                            ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+                            matchStartT.setString("Player 2 will began");
+                        }
+                    }
+                    else if(counter == 3)
+                    {
+                        state = Tstate::menu;
+                        circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
+                        counter = 1; counter2 = 0;
                     }
                 }
-                else if(counter == 3)
-                {
-                    state = Tstate::menu;
-                    circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
-                    counter = 1; counter2 = 0;
-                }
-            }
+            }else counter2--;
         }
         ///******************************state singleOr2players
 
@@ -474,17 +473,26 @@ int main()
         ///state character choise******************************
         else if(state == Tstate::characterChoise)
         {
-            changeCharacterStatistics(player1S, player2S, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+            changeCharacterStatistics(false,player1S, player2S, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
 
+            if(Keyboard::isKeyPressed(Keyboard::Escape))
+            {
+                state = Tstate::singleOr2players;
+                counter = 1;
+                changeCharacterStatistics(true,player1S, player2S, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+                                      characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
+                                      characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
+                                      characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
+                                      frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+            }
+
             window.draw(characterChoiseT);
             window.draw(characterChoiseT2);
             window.draw(characterChoiseT3);
-            window.draw(characterChoiseRect1);
-            window.draw(characterChoiseRect2);
             window.draw(player1S);
             window.draw(player2S);
             window.draw(triangle1);
@@ -511,6 +519,8 @@ int main()
             window.draw(characterChoiseSpeedUpContainer3T);
             window.draw(characterChoiseIncreaseContainer2T);
             window.draw(characterChoiseIncreaseContainer3T);
+            window.draw(characterChoiseExitT);
+            window.draw(characterChoiseNextT);
         }
         ///******************************state character choise
 
@@ -567,7 +577,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     }
 }
 
-void changeCharacterStatistics(Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,
+void changeCharacterStatistics(bool additionalMode,Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,
                                Text& power1,Text& power2,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,
                                Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,
                                Character frog,Character gato,Character kuszczak,
@@ -581,6 +591,30 @@ void changeCharacterStatistics(Sprite& sprite1,Sprite& sprite2,Text& name1,Text&
     static int counter1{};
     static int counter2{};
     bool wasPressed = false;
+
+    if(additionalMode)
+    {
+        player1 = 0;
+        player2 = 1;
+
+        sprite1.setTexture(frogT);
+        name1.setString("Frog");
+        speed1.setString(floatTostring(frog.getSpeed()));
+        power1.setString(floatTostring(frog.getPower()));
+        speedUp1.setString(floatTostring(frog.getSpeedUp()));
+        speedUpContainer1.setString(floatTostring(frog.getSpeedUpContainer()));
+        increase1.setString(floatTostring(frog.getIncrease()));
+        increaseContainer1.setString(floatTostring(frog.getIncreaseContainer()));
+
+        sprite2.setTexture(gatoT);
+        name2.setString("el Gato");
+        speed2.setString(floatTostring(gato.getSpeed()));
+        power2.setString(floatTostring(gato.getPower()));
+        speedUp2.setString(floatTostring(gato.getSpeedUp()));
+        speedUpContainer2.setString(floatTostring(gato.getSpeedUpContainer()));
+        increase2.setString(floatTostring(gato.getIncrease()));
+        increaseContainer2.setString(floatTostring(gato.getIncreaseContainer()));
+    }
 
     if(!counter1)
     {
