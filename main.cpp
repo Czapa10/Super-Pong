@@ -368,6 +368,7 @@ int main()
                     {
                         state = Tstate::menu;
                         circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
+                        circle2.setPosition(Vector2f(pauseResume.getPosition().x - 50, pauseResume.getPosition().y + 30));
                         counter = 1; counter2 = 0;
                         pauseScreen = false;
                     }
@@ -488,6 +489,20 @@ int main()
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+            }
+            else if(Keyboard::isKeyPressed(Keyboard::Enter))
+            {
+                state = Tstate::game;
+                counter = 150; counter3 = 0; counter4 = 1;
+
+                ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+                ball.setVelocity(10);
+                paddle1.rect.setPosition(Vector2f(10,400));
+                paddle2.rect.setPosition(Vector2f(1265,400));
+                score1 = 0; score2 = 0;
+                score1T.setString("0"); score2T.setString("0");
+                lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
             }
 
             window.draw(characterChoiseT);
