@@ -431,33 +431,12 @@ int main()
                     if(counter == 1)
                     {
                         state = Tstate::characterChoise;
-                        counter = 0;
-                        counter2 = 0;
+                        counter5 = 60;
                     }
                     else if(counter == 2)
                     {
-                        state = Tstate::game;
-                        window.setFramerateLimit(60);
-                        score1 = 0; score2 = 0; score1T.setString("0"); score2T.setString("0");
-                        counter = 115; counter2 = 0;
-                        lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
-                        lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
-                        gamePause = true;
-                        counter = 0;
-                        counter2 = 0;
-
                         state = Tstate::characterChoise;
-
-                        if(random(2))//1
-                        {
-                            ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
-                            matchStartT.setString("Player 1 will began");
-                        }
-                        else//2
-                        {
-                            ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
-                            matchStartT.setString("Player 2 will began");
-                        }
+                        counter5 = 60;
                     }
                     else if(counter == 3)
                     {
@@ -490,7 +469,7 @@ int main()
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
             }
-            else if(Keyboard::isKeyPressed(Keyboard::Enter))
+            else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter5))
             {
                 state = Tstate::game;
                 counter = 150; counter3 = 0; counter4 = 1;
@@ -503,7 +482,19 @@ int main()
                 score1T.setString("0"); score2T.setString("0");
                 lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
                 lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
+
+                if(random(2))//1
+                {
+                    ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+                    matchStartT.setString("Player 1 will begin");
+                }
+                else//2
+                {
+                    ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+                    matchStartT.setString("Player 2 will begin");
+                }
             }
+            if(counter) counter5--;
 
             window.draw(characterChoiseT);
             window.draw(characterChoiseT2);
