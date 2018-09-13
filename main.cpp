@@ -21,10 +21,11 @@ int counter, counter2, counter3, counter4, counter5;
 int score1, score2;
 bool gamePause{true};
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
+Texture frogT2; Texture gatoT2; Texture kuszczakT2; Texture gandalfT2; Texture lennonT2; Texture blackManT2; Texture alienT2;
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
-void changeCharacterStatistics(bool additionalMode,Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
+void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite2,Sprite& spriteInGame1,Sprite& spriteInGame2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
 string floatTostring(float x);
 int random(int x);
 ///--------------------------------------------------
@@ -94,8 +95,17 @@ int main()
     lennonT.loadFromFile("resources/lennon.jpg");
     blackManT.loadFromFile("resources/black-man.jpg");
     alienT.loadFromFile("resources/alien.jpg");
+    frogT2.loadFromFile("resources/frog2.jpg");
+    gatoT2.loadFromFile("resources/gato2.png");
+    kuszczakT2.loadFromFile("resources/kuszczak2.jpg");
+    gandalfT2.loadFromFile("resources/gandalf2.jpg");
+    lennonT2.loadFromFile("resources/lennon2.jpg");
+    blackManT2.loadFromFile("resources/black-man2.jpg");
+    alienT2.loadFromFile("resources/alien2.jpg");
     Sprite player1S(frogT); player1S.setPosition(Vector2f(565,245)); player1S.setTextureRect(IntRect(0,0,120,120));
     Sprite player2S(gatoT); player2S.setPosition(Vector2f(1015,245)); player2S.setTextureRect(IntRect(0,0,120,120));
+    Sprite gameLeftPicture(frogT2); gameLeftPicture.setPosition(Vector2f(-5,0));
+    Sprite gameRightPicture(gatoT2); gameRightPicture.setPosition(Vector2f(1085,0));
     CircleShape triangle1(20,3); triangle1.setPosition(Vector2f(525,325)); triangle1.setRotation(-90);
     CircleShape triangle2(20,3); triangle2.setPosition(Vector2f(725,285)); triangle2.setRotation(90);
     CircleShape triangle3(20,3); triangle3.setPosition(Vector2f(975,325)); triangle3.setRotation(-90);
@@ -317,6 +327,8 @@ int main()
             window.draw(lane.RincreaseSubtitle);
             window.draw(score1T);
             window.draw(score2T);
+            window.draw(gameLeftPicture);
+            window.draw(gameRightPicture);
             window.draw(gameSpeedL);
             window.draw(gameIncreaseL);
             window.draw(gameIncreaseR);
@@ -453,7 +465,7 @@ int main()
         ///state character choise******************************
         else if(state == Tstate::characterChoise)
         {
-            changeCharacterStatistics(false,player1S, player2S, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+            changeCharacterStatistics(1,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
@@ -463,7 +475,7 @@ int main()
             {
                 state = Tstate::singleOr2players;
                 counter = 1;
-                changeCharacterStatistics(true,player1S, player2S, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+                changeCharacterStatistics(2,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
@@ -483,6 +495,12 @@ int main()
                 lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
                 lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
 
+                changeCharacterStatistics(3,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+                                      characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
+                                      characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
+                                      characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
+                                      frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+
                 if(random(2))//1
                 {
                     ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
@@ -494,7 +512,7 @@ int main()
                     matchStartT.setString("Player 2 will begin");
                 }
             }
-            if(counter) counter5--;
+            if(counter5) counter5--;
 
             window.draw(characterChoiseT);
             window.draw(characterChoiseT2);
@@ -583,7 +601,8 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     }
 }
 
-void changeCharacterStatistics(bool additionalMode,Sprite& sprite1,Sprite& sprite2,Text& name1,Text& name2,Text& speed1,Text& speed2,
+void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite2,Sprite& spriteInGame1,Sprite& spriteInGame2,
+                               Text& name1,Text& name2,Text& speed1,Text& speed2,
                                Text& power1,Text& power2,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,
                                Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,
                                Character frog,Character gato,Character kuszczak,
@@ -598,7 +617,7 @@ void changeCharacterStatistics(bool additionalMode,Sprite& sprite1,Sprite& sprit
     static int counter2{};
     bool wasPressed = false;
 
-    if(additionalMode)
+    if(additionalMode == 2)
     {
         player1 = 0;
         player2 = 1;
@@ -620,6 +639,25 @@ void changeCharacterStatistics(bool additionalMode,Sprite& sprite1,Sprite& sprit
         speedUpContainer2.setString(floatTostring(gato.getSpeedUpContainer()));
         increase2.setString(floatTostring(gato.getIncrease()));
         increaseContainer2.setString(floatTostring(gato.getIncreaseContainer()));
+    }
+
+    if(additionalMode == 3)
+    {
+        if(player1 == 0) spriteInGame1.setTexture(frogT2);
+        else if(player1 == 1) spriteInGame1.setTexture(gatoT2);
+        else if(player1 == 2) spriteInGame1.setTexture(kuszczakT2);
+        else if(player1 == 3) spriteInGame1.setTexture(gandalfT2);
+        else if(player1 == 4) spriteInGame1.setTexture(lennonT2);
+        else if(player1 == 5) spriteInGame1.setTexture(blackManT2);
+        else if(player1 == 6) spriteInGame1.setTexture(alienT2);
+
+        if(player2 == 0) spriteInGame1.setTexture(frogT2);
+        else if(player2 == 1) spriteInGame2.setTexture(gatoT2);
+        else if(player2 == 2) spriteInGame2.setTexture(kuszczakT2);
+        else if(player2 == 3) spriteInGame2.setTexture(gandalfT2);
+        else if(player2 == 4) spriteInGame2.setTexture(lennonT2);
+        else if(player2 == 5) spriteInGame2.setTexture(blackManT2);
+        else if(player2 == 6) spriteInGame2.setTexture(alienT2);
     }
 
     if(!counter1)
