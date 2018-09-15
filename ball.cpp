@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "ball.h"
 using namespace sf;
 
@@ -14,7 +15,7 @@ void Ball::updateMovement()
     circle.move(Vector2f(LeftRightVelocity,UpDownVelocity));
 }
 
-void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool isIncreasing2)
+void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool isIncreasing2, float powerP1, float powerP2)
 {
     ///up & down colision
     if((circle.getPosition().y <= 100)||(circle.getPosition().y + 40 >= WINDOW_HEIGTH))
@@ -33,17 +34,17 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
     if((((circle.getPosition().x <= 35)&&(circle.getPosition().x >= 10))&&((circle.getPosition().y >= paddle1PosY - 40)&&(circle.getPosition().y <= paddle1PosY + paddle1DownBound)))
     ||(((circle.getPosition().x >= 1225)&&(circle.getPosition().x <= 1250))&&((circle.getPosition().y >= paddle2PosY - 40)&&(circle.getPosition().y <= paddle2PosY + paddle2DownBound))))
     {
-        LeftRightVelocity = - LeftRightVelocity;
-        if(UpDownVelocity < 0)
+        if(LeftRightVelocity < 0)
         {
-            UpDownVelocity -= 0.5;
-            LeftRightVelocity -= 0.5;
+            LeftRightVelocity -= powerP1/10;
+            UpDownVelocity -= powerP1/10;
         }
         else
         {
-            UpDownVelocity += 0.5;
-            LeftRightVelocity += 0.5;
+            LeftRightVelocity += powerP2/10;
+            UpDownVelocity -= powerP2/10;
         }
+        LeftRightVelocity = - LeftRightVelocity;
     }
 }
 

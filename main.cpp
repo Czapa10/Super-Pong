@@ -22,6 +22,8 @@ int score1, score2;
 bool gamePause{true};
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
 Texture frogT2; Texture gatoT2; Texture kuszczakT2; Texture gandalfT2; Texture lennonT2; Texture blackManT2; Texture alienT2;
+Character player1;
+Character player2;
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
@@ -140,6 +142,7 @@ int main()
     Character lennon(5,7,7,6,2,5,"Lennon");
     Character blackMan(10,8,10,10,2,3,"black Man");
     Character alien(9,9,9,9,9,9,"Alien");
+
     ///end of the loading**************************************
 
     while (window.isOpen())
@@ -305,8 +308,8 @@ int main()
             if(!gamePause)
             {
             getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2);
-            ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease());
-            ball.updateMovement();
+            ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(), player1.getPower(), player2.getPower());
+            ball.updateMovement();;
             paddle1.movement(2);
             paddle2.movement(1);
             }
@@ -565,7 +568,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     }
     if(ball.circle.getPosition().x < - 45)///if player 2 got point
     {
-        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+        ball.circle.setPosition(Vector2f(45, WINDOW_HEIGTH/2 - 20));
         t1.setString("Player 1 will serw");
         ball.setVelocity(10);
 
@@ -583,7 +586,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     }
     else if(ball.circle.getPosition().x > 1345)///if player 1 got point
     {
-        ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+        ball.circle.setPosition(Vector2f(1215, WINDOW_HEIGTH/2 - 20));
         t1.setString("Player 2 will serw");
         ball.setVelocity(-10);
 
@@ -643,21 +646,21 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
 
     if(additionalMode == 3)
     {
-        if(player1 == 0) spriteInGame1.setTexture(frogT2);
-        else if(player1 == 1) spriteInGame1.setTexture(gatoT2);
-        else if(player1 == 2) spriteInGame1.setTexture(kuszczakT2);
-        else if(player1 == 3) spriteInGame1.setTexture(gandalfT2);
-        else if(player1 == 4) spriteInGame1.setTexture(lennonT2);
-        else if(player1 == 5) spriteInGame1.setTexture(blackManT2);
-        else if(player1 == 6) spriteInGame1.setTexture(alienT2);
+        if(player1 == 0) {spriteInGame1.setTexture(frogT2); ::player1.setStatistics(frog.getSpeed(),frog.getPower(),frog.getSpeedUp(),frog.getSpeedUpContainer(),frog.getIncrease(),frog.getIncreaseContainer());}
+        else if(player1 == 1) {spriteInGame1.setTexture(gatoT2); ::player1.setStatistics(gato.getSpeed(),gato.getPower(),gato.getSpeedUp(),gato.getSpeedUpContainer(),gato.getIncrease(),gato.getIncreaseContainer());}
+        else if(player1 == 2) {spriteInGame1.setTexture(kuszczakT2); ::player1.setStatistics(kuszczak.getSpeed(),kuszczak.getPower(),kuszczak.getSpeedUp(),kuszczak.getSpeedUpContainer(),kuszczak.getIncrease(),kuszczak.getIncreaseContainer());}
+        else if(player1 == 3) {spriteInGame1.setTexture(gandalfT2); ::player1.setStatistics(gandalf.getSpeed(),gandalf.getPower(),gandalf.getSpeedUp(),gandalf.getSpeedUpContainer(),gandalf.getIncrease(),gandalf.getIncreaseContainer());}
+        else if(player1 == 4) {spriteInGame1.setTexture(lennonT2); ::player1.setStatistics(lennon.getSpeed(),lennon.getPower(),lennon.getSpeedUp(),lennon.getSpeedUpContainer(),lennon.getIncrease(),lennon.getIncreaseContainer());}
+        else if(player1 == 5) {spriteInGame1.setTexture(blackManT2); ::player1.setStatistics(black.getSpeed(),black.getPower(),black.getSpeedUp(),black.getSpeedUpContainer(),black.getIncrease(),black.getIncreaseContainer());}
+        else if(player1 == 6) {spriteInGame1.setTexture(alienT2); ::player1.setStatistics(alien.getSpeed(),alien.getPower(),alien.getSpeedUp(),alien.getSpeedUpContainer(),alien.getIncrease(),alien.getIncreaseContainer());}
 
-        if(player2 == 0) spriteInGame1.setTexture(frogT2);
-        else if(player2 == 1) spriteInGame2.setTexture(gatoT2);
-        else if(player2 == 2) spriteInGame2.setTexture(kuszczakT2);
-        else if(player2 == 3) spriteInGame2.setTexture(gandalfT2);
-        else if(player2 == 4) spriteInGame2.setTexture(lennonT2);
-        else if(player2 == 5) spriteInGame2.setTexture(blackManT2);
-        else if(player2 == 6) spriteInGame2.setTexture(alienT2);
+        if(player2 == 0) {spriteInGame1.setTexture(frogT2); ::player2.setStatistics(frog.getSpeed(),frog.getPower(),frog.getSpeedUp(),frog.getSpeedUpContainer(),frog.getIncrease(),frog.getIncreaseContainer());}
+        else if(player2 == 1) {spriteInGame2.setTexture(gatoT2); ::player2.setStatistics(gato.getSpeed(),gato.getPower(),gato.getSpeedUp(),gato.getSpeedUpContainer(),gato.getIncrease(),gato.getIncreaseContainer());}
+        else if(player2 == 2) {spriteInGame2.setTexture(kuszczakT2); ::player2.setStatistics(kuszczak.getSpeed(),kuszczak.getPower(),kuszczak.getSpeedUp(),kuszczak.getSpeedUpContainer(),kuszczak.getIncrease(),kuszczak.getIncreaseContainer());}
+        else if(player2 == 3) {spriteInGame2.setTexture(gandalfT2); ::player2.setStatistics(gandalf.getSpeed(),gandalf.getPower(),gandalf.getSpeedUp(),gandalf.getSpeedUpContainer(),gandalf.getIncrease(),gandalf.getIncreaseContainer());}
+        else if(player2 == 4) {spriteInGame2.setTexture(lennonT2); ::player2.setStatistics(lennon.getSpeed(),lennon.getPower(),lennon.getSpeedUp(),lennon.getSpeedUpContainer(),lennon.getIncrease(),lennon.getIncreaseContainer());}
+        else if(player2 == 5) {spriteInGame2.setTexture(blackManT2); ::player2.setStatistics(black.getSpeed(),black.getPower(),black.getSpeedUp(),black.getSpeedUpContainer(),black.getIncrease(),black.getIncreaseContainer());}
+        else if(player2 == 6) {spriteInGame2.setTexture(alienT2); ::player2.setStatistics(alien.getSpeed(),alien.getPower(),alien.getSpeedUp(),alien.getSpeedUpContainer(),alien.getIncrease(),alien.getIncreaseContainer());}
     }
 
     if(!counter1)
