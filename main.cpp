@@ -28,6 +28,9 @@ Character player2;
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
 void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite2,Sprite& spriteInGame1,Sprite& spriteInGame2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
+void setPaddlesSpeed(Paddle& pad1,Paddle& pad2,Character p1,Character p2);
+void setPaddlesSpeed(Paddle& pad1,Character p1);
+void setPaddlesSpeed(Character p2,Paddle& pad2);
 string floatTostring(float x);
 int random(int x);
 ///--------------------------------------------------
@@ -280,7 +283,7 @@ int main()
                 if(x) paddle1.setVelocity(12);
                 else paddle1.setVelocity(6);
             }
-            else paddle1.setVelocity(6);
+            else setPaddlesSpeed(paddle1,player1);
 
             if((Keyboard::isKeyPressed(Keyboard::D))&&(!gamePause))
             {
@@ -296,7 +299,7 @@ int main()
                 if(x) paddle2.setVelocity(12);
                 else paddle2.setVelocity(6);
             }
-            else paddle2.setVelocity(6);
+            else setPaddlesSpeed(player2,paddle2);
 
             if((Keyboard::isKeyPressed(Keyboard::Right))&&(!gamePause))
             {
@@ -503,6 +506,8 @@ int main()
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+
+                setPaddlesSpeed(paddle1,paddle2,player1,player2);
 
                 if(random(2))//1
                 {
@@ -873,6 +878,21 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
             increaseContainer2.setString(floatTostring(alien.getIncreaseContainer()));
         }
     }
+}
+
+void setPaddlesSpeed(Paddle& pad1,Paddle& pad2,Character p1,Character p2)
+{
+    pad1.setVelocity(p1.getSpeed());
+    pad2.setVelocity(p2.getSpeed());
+}
+
+void setPaddlesSpeed(Paddle& pad1,Character p1)
+{
+    pad1.setVelocity(p1.getSpeed());
+}
+void setPaddlesSpeed(Character p2,Paddle& pad2)
+{
+    pad2.setVelocity(p2.getSpeed());
 }
 
 string floatTostring(float x)
