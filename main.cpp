@@ -141,7 +141,7 @@ int main()
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
     Character kuszczak(4,6,4,4,10,10,"Kuszczak");
-    Character gandalf(3,10,4,4,6,6,"Gandalf");
+    Character gandalf(3,10,7,7,6,6,"Gandalf");
     Character lennon(5,7,7,6,2,5,"Lennon");
     Character blackMan(10,8,10,10,2,3,"black Man");
     Character alien(9,9,9,9,9,9,"Alien");
@@ -280,8 +280,8 @@ int main()
             if((Keyboard::isKeyPressed(Keyboard::A))&&(!gamePause))
             {
                 bool x = lane.minusSpeed1(1);
-                if(x) paddle1.setVelocity(12);
-                else paddle1.setVelocity(6);
+                if(x) paddle1.setVelocity(player1.getSpeed() + player1.getSpeedUp());
+                else paddle1.setVelocity(player1.getSpeed());
             }
             else setPaddlesSpeed(paddle1,player1);
 
@@ -296,8 +296,8 @@ int main()
             if((Keyboard::isKeyPressed(Keyboard::Left))&&(!gamePause))
             {
                 bool x = lane.minusSpeed2(1);
-                if(x) paddle2.setVelocity(12);
-                else paddle2.setVelocity(6);
+                if(x) paddle2.setVelocity(player2.getSpeed() + player2.getSpeedUp());
+                else paddle2.setVelocity(player2.getSpeed());
             }
             else setPaddlesSpeed(player2,paddle2);
 
