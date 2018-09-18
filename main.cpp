@@ -287,10 +287,10 @@ int main()
 
             if((Keyboard::isKeyPressed(Keyboard::D))&&(!gamePause))
             {
-                if(lane.minusIncrease1(1))paddle1.increase(1);
-                else paddle1.increaseStop(1);
+                if(lane.minusIncrease1(1))paddle1.increase(1,player1.getIncrease());
+                else paddle1.increaseStop(1,player1.getIncrease());
             }
-            else paddle1.increaseStop(1);
+            else paddle1.increaseStop(1,player1.getIncrease());
 
             ///player 2 speed & increase
             if((Keyboard::isKeyPressed(Keyboard::Left))&&(!gamePause))
@@ -303,16 +303,17 @@ int main()
 
             if((Keyboard::isKeyPressed(Keyboard::Right))&&(!gamePause))
             {
-                if(lane.minusIncrease2(1))paddle2.increase(2);
-                else paddle2.increaseStop(2);
+                if(lane.minusIncrease2(1))paddle2.increase(2,player2.getIncrease());
+                else paddle2.increaseStop(2,player2.getIncrease());
             }
-            else paddle2.increaseStop(2);
+            else paddle2.increaseStop(2,player2.getIncrease());
 
             if(!gamePause)
             {
             getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2);
-            ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(), player1.getPower(), player2.getPower());
-            ball.updateMovement();;
+            ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(),
+                            player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower());
+            ball.updateMovement();
             paddle1.movement(2);
             paddle2.movement(1);
             }
