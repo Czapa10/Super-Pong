@@ -17,7 +17,7 @@ Tstate state{Tstate::logos};
 constexpr int WINDOW_WIDTH{1300};
 constexpr int WINDOW_HEIGTH{900};
 
-int counter, counter2, counter3, counter4, counter5;
+int counter, counter2, counter3, counter4, counter5, counterIncreaseBox1, counterSpeedUpBox1, counterIncreaseBox2, counterSpeedUpBox2;
 int score1, score2;
 bool gamePause{true};
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
@@ -279,7 +279,14 @@ int main()
             ///player 1 speed & increase
             if((Keyboard::isKeyPressed(Keyboard::A))&&(!gamePause))
             {
-                bool x = lane.minusSpeed1(1);
+                bool x;
+                if(!counterSpeedUpBox1)
+                {
+                    x = lane.minusSpeed1(1);
+                    counterSpeedUpBox1 = player1.getSpeedUpContainer();
+                }
+                else counterSpeedUpBox1--;
+
                 if(x) paddle1.setVelocity(player1.getSpeed() + player1.getSpeedUp());
                 else paddle1.setVelocity(player1.getSpeed());
             }
@@ -287,7 +294,15 @@ int main()
 
             if((Keyboard::isKeyPressed(Keyboard::D))&&(!gamePause))
             {
-                if(lane.minusIncrease1(1))paddle1.increase(1,player1.getIncrease());
+                bool x;
+                if(!counterIncreaseBox1)
+                {
+                    x = lane.minusIncrease1(1);
+                    counterIncreaseBox1 = player1.getIncreaseContainer();
+                }
+                else counterIncreaseBox1--;
+
+                if(x) paddle1.increase(1,player1.getIncrease());
                 else paddle1.increaseStop(1,player1.getIncrease());
             }
             else paddle1.increaseStop(1,player1.getIncrease());
@@ -295,7 +310,14 @@ int main()
             ///player 2 speed & increase
             if((Keyboard::isKeyPressed(Keyboard::Left))&&(!gamePause))
             {
-                bool x = lane.minusSpeed2(1);
+                bool x;
+                if(!counterSpeedUpBox2)
+                {
+                    x = lane.minusSpeed2(1);
+                    counterIncreaseBox2 = player2.getSpeedUpContainer();
+                }
+                else counterSpeedUpBox2--;
+
                 if(x) paddle2.setVelocity(player2.getSpeed() + player2.getSpeedUp());
                 else paddle2.setVelocity(player2.getSpeed());
             }
@@ -303,7 +325,15 @@ int main()
 
             if((Keyboard::isKeyPressed(Keyboard::Right))&&(!gamePause))
             {
-                if(lane.minusIncrease2(1))paddle2.increase(2,player2.getIncrease());
+                bool x;
+                if(!counterIncreaseBox2)
+                {
+                    x = lane.minusIncrease2(1);
+                    counterIncreaseBox2 = player2.getIncreaseContainer();
+                }
+                else counterIncreaseBox2--;
+
+                if(x) paddle2.increase(2,player2.getIncrease());
                 else paddle2.increaseStop(2,player2.getIncrease());
             }
             else paddle2.increaseStop(2,player2.getIncrease());

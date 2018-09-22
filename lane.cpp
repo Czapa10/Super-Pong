@@ -72,6 +72,7 @@ void Lane::setSpeed2(int x){speed2 = x;}
 
 bool Lane::minusSpeed1(int x)
 {
+
     if(speed1)
     {
         speed1 -= x;
