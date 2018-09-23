@@ -11,7 +11,7 @@
 using namespace sf;
 using namespace std;
 
-enum class Tstate{logos,menu,game,singleOr2players,characterChoise};
+enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip};
 Tstate state{Tstate::logos};
 
 constexpr int WINDOW_WIDTH{1300};
@@ -139,6 +139,29 @@ int main()
     Text characterChoiseNextT("Next - ENTER",font2,80); characterChoiseNextT.setPosition(Vector2f(800,780)); characterChoiseNextT.setFillColor(Color::Green);
     Text characterChoiseAT("A",font2,20); characterChoiseAT.setPosition(Vector2f(540,290)); characterChoiseAT.setFillColor(Color::Black);
     Text characterChoiseDT("D",font2,20); characterChoiseDT.setPosition(Vector2f(695,290)); characterChoiseDT.setFillColor(Color::Black);
+    Text controlsTipT("Controls",font2,100); controlsTipT.setPosition(Vector2f(450,5)); controlsTipT.setFillColor(Color::Yellow);
+    Text controlsTipPlayT("ENTER - play",font2,80); controlsTipPlayT.setPosition(Vector2f(100,800)); controlsTipPlayT.setFillColor(Color::Green);
+    Text controlsTipBackT("ESC - back",font2,80); controlsTipBackT.setPosition(Vector2f(800,800)); controlsTipBackT.setFillColor(Color::Red);
+    Text controlsTipPlayer1T("player 1",font2,70); controlsTipPlayer1T.setPosition(Vector2f(100,100));
+    Text controlsTipPlayer2T("player 2",font2,70); controlsTipPlayer2T.setPosition(Vector2f(850,100));
+    Text controlsTipAT("SPEED UP",font2,65); controlsTipAT.setPosition(Vector2f(110,310));
+    Text controlsTipWT("MOVE UP",font2,65); controlsTipWT.setPosition(Vector2f(110,410));
+    Text controlsTipST("MOVE DOWN",font2,65); controlsTipST.setPosition(Vector2f(110,510));
+    Text controlsTipDT("INCREASE",font2,65); controlsTipDT.setPosition(Vector2f(110,610));
+    Text controlsTipLeftArrowT("SPEED UP",font2,65); controlsTipLeftArrowT.setPosition(Vector2f(915,310));
+    Text controlsTipRightArrowT("INCREASE",font2,65); controlsTipRightArrowT.setPosition(Vector2f(905,410));
+    Text controlsTipUpArrowT("MOVE UP",font2,65); controlsTipUpArrowT.setPosition(Vector2f(915,510));
+    Text controlsTipDownArrowT("MOVE DOWN",font2,65); controlsTipDownArrowT.setPosition(Vector2f(815,610));
+    Texture awsd; awsd.loadFromFile("resources/awsd.png");
+    Texture arrows; arrows.loadFromFile("resources/KeyboardArrows.jpg");
+    Sprite A(awsd); A.setTextureRect(IntRect(7,96,94,89)); A.setPosition(Vector2f(10,300));
+    Sprite W(awsd); W.setTextureRect(IntRect(99,5,94,89)); W.setPosition(Vector2f(10,400));
+    Sprite S(awsd); S.setTextureRect(IntRect(106,96,94,89)); S.setPosition(Vector2f(10,500));
+    Sprite D(awsd); D.setTextureRect(IntRect(201,96,94,89)); D.setPosition(Vector2f(10,600));
+    Sprite leftArrow(arrows); leftArrow.setTextureRect(IntRect(19,116,83,83)); leftArrow.setPosition(Vector2f(1196,300));
+    Sprite rightArrow(arrows); rightArrow.setTextureRect(IntRect(200,116,83,83)); rightArrow.setPosition(Vector2f(1196,400));
+    Sprite upArrow(arrows); upArrow.setTextureRect(IntRect(109,27,83,83)); upArrow.setPosition(Vector2f(1196,500));
+    Sprite downArrow(arrows); downArrow.setTextureRect(IntRect(109,116,83,83)); downArrow.setPosition(Vector2f(1196,600));
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
@@ -438,7 +461,7 @@ int main()
         ///******************************************state GAME
 
 
-        ///state singleOr2players******************************
+        ///state SINGLE OR 2 PLAYERS******************************
         else if(state == Tstate::singleOr2players)
         {
             window.draw(sinOr2pSingle);
@@ -498,10 +521,10 @@ int main()
                 }
             }else counter2--;
         }
-        ///******************************state singleOr2players
+        ///******************************state SINGLE OR 2 PLAYERS
 
 
-        ///state character choise******************************
+        ///state CHARACTER CHOISE******************************
         else if(state == Tstate::characterChoise)
         {
             changeCharacterStatistics(1,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
@@ -510,7 +533,7 @@ int main()
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
 
-            if(Keyboard::isKeyPressed(Keyboard::Escape))
+            if(Keyboard::isKeyPressed(Keyboard::Escape)&&(!counter5))
             {
                 state = Tstate::singleOr2players;
                 counter = 1;
@@ -522,8 +545,8 @@ int main()
             }
             else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter5))
             {
-                state = Tstate::game;
-                counter = 150; counter3 = 0; counter4 = 1;
+                state = Tstate::controlsTip;
+                counter = 150; counter3 = 0; counter4 = 1; counter2 = 15;
 
                 ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
                 ball.setVelocity(10);
@@ -589,7 +612,37 @@ int main()
             window.draw(characterChoiseExitT);
             window.draw(characterChoiseNextT);
         }
-        ///******************************state character choise
+        ///******************************state CHARACTER CHOISE
+
+
+        ///state CONTROLS TIP******************************
+        if(state == Tstate::controlsTip)
+        {
+            window.draw(controlsTipT);
+            window.draw(controlsTipPlayT);
+            window.draw(controlsTipBackT);
+            window.draw(controlsTipPlayer1T);
+            window.draw(controlsTipPlayer2T);
+            window.draw(controlsTipAT); window.draw(controlsTipWT); window.draw(controlsTipST); window.draw(controlsTipDT);
+            window.draw(controlsTipLeftArrowT); window.draw(controlsTipRightArrowT); window.draw(controlsTipDownArrowT); window.draw(controlsTipUpArrowT);
+            window.draw(A); window.draw(W); window.draw(S); window.draw(D);
+            window.draw(rightArrow); window.draw(leftArrow); window.draw(upArrow); window.draw(downArrow);
+
+            if(!counter2)
+            {
+                if(Keyboard::isKeyPressed(Keyboard::Enter))
+                {
+                    state = Tstate::game;
+                }
+                else if(Keyboard::isKeyPressed(Keyboard::Escape))
+                {
+                    state = Tstate::characterChoise;
+                    counter5 = 60;
+                }
+            }
+            else counter2--;
+        }
+        ///******************************state CONTROLS TIP
 
         window.display();
     }
