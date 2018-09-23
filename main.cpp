@@ -137,12 +137,14 @@ int main()
     Text characterChoiseIncreaseContainer3T("5",font2,50); characterChoiseIncreaseContainer3T.setPosition(Vector2f(1050,715)); characterChoiseIncreaseContainer3T.setFillColor(Color(12,243,232));
     Text characterChoiseExitT("Exit - ESC",font2,80); characterChoiseExitT.setPosition(Vector2f(150,780)); characterChoiseExitT.setFillColor(Color::Red);
     Text characterChoiseNextT("Next - ENTER",font2,80); characterChoiseNextT.setPosition(Vector2f(800,780)); characterChoiseNextT.setFillColor(Color::Green);
+    Text characterChoiseAT("A",font2,20); characterChoiseAT.setPosition(Vector2f(540,290)); characterChoiseAT.setFillColor(Color::Black);
+    Text characterChoiseDT("D",font2,20); characterChoiseDT.setPosition(Vector2f(695,290)); characterChoiseDT.setFillColor(Color::Black);
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
     Character kuszczak(4,6,4,4,10,10,"Kuszczak");
-    Character gandalf(3,10,7,7,6,6,"Gandalf");
-    Character lennon(5,7,7,6,2,5,"Lennon");
+    Character gandalf(4,10,7,7,6,6,"Gandalf");
+    Character lennon(6,7,7,6,3,5,"Lennon");
     Character blackMan(10,8,10,10,2,3,"black Man");
     Character alien(9,9,9,9,9,9,"Alien");
 
@@ -314,7 +316,7 @@ int main()
                 if(!counterSpeedUpBox2)
                 {
                     x = lane.minusSpeed2(1);
-                    counterIncreaseBox2 = player2.getSpeedUpContainer();
+                    counterSpeedUpBox2 = player2.getSpeedUpContainer();
                 }
                 else counterSpeedUpBox2--;
 
@@ -562,6 +564,8 @@ int main()
             window.draw(triangle2);
             window.draw(triangle3);
             window.draw(triangle4);
+            window.draw(characterChoiseAT);
+            window.draw(characterChoiseDT);
             window.draw(characterChoiseName1T);
             window.draw(characterChoiseName2T);
             window.draw(characterChoiseSpeed1T);
