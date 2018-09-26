@@ -11,7 +11,7 @@
 using namespace sf;
 using namespace std;
 
-enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip};
+enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel};
 Tstate state{Tstate::logos};
 
 constexpr int WINDOW_WIDTH{1300};
@@ -162,6 +162,15 @@ int main()
     Sprite rightArrow(arrows); rightArrow.setTextureRect(IntRect(200,116,83,83)); rightArrow.setPosition(Vector2f(1196,400));
     Sprite upArrow(arrows); upArrow.setTextureRect(IntRect(109,27,83,83)); upArrow.setPosition(Vector2f(1196,500));
     Sprite downArrow(arrows); downArrow.setTextureRect(IntRect(109,116,83,83)); downArrow.setPosition(Vector2f(1196,600));
+    Text dificultyLevelT("DIFFICULTY LEVEL",font1,100); dificultyLevelT.setPosition(Vector2f(30,5));
+    Text dificultyLevelEasyT("EASY",font2,50); dificultyLevelEasyT.setPosition(Vector2f(button1.getPosition().x + 80, button1.getPosition().y + 20));
+    Text dificultyLevelMediumT("MEDIUM",font2,50); dificultyLevelMediumT.setPosition(Vector2f(button2.getPosition().x + 60, button2.getPosition().y + 20));
+    Text dificultyLevelHardT("HARD",font2,50); dificultyLevelHardT.setPosition(Vector2f(button3.getPosition().x + 75, button3.getPosition().y + 20));
+    Text dificultyLevelExitT("EXIT",font2,50); dificultyLevelExitT.setPosition(Vector2f(button4.getPosition().x + 80, button4.getPosition().y + 20));
+    RectangleShape dificultyLevelEasyR(BUTTON_SIZE); dificultyLevelEasyR.setPosition(Vector2f(button1.getPosition().x, button1.getPosition().y)); dificultyLevelEasyR.setFillColor(Color::Green);
+    RectangleShape dificultyLevelMediumR(BUTTON_SIZE); dificultyLevelMediumR.setPosition(Vector2f(button2.getPosition().x, button2.getPosition().y)); dificultyLevelMediumR.setFillColor(Color(236,111,9));
+    RectangleShape dificultyLevelHardR(BUTTON_SIZE); dificultyLevelHardR.setPosition(Vector2f(button3.getPosition().x, button3.getPosition().y)); dificultyLevelHardR.setFillColor(Color(206,17,17));
+    RectangleShape dificultyLevelExitR(BUTTON_SIZE); dificultyLevelExitR.setPosition(Vector2f(button4.getPosition().x, button4.getPosition().y)); dificultyLevelExitR.setFillColor(Color::Red);
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
@@ -616,8 +625,10 @@ int main()
 
 
         ///state CONTROLS TIP******************************
-        if(state == Tstate::controlsTip)
+        else if(state == Tstate::controlsTip)
         {
+            static int counter{20};
+
             window.draw(controlsTipT);
             window.draw(controlsTipPlayT);
             window.draw(controlsTipBackT);
@@ -628,21 +639,84 @@ int main()
             window.draw(A); window.draw(W); window.draw(S); window.draw(D);
             window.draw(rightArrow); window.draw(leftArrow); window.draw(upArrow); window.draw(downArrow);
 
-            if(!counter2)
+            if(!counter)
             {
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    state = Tstate::game;
+                    //state = Tstate::game;
+                    state = Tstate::dificultyLevel;
+                    counter = 20;
                 }
                 else if(Keyboard::isKeyPressed(Keyboard::Escape))
                 {
                     state = Tstate::characterChoise;
                     counter5 = 60;
+                    counter = 20;
                 }
             }
-            else counter2--;
+            else counter--;
         }
         ///******************************state CONTROLS TIP
+
+
+        ///state DIFFICULTY LEVEL******************************
+        else if(state == Tstate::dificultyLevel)
+        {
+            static int counter{0};
+            static int counterEnter{25};
+            static int whereIsOutline{1};
+
+            if(whereIsOutline == 1) dificultyLevelEasyR.setOutlineThickness(5);
+            else dificultyLevelEasyR.setOutlineThickness(0);
+            if(whereIsOutline == 2) dificultyLevelMediumR.setOutlineThickness(5);
+            else dificultyLevelMediumR.setOutlineThickness(0);
+            if(whereIsOutline == 3) dificultyLevelHardR.setOutlineThickness(5);
+            else dificultyLevelHardR.setOutlineThickness(0);
+            if(whereIsOutline == 4) dificultyLevelExitR.setOutlineThickness(5);
+            else dificultyLevelExitR.setOutlineThickness(0);
+
+            if(!counter)
+            {
+                if(Keyboard::isKeyPressed(Keyboard::Down))
+                {
+                    if(whereIsOutline == 4) whereIsOutline = 1;
+                    else whereIsOutline++;
+                    counter = 12;
+                }
+                else if(Keyboard::isKeyPressed(Keyboard::Up))
+                {
+                    if(whereIsOutline == 1) whereIsOutline = 4;
+                    else whereIsOutline--;
+                    counter = 12;
+                }
+            }
+            else counter--;
+
+            if((!counterEnter)&&(Keyboard::isKeyPressed(Keyboard::Enter)))
+            {
+                if(whereIsOutline == 4)
+                {
+                    state = Tstate::controlsTip;
+                    counter = 0;
+                    counterEnter = 25;
+                    whereIsOutline = 1;
+                }
+            }
+            if(counterEnter > 0) counterEnter--;
+
+            //rectangle shapes
+            window.draw(dificultyLevelEasyR);
+            window.draw(dificultyLevelMediumR);
+            window.draw(dificultyLevelHardR);
+            window.draw(dificultyLevelExitR);
+            //texts
+            window.draw(dificultyLevelT);
+            window.draw(dificultyLevelEasyT);
+            window.draw(dificultyLevelMediumT);
+            window.draw(dificultyLevelHardT);
+            window.draw(dificultyLevelExitT);
+        }
+        ///******************************state DIFFICULTY LEVEL
 
         window.display();
     }
