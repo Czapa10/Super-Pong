@@ -19,6 +19,7 @@ constexpr int WINDOW_HEIGTH{900};
 
 int counter, counter2, counter3, counter4, counter5, counterIncreaseBox1, counterSpeedUpBox1, counterIncreaseBox2, counterSpeedUpBox2;
 int score1, score2;
+int oneOr2Players;
 bool gamePause{true};
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
 Texture frogT2; Texture gatoT2; Texture kuszczakT2; Texture gandalfT2; Texture lennonT2; Texture blackManT2; Texture alienT2;
@@ -26,7 +27,7 @@ Character player1;
 Character player2;
 
 ///------declarations of functions-------------------
-void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle,Paddle& paddle2);
+void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2,int& counterMatchStart, int& counterMatchWin);
 void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite2,Sprite& spriteInGame1,Sprite& spriteInGame2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
 void setPaddlesSpeed(Paddle& pad1,Paddle& pad2,Character p1,Character p2);
 void setPaddlesSpeed(Paddle& pad1,Character p1);
@@ -192,12 +193,12 @@ int main()
         ///state LOGOS*****************************************
         if(state == Tstate::logos)
         {
+            static int counter{};
             window.draw(MaineCoonLogoS);
             counter++;
             if(counter>200)
             {
                 state = Tstate::menu;
-                counter = 1;
             }
         }
         ///*****************************************state LOGOS
@@ -206,6 +207,9 @@ int main()
         ///state MENU******************************************
         else if(state == Tstate::menu)
         {
+            static int isSelected{1};
+            static int counter{};
+
             window.draw(menuT1);
             window.draw(button1);
             window.draw(button2);
@@ -217,53 +221,48 @@ int main()
             window.draw(menuT5);
             window.draw(circle);
 
-            if(Keyboard::isKeyPressed(Keyboard::Down))
+            if(!counter)
             {
-                if(!counter2)
+                if(Keyboard::isKeyPressed(Keyboard::Down))
                 {
-                    if(counter == 4)
+                    if(isSelected == 4)
                     {
-                        counter = 1;
+                        isSelected = 1;
                         circle.move(0,-450);
                     }else{
-                        counter++;
+                        isSelected++;
                         circle.move(0,150);
                     }
-                    counter2 = 12;
+                    counter = 12;
                 }
-                else counter2--;
-            }
 
-            if(Keyboard::isKeyPressed(Keyboard::Up))
-            {
-                if(!counter2)
+                if(Keyboard::isKeyPressed(Keyboard::Up))
                 {
-                    if(counter == 1)
+                    if(isSelected == 1)
                     {
-                        counter = 4;
+                        isSelected = 4;
                         circle.move(0,450);
                     }else{
-                        counter--;
+                        isSelected--;
                         circle.move(0,-150);
                     }
-                    counter2 = 11;
+                    counter = 11;
                 }
-                else counter2--;
-            }
 
-            if(Keyboard::isKeyPressed(Keyboard::Enter))
-            {
-                if(counter == 2)
+                if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    state = Tstate::singleOr2players;
-                    counter = 1;
-                    counter2 = 25;
+                    if(isSelected == 2)
+                    {
+                        state = Tstate::singleOr2players;
+                        isSelected = 1;
+                        counter = 20;
+                    }
+                    else if(isSelected == 4)
+                    {
+                        window.close();
+                    }
                 }
-                else if(counter == 4)
-                {
-                    window.close();
-                }
-            }
+            }else counter--;
         }
         ///******************************************state MENU
 
@@ -272,6 +271,11 @@ int main()
         else if(state == Tstate::game)
         {
             static bool pauseScreen{false};
+            static int counterPause{};
+            static int counterMatchStart{200};
+            static int counterMatchWin{};
+            static int counterPauseScreen{};
+            static int isSelectedPauseMenu{1};
 
             if(Keyboard::isKeyPressed(Keyboard::Space))
             {
@@ -294,19 +298,19 @@ int main()
             ///pause screen
             if(Keyboard::isKeyPressed(Keyboard::Escape))
             {
-                if((!gamePause)&&(!pauseScreen)&&(counter3 == 0))
+                if((!gamePause)&&(!pauseScreen)&&(counterPause == 0))
                 {
                     pauseScreen = true;
                     gamePause = true;
-                    counter3 = 12;
+                    counterPause = 12;
                     counter4 = 1;
                     counter5 = 0;
                 }
-                if((counter3 == 0)&&(pauseScreen))
+                if((counterPause == 0)&&(pauseScreen))
                 {
+                    counterPause = 12;
                     pauseScreen = false;
                     gamePause = false;
-                    counter3 = 12;
                 }
             }
 
@@ -374,7 +378,7 @@ int main()
 
             if(!gamePause)
             {
-            getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2);
+            getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2,counterMatchStart,counterMatchWin);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(),
                             player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower());
             ball.updateMovement();
@@ -405,44 +409,47 @@ int main()
             window.draw(gameIncreaseR);
             window.draw(gameSpeedR);
 
-            if((counter > 0)&&(!counter2))
+            if((counterMatchStart > 0)&&(score1 < 4)&&(score2 < 4))
             {
                 window.draw(matchStartT);
-                counter--;
-                if(counter == 1) gamePause = false;
+                counterMatchStart--;
+                if(counterMatchStart == 1) gamePause = false;
             }
-            if(counter2 > 0)
+            if(counterMatchWin > 0)
             {
                 window.draw(matchWinT);
-                counter2--;
-                if(counter2 < 55) gamePause = true;
-                if(counter2 == 1)
+                counterMatchWin--;
+                if(counterMatchWin < 55) gamePause = true;
+                if(counterMatchWin == 1)
                 {
                     state = Tstate::menu;
                     circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
-                    counter = 1; counter2 = 0;
+                    pauseScreen = false;
+                    gamePause = true;
+                    counterMatchStart = 200;
+                    counterMatchWin = 0;
                 }
             }
             if(pauseScreen)
             {
-                if(((Keyboard::isKeyPressed(Keyboard::Up))||(Keyboard::isKeyPressed(Keyboard::Down)))&&(!counter5))
+                if(((Keyboard::isKeyPressed(Keyboard::Up))||(Keyboard::isKeyPressed(Keyboard::Down)))&&(!counterPauseScreen))
                 {
-                    if(counter4 == 1)
+                    if(isSelectedPauseMenu == 1)
                     {
                         circle2.setPosition(Vector2f(pauseExit.getPosition().x - 50, pauseExit.getPosition().y + 30));
-                        counter4++;
-                        counter5 = 12;
+                        isSelectedPauseMenu++;
+                        counterPauseScreen = 12;
                     }
                     else
                     {
                         circle2.setPosition(Vector2f(pauseResume.getPosition().x - 50, pauseResume.getPosition().y + 30));
-                        counter4--;
-                        counter5 = 12;
+                        isSelectedPauseMenu--;
+                        counterPauseScreen = 12;
                     }
                 }
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    if(counter4 == 1)
+                    if(isSelectedPauseMenu == 1)
                     {
                         pauseScreen = false;
                         gamePause = false;
@@ -452,11 +459,13 @@ int main()
                         state = Tstate::menu;
                         circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
                         circle2.setPosition(Vector2f(pauseResume.getPosition().x - 50, pauseResume.getPosition().y + 30));
-                        counter = 1; counter2 = 0;
                         pauseScreen = false;
+                        gamePause = true;
+                        counterMatchStart = 200;
+                        counterMatchWin = 0;
                     }
                 }
-                if(counter5 > 0)counter5--;
+                if(counterPauseScreen > 0)counterPauseScreen--;
 
                 window.draw(pauseSubtitleT);
                 window.draw(pauseExit);
@@ -465,7 +474,7 @@ int main()
                 window.draw(pauseResumeT);
                 window.draw(circle2);
             }
-            if(counter3 > 0)counter3--;
+            if(counterPause > 0)counterPause--;
         }
         ///******************************************state GAME
 
@@ -473,6 +482,9 @@ int main()
         ///state SINGLE OR 2 PLAYERS******************************
         else if(state == Tstate::singleOr2players)
         {
+            static int isSelected{1};
+            static int counter{20};
+
             window.draw(sinOr2pSingle);
             window.draw(sinOr2pMulti);
             window.draw(sinOr2pExit);
@@ -483,52 +495,52 @@ int main()
             window.draw(sinOr2pSingleSprite);
             window.draw(sinOr2pMultiSprite);
 
-            if(counter == 1) sinOr2pSingle.setOutlineThickness(5);
+            if(isSelected == 1) sinOr2pSingle.setOutlineThickness(5);
             else sinOr2pSingle.setOutlineThickness(0);
-            if(counter == 2) sinOr2pMulti.setOutlineThickness(5);
+            if(isSelected == 2) sinOr2pMulti.setOutlineThickness(5);
             else sinOr2pMulti.setOutlineThickness(0);
-            if(counter == 3) sinOr2pExit.setOutlineThickness(5);
+            if(isSelected == 3) sinOr2pExit.setOutlineThickness(5);
             else sinOr2pExit.setOutlineThickness(0);
 
-            if(!counter2)
+            if(!counter)
             {
-                if(counter == 1)
+                if(isSelected == 1)
                 {
-                    if(Keyboard::isKeyPressed(Keyboard::Right)){counter = 2; counter2 = 12;}
-                    if(Keyboard::isKeyPressed(Keyboard::Down)){counter = 3; counter2 = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Right)){isSelected = 2; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Down)){isSelected = 3; counter = 12;}
                 }
-                if(counter == 2)
+                if(isSelected == 2)
                 {
-                    if(Keyboard::isKeyPressed(Keyboard::Left)){counter = 1; counter2 = 12;}
-                    if(Keyboard::isKeyPressed(Keyboard::Down)){counter = 3; counter2 = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Left)){isSelected = 1; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Down)){isSelected = 3; counter = 12;}
                 }
-                if(counter == 3)
+                if(isSelected == 3)
                 {
-                    if(Keyboard::isKeyPressed(Keyboard::Up)){counter = 1; counter2 = 12;}
-                    if(Keyboard::isKeyPressed(Keyboard::Left)){counter = 1; counter2 = 12;}
-                    if(Keyboard::isKeyPressed(Keyboard::Right)){counter = 2; counter2 = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Up)){isSelected = 1; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Left)){isSelected = 1; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Right)){isSelected = 2; counter = 12;}
                 }
 
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    if(counter == 1)
+                    if(isSelected == 1)
                     {
                         state = Tstate::characterChoise;
-                        counter5 = 60;
+                        oneOr2Players = 1;
                     }
-                    else if(counter == 2)
+                    else if(isSelected == 2)
                     {
                         state = Tstate::characterChoise;
-                        counter5 = 60;
+                        oneOr2Players = 2;
                     }
-                    else if(counter == 3)
+                    else if(isSelected == 3)
                     {
                         state = Tstate::menu;
                         circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
-                        counter = 1; counter2 = 0;
+                        counter = 20;
                     }
                 }
-            }else counter2--;
+            }else counter--;
         }
         ///******************************state SINGLE OR 2 PLAYERS
 
@@ -536,26 +548,31 @@ int main()
         ///state CHARACTER CHOISE******************************
         else if(state == Tstate::characterChoise)
         {
+            static int counter{30};
+
             changeCharacterStatistics(1,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
 
-            if(Keyboard::isKeyPressed(Keyboard::Escape)&&(!counter5))
+            if(Keyboard::isKeyPressed(Keyboard::Escape)&&(!counter))
             {
                 state = Tstate::singleOr2players;
-                counter = 1;
+                ::counter = 1;
+                counter = 30;
                 changeCharacterStatistics(2,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
             }
-            else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter5))
+            else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
             {
-                state = Tstate::controlsTip;
-                counter = 150; counter3 = 0; counter4 = 1; counter2 = 15;
+                if(oneOr2Players == 2)state = Tstate::controlsTip;
+                else state = Tstate::dificultyLevel;
+                ::counter = 150; counter3 = 0; counter4 = 1; counter2 = 15;
+                counter = 30;
 
                 ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
                 ball.setVelocity(10);
@@ -585,7 +602,7 @@ int main()
                     matchStartT.setString("Player 2 will begin");
                 }
             }
-            if(counter5) counter5--;
+            if(counter) counter--;
 
             window.draw(characterChoiseT);
             window.draw(characterChoiseT2);
@@ -644,14 +661,11 @@ int main()
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
                     //state = Tstate::game;
-                    state = Tstate::dificultyLevel;
-                    counter = 20;
+                    state = Tstate::game;
                 }
                 else if(Keyboard::isKeyPressed(Keyboard::Escape))
                 {
                     state = Tstate::characterChoise;
-                    counter5 = 60;
-                    counter = 20;
                 }
             }
             else counter--;
@@ -696,7 +710,7 @@ int main()
             {
                 if(whereIsOutline == 4)
                 {
-                    state = Tstate::controlsTip;
+                    state = Tstate::characterChoise;
                     counter = 0;
                     counterEnter = 25;
                     whereIsOutline = 1;
@@ -724,13 +738,13 @@ int main()
     return 0;
 }
 
-void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2)
+void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2,int& counterMatchStart, int& counterMatchWin)
 {
     if((ball.circle.getPosition().x < - 45)||(ball.circle.getPosition().x > 1345))///if someone got point
     {
         paddle1.rect.setPosition(Vector2f(10,400));
         paddle2.rect.setPosition(Vector2f(1265,400));
-        counter =  100;
+        counterMatchStart =  100;
         gamePause = true;
     }
     if(ball.circle.getPosition().x < - 45)///if player 2 got point
@@ -748,7 +762,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
             s2.setString("4");
             t2.setString("Player 2 won");
             gamePause = true;
-            counter2 = 230;
+            counterMatchWin = 230;
         }
     }
     else if(ball.circle.getPosition().x > 1345)///if player 1 got point
@@ -766,7 +780,7 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
             s1.setString("4");
             t2.setString("Player 1 won");
             gamePause = true;
-            counter2 = 230;
+            counterMatchWin = 230;
         }
     }
 }
