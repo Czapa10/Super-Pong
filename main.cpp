@@ -21,6 +21,7 @@ int counter, counter2, counter3, counter4, counter5, counterIncreaseBox1, counte
 int score1, score2;
 int oneOr2Players;
 bool gamePause{true};
+int paddle1Control, paddle2Control;
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
 Texture frogT2; Texture gatoT2; Texture kuszczakT2; Texture gandalfT2; Texture lennonT2; Texture blackManT2; Texture alienT2;
 Character player1;
@@ -382,8 +383,8 @@ int main()
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(),
                             player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower());
             ball.updateMovement();
-            paddle1.movement(2);
-            paddle2.movement(1);
+            paddle1.movement(paddle1Control);
+            paddle2.movement(paddle2Control);
             }
 
             window.draw(ball.circle);
@@ -527,11 +528,17 @@ int main()
                     {
                         state = Tstate::characterChoise;
                         oneOr2Players = 1;
+                        characterChoiseT2.setString("computer");
+                        characterChoiseT3.setString("player");
                     }
                     else if(isSelected == 2)
                     {
                         state = Tstate::characterChoise;
                         oneOr2Players = 2;
+                        paddle1Control = 2;
+                        paddle2Control = 1;
+                        characterChoiseT2.setString("player 1");
+                        characterChoiseT3.setString("player 2");
                     }
                     else if(isSelected == 3)
                     {

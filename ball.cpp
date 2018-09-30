@@ -3,6 +3,8 @@
 #include "ball.h"
 using namespace sf;
 
+extern int random(int x);
+
 Ball::Ball()
 {
     circle.setRadius(20);
@@ -35,15 +37,17 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
     if((((circle.getPosition().x <= 35)&&(circle.getPosition().x >= 10))&&((circle.getPosition().y >= paddle1PosY - 40)&&(circle.getPosition().y <= paddle1PosY + paddle1DownBound)))
     ||(((circle.getPosition().x >= 1225)&&(circle.getPosition().x <= 1250))&&((circle.getPosition().y >= paddle2PosY - 40)&&(circle.getPosition().y <= paddle2PosY + paddle2DownBound))))
     {
+        float randomNumber = random(10)/4;
+
         if(LeftRightVelocity < 0)
         {
-            LeftRightVelocity -= powerP1/10;
-            UpDownVelocity -= powerP1/10;
+            LeftRightVelocity -= (powerP1/10);
+            UpDownVelocity -= (powerP1/10 + randomNumber);
         }
         else
         {
-            LeftRightVelocity += powerP2/10;
-            UpDownVelocity -= powerP2/10;
+            LeftRightVelocity += (powerP2/10);
+            UpDownVelocity -= (powerP2/10 + randomNumber);
         }
         LeftRightVelocity = - LeftRightVelocity;
     }
