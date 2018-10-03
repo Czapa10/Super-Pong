@@ -13,6 +13,8 @@ using namespace std;
 
 enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel};
 Tstate state{Tstate::logos};
+enum class Tlevel{easy,medium,hard};
+Tlevel difficultyLevel{Tlevel::easy};
 
 constexpr int WINDOW_WIDTH{1300};
 constexpr int WINDOW_HEIGTH{900};
@@ -72,6 +74,7 @@ int main()
     Text matchStartT("Player 1 will begin",font2,50); matchStartT.setPosition(Vector2f(WINDOW_WIDTH/2 - 200, WINDOW_HEIGTH/2 + 15));
     Text matchWinT("player 1 won",font2,150); matchWinT.setFillColor(Color::Yellow); matchWinT.setPosition(Vector2f(WINDOW_WIDTH/2 - 400, WINDOW_HEIGTH/2 - 90));
     Ball ball;
+    Ball AIball;
     Paddle paddle1;
     Paddle paddle2(1265); paddle2.rect.setFillColor(Color::Cyan);
     Lane lane;
@@ -410,6 +413,37 @@ int main()
             window.draw(gameIncreaseR);
             window.draw(gameSpeedR);
 
+            if(Keyboard::isKeyPressed(Keyboard::Home))
+            {
+                window.draw(AIball.circle);
+            }
+
+            if(oneOr2Players == 1)
+            {
+                static bool isPositionCorect{false};
+
+                int AIballSpeed, AIlevel;
+                if(difficultyLevel == Tlevel::easy){AIballSpeed = 2; AIlevel = 1;}
+                else if(difficultyLevel == Tlevel::medium){AIballSpeed = 3; AIlevel = 2;}
+                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 4; AIlevel = 3;}
+
+                paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight());
+
+                if((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 900))
+                {
+                    if(!isPositionCorect)
+                    {
+                        AIball.circle.setPosition(Vector2f(ball.circle.getPosition().x, ball.circle.getPosition().y));
+                        AIball.setVelocityUpDown(ball.getVelocityUpDown() * AIballSpeed);
+                        AIball.setVelocityLeftRight(ball.getVelocityLeftRight() * AIballSpeed);
+                        isPositionCorect = true;
+                    }
+                    AIball.collision();
+                    AIball.updateMovement();
+                }
+                else isPositionCorect = false;
+            }
+
             if((counterMatchStart > 0)&&(score1 < 4)&&(score2 < 4))
             {
                 window.draw(matchStartT);
@@ -528,6 +562,8 @@ int main()
                     {
                         state = Tstate::characterChoise;
                         oneOr2Players = 1;
+                        paddle1Control = 0;
+                        paddle2Control = 1;
                         characterChoiseT2.setString("computer");
                         characterChoiseT3.setString("player");
                     }
@@ -546,6 +582,8 @@ int main()
                         circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
                         counter = 20;
                     }
+                    isSelected = 1;
+                    counter = 20;
                 }
             }else counter--;
         }
@@ -715,13 +753,29 @@ int main()
 
             if((!counterEnter)&&(Keyboard::isKeyPressed(Keyboard::Enter)))
             {
-                if(whereIsOutline == 4)
+                if(whereIsOutline == 1)
+                {
+                    state = Tstate::game;
+                    difficultyLevel = Tlevel::easy;
+                }
+                else if(whereIsOutline == 2)
+                {
+                    state = Tstate::game;
+                    difficultyLevel = Tlevel::medium;
+                }
+                else if(whereIsOutline == 3)
+                {
+                    state = Tstate::game;
+                    difficultyLevel = Tlevel::hard;
+                }
+                else if(whereIsOutline == 4)
                 {
                     state = Tstate::characterChoise;
-                    counter = 0;
-                    counterEnter = 25;
-                    whereIsOutline = 1;
                 }
+
+                counter = 0;
+                counterEnter = 25;
+                whereIsOutline = 1;
             }
             if(counterEnter > 0) counterEnter--;
 

@@ -17,6 +17,7 @@ Paddle::Paddle(int X,int Y,int vel)
 
 void Paddle::movement(int control)///1-arrows | 2-awsd| 3-mouse
 {
+    ///player control
     if(control == 1)///arrows
     {
         if((Keyboard::isKeyPressed(Keyboard::Up))&&(rect.getPosition().y > 100))UP
@@ -26,6 +27,16 @@ void Paddle::movement(int control)///1-arrows | 2-awsd| 3-mouse
     {
         if((Keyboard::isKeyPressed(Keyboard::W))&&(rect.getPosition().y > 100))UP
         else if((Keyboard::isKeyPressed(Keyboard::S))&&(rect.getPosition().y + 100 < WINDOW_HEIGTH))DOWN
+    }
+}
+
+bool Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight)
+{
+    ///EASY
+    if((difficultyLevel == 1)&&(velocityLeftRight < 0)&&(AIballXposition < 900))
+    {
+        if(AIballYposition < rect.getPosition().y + 50)UP
+        else DOWN
     }
 }
 

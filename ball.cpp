@@ -53,6 +53,20 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
     }
 }
 
+void Ball::collision()
+{
+    ///up & down colision
+    if((circle.getPosition().y < 100)||(circle.getPosition().y + 40 > WINDOW_HEIGTH))
+    {
+        UpDownVelocity = -UpDownVelocity;
+    }
+    ///left wall colision
+    if(circle.getPosition().x < 15)
+    {
+        setVelocity(0);
+    }
+}
+
 void Ball::setVelocity(float vel)
 {
     LeftRightVelocity = vel;
