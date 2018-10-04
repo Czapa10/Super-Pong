@@ -19,7 +19,7 @@ Tlevel difficultyLevel{Tlevel::easy};
 constexpr int WINDOW_WIDTH{1300};
 constexpr int WINDOW_HEIGTH{900};
 
-int counter, counter2, counter3, counter4, counter5, counterIncreaseBox1, counterSpeedUpBox1, counterIncreaseBox2, counterSpeedUpBox2;
+int counter ,counterIncreaseBox1, counterSpeedUpBox1, counterIncreaseBox2, counterSpeedUpBox2;
 int score1, score2;
 int oneOr2Players;
 bool gamePause{true};
@@ -307,8 +307,7 @@ int main()
                     pauseScreen = true;
                     gamePause = true;
                     counterPause = 12;
-                    counter4 = 1;
-                    counter5 = 0;
+                    isSelectedPauseMenu = 1;
                 }
                 if((counterPause == 0)&&(pauseScreen))
                 {
@@ -604,7 +603,7 @@ int main()
             if(Keyboard::isKeyPressed(Keyboard::Escape)&&(!counter))
             {
                 state = Tstate::singleOr2players;
-                ::counter = 1;
+                //::counter = 1;
                 counter = 30;
                 changeCharacterStatistics(2,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
@@ -616,7 +615,7 @@ int main()
             {
                 if(oneOr2Players == 2)state = Tstate::controlsTip;
                 else state = Tstate::dificultyLevel;
-                ::counter = 150; counter3 = 0; counter4 = 1; counter2 = 15;
+                //::counter = 150; counter3 = 0; counter4 = 1; counter2 = 15;
                 counter = 30;
 
                 ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
