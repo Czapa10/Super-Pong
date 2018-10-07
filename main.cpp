@@ -12,7 +12,7 @@
 using namespace sf;
 using namespace std;
 
-enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel};
+enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel,settings};
 Tstate state{Tstate::logos};
 enum class Tlevel{easy,medium,hard};
 Tlevel difficultyLevel{Tlevel::easy};
@@ -24,7 +24,9 @@ int counter ,counterIncreaseBox1, counterSpeedUpBox1, counterIncreaseBox2, count
 int score1, score2;
 int oneOr2Players;
 bool gamePause{true};
-int paddle1Control, paddle2Control;
+bool showControlTip{true};
+int lengthOfTheMatch{4};
+int paddle1Control, paddle2Control, controlIn1player;
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
 Texture frogT2; Texture gatoT2; Texture kuszczakT2; Texture gandalfT2; Texture lennonT2; Texture blackManT2; Texture alienT2;
 Character player1;
@@ -178,6 +180,11 @@ int main()
     RectangleShape dificultyLevelMediumR(BUTTON_SIZE); dificultyLevelMediumR.setPosition(Vector2f(button2.getPosition().x, button2.getPosition().y)); dificultyLevelMediumR.setFillColor(Color(236,111,9));
     RectangleShape dificultyLevelHardR(BUTTON_SIZE); dificultyLevelHardR.setPosition(Vector2f(button3.getPosition().x, button3.getPosition().y)); dificultyLevelHardR.setFillColor(Color(206,17,17));
     RectangleShape dificultyLevelExitR(BUTTON_SIZE); dificultyLevelExitR.setPosition(Vector2f(button4.getPosition().x, button4.getPosition().y)); dificultyLevelExitR.setFillColor(Color::Red);
+    Text settingsT("SETTINGS",font1,100); settingsT.setPosition(Vector2f(300,5));
+    Text settingsTExit("ESC - exit",font2,70); settingsTExit.setPosition(Vector2f(450,800)); settingsTExit.setFillColor(Color::Red);
+    Text settingsTControlsInOnePlayer("Control in one player match:  Arrows",font2,60); settingsTControlsInOnePlayer.setPosition(Vector2f(50,200)); settingsTControlsInOnePlayer.setFillColor(Color::Yellow);
+    Text settingsTShowControlsTip("Show control tip before match:  Yes",font2,60); settingsTShowControlsTip.setPosition(Vector2f(50,300));
+    Text settingsTLengthOfMatch("Length Of Match:  4",font2,60); settingsTLengthOfMatch.setPosition(Vector2f(50,400));
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
@@ -261,13 +268,19 @@ int main()
                     if(isSelected == 2)
                     {
                         state = Tstate::singleOr2players;
-                        isSelected = 1;
-                        counter = 20;
+                    }
+                    else if(isSelected == 3)
+                    {
+                        state = Tstate::settings;
                     }
                     else if(isSelected == 4)
                     {
                         window.close();
                     }
+
+                    isSelected = 1;
+                    counter = 20;
+                    circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
                 }
             }else counter--;
         }
@@ -429,7 +442,7 @@ int main()
                 else if(difficultyLevel == Tlevel::medium){AIballSpeed = 3; AIlevel = 2;}
                 else if(difficultyLevel == Tlevel::hard){AIballSpeed = 3.5; AIlevel = 3.5;}
 
-                paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight());
+                if(!gamePause) paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight());
 
                 if((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 1250))
                 {
@@ -440,8 +453,11 @@ int main()
                         AIball.setVelocityLeftRight(ball.getVelocityLeftRight() * AIballSpeed);
                         isPositionCorect = true;
                     }
-                    AIball.collision();
-                    AIball.updateMovement();
+                    if(!gamePause)
+                    {
+                        AIball.collision();
+                        AIball.updateMovement();
+                    }
                 }
                 else isPositionCorect = false;
             }
@@ -794,6 +810,105 @@ int main()
             window.draw(dificultyLevelExitT);
         }
         ///******************************state DIFFICULTY LEVEL
+
+
+        ///state SETTINGS******************************
+        else if(state == Tstate::settings)
+        {
+            static int isSelected{1};
+            static int is1Selected{1};
+            static int is2Selected{1};
+            static int is3Selected{4};
+            static int counter{12};
+
+            if(Keyboard::isKeyPressed(Keyboard::Escape))
+            {
+                state = Tstate::menu;
+                isSelected = 1;
+            }
+
+            if(!counter)
+            {
+                if(Keyboard::isKeyPressed(Keyboard::Down))
+                {
+                    if(isSelected == 3) isSelected = 1;
+                    else isSelected++;
+                    counter = 12;
+                }
+                else if(Keyboard::isKeyPressed(Keyboard::Up))
+                {
+                    if(isSelected == 1) isSelected = 3;
+                    else isSelected--;
+                    counter = 12;
+                }
+
+                else if(Keyboard::isKeyPressed(Keyboard::Enter))
+                {
+                    if(isSelected == 1)
+                    {
+                        if(is1Selected == 1){is1Selected++; controlIn1player = false;}
+                        else{is1Selected--; controlIn1player = true;}
+                        counter = 12;
+                    }
+                    if(isSelected == 2)
+                    {
+                        if(is2Selected == 1){is2Selected++; showControlTip = false;}
+                        else{is2Selected--; showControlTip = true;}
+                        counter = 12;
+                    }
+                    if(isSelected == 3)
+                    {
+                        if(is3Selected == 10)is3Selected = 1;
+                        else is3Selected++;
+                        lengthOfTheMatch = is3Selected;
+                        counter = 12;
+                    }
+                }
+            }
+            else counter--;
+
+            if(counter == 12)
+            {
+                if(isSelected == 1) settingsTControlsInOnePlayer.setFillColor(Color::Yellow);
+                else settingsTControlsInOnePlayer.setFillColor(Color::White);
+                if(isSelected == 2)settingsTShowControlsTip.setFillColor(Color::Yellow);
+                else settingsTShowControlsTip.setFillColor(Color::White);
+                if(isSelected == 3)settingsTLengthOfMatch.setFillColor(Color::Yellow);
+                else settingsTLengthOfMatch.setFillColor(Color::White);
+
+                if(isSelected == 1)
+                {
+                    if(is1Selected == 1) settingsTControlsInOnePlayer.setString("Control in one player match:  Arrows");
+                    else settingsTControlsInOnePlayer.setString("Control in one player match:  AWSD");
+                }
+                else if(isSelected == 2)
+                {
+                    if(is2Selected == 1) settingsTShowControlsTip.setString("Show control tip before match:  Yes");
+                    else settingsTShowControlsTip.setString("Show control tip before match:  No");
+                }
+                else if(isSelected == 3)
+                {
+                    if(is3Selected == 1) settingsTLengthOfMatch.setString("Length Of Match:  1");
+                    else if(is3Selected == 2) settingsTLengthOfMatch.setString("Length Of Match:  2");
+                    else if(is3Selected == 3) settingsTLengthOfMatch.setString("Length Of Match:  3");
+                    else if(is3Selected == 4) settingsTLengthOfMatch.setString("Length Of Match:  4");
+                    else if(is3Selected == 5) settingsTLengthOfMatch.setString("Length Of Match:  5");
+                    else if(is3Selected == 6) settingsTLengthOfMatch.setString("Length Of Match:  6");
+                    else if(is3Selected == 7) settingsTLengthOfMatch.setString("Length Of Match:  7");
+                    else if(is3Selected == 8) settingsTLengthOfMatch.setString("Length Of Match:  8");
+                    else if(is3Selected == 9) settingsTLengthOfMatch.setString("Length Of Match:  9");
+                    else if(is3Selected == 10) settingsTLengthOfMatch.setString("Length Of Match:  10");
+                }
+            }
+
+            window.draw(settingsT);
+            window.draw(settingsTExit);
+            window.draw(settingsTControlsInOnePlayer);
+            window.draw(settingsTShowControlsTip);
+            window.draw(settingsTLengthOfMatch);
+
+        }
+        ///******************************state SETTINGS
 
         window.display();
     }
