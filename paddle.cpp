@@ -32,11 +32,10 @@ void Paddle::movement(int control)///1-arrows | 2-awsd| 3-mouse
 
 bool Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight)
 {
-    ///EASY
-    if((difficultyLevel == 1)&&(velocityLeftRight < 0)&&(AIballXposition < 900))
+    if((velocityLeftRight < 0)&&(AIballXposition < 900))
     {
-        if(AIballYposition < rect.getPosition().y + 50)UP
-        else DOWN
+        if(AIballYposition < rect.getPosition().y + 30)UP
+        if(AIballYposition > rect.getPosition().y + 30)DOWN
     }
 }
 

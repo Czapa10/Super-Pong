@@ -7,6 +7,7 @@
 #include "lane.h"
 #include "character.h"
 
+#define VERSION "ALPHA 0.3"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
@@ -64,6 +65,7 @@ int main()
     Text menuT3("Single match",font2,50); menuT3.setPosition(Vector2f(button2.getPosition().x + 5,button2.getPosition().y + 10));
     Text menuT4("Settings",font2,50); menuT4.setPosition(Vector2f(button3.getPosition().x + 60,button3.getPosition().y + 10));
     Text menuT5("Exit",font2,50); menuT5.setPosition(Vector2f(button4.getPosition().x + 95,button4.getPosition().y + 10));
+    Text versionT(VERSION,font2,40); versionT.setPosition(Vector2f(10,830));
     RectangleShape pauseResume(BUTTON_SIZE); pauseResume.setPosition(Vector2f(500,350)); pauseResume.setOutlineThickness(5); pauseResume.setFillColor(Color(45,188,14));
     RectangleShape pauseExit(BUTTON_SIZE); pauseExit.setPosition(Vector2f(500,550)); pauseExit.setOutlineThickness(5); pauseExit.setFillColor(Color::Red);
     Text pauseResumeT("RESUME",font2,70); pauseResumeT.setPosition(Vector2f(532,360));
@@ -224,6 +226,7 @@ int main()
             window.draw(menuT4);
             window.draw(menuT5);
             window.draw(circle);
+            window.draw(versionT);
 
             if(!counter)
             {
@@ -421,14 +424,14 @@ int main()
             {
                 static bool isPositionCorect{false};
 
-                int AIballSpeed, AIlevel;
+                int AIlevel; float AIballSpeed;
                 if(difficultyLevel == Tlevel::easy){AIballSpeed = 2; AIlevel = 1;}
                 else if(difficultyLevel == Tlevel::medium){AIballSpeed = 3; AIlevel = 2;}
-                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 4; AIlevel = 3;}
+                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 3.5; AIlevel = 3.5;}
 
                 paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight());
 
-                if((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 900))
+                if((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 1250))
                 {
                     if(!isPositionCorect)
                     {
@@ -603,7 +606,6 @@ int main()
             if(Keyboard::isKeyPressed(Keyboard::Escape)&&(!counter))
             {
                 state = Tstate::singleOr2players;
-                //::counter = 1;
                 counter = 30;
                 changeCharacterStatistics(2,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
@@ -615,7 +617,6 @@ int main()
             {
                 if(oneOr2Players == 2)state = Tstate::controlsTip;
                 else state = Tstate::dificultyLevel;
-                //::counter = 150; counter3 = 0; counter4 = 1; counter2 = 15;
                 counter = 30;
 
                 ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
@@ -638,12 +639,14 @@ int main()
                 if(random(2))//1
                 {
                     ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
-                    matchStartT.setString("Player 1 will begin");
+                    if(oneOr2Players == 2)matchStartT.setString("Player 1 will begin");
+                    else matchStartT.setString("Computer will begin");
                 }
                 else//2
                 {
                     ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
-                    matchStartT.setString("Player 2 will begin");
+                    if(oneOr2Players == 2)matchStartT.setString("Player 2 will begin");
+                    else matchStartT.setString("Player will begin");
                 }
             }
             if(counter) counter--;
@@ -810,7 +813,8 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     if(ball.circle.getPosition().x < - 45)///if player 2 got point
     {
         ball.circle.setPosition(Vector2f(45, WINDOW_HEIGTH/2 - 20));
-        t1.setString("Player 1 will serw");
+        if(oneOr2Players == 2)t1.setString("Player 1 will serw");
+        else t1.setString("Computer will serw");
         ball.setVelocity(10);
 
         score1++;
@@ -820,7 +824,8 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
         else if(score1 == 4)
         {
             s2.setString("4");
-            t2.setString("Player 2 won");
+            if(oneOr2Players == 2)t2.setString("Player 2 won");
+            else t2.setString("Player won");
             gamePause = true;
             counterMatchWin = 230;
         }
@@ -828,7 +833,8 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     else if(ball.circle.getPosition().x > 1345)///if player 1 got point
     {
         ball.circle.setPosition(Vector2f(1215, WINDOW_HEIGTH/2 - 20));
-        t1.setString("Player 2 will serw");
+        if(oneOr2Players == 2)t1.setString("Player 2 will serw");
+        else t1.setString("Player will serw");
         ball.setVelocity(-10);
 
         score2++;
@@ -838,7 +844,8 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
         else if(score2 == 4)
         {
             s1.setString("4");
-            t2.setString("Player 1 won");
+            if(oneOr2Players == 2)t2.setString("Player 1 won");
+            else t2.setString("Computer won");
             gamePause = true;
             counterMatchWin = 230;
         }
@@ -895,7 +902,7 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
         else if(player1 == 5) {spriteInGame1.setTexture(blackManT2); ::player1.setStatistics(black.getSpeed(),black.getPower(),black.getSpeedUp(),black.getSpeedUpContainer(),black.getIncrease(),black.getIncreaseContainer());}
         else if(player1 == 6) {spriteInGame1.setTexture(alienT2); ::player1.setStatistics(alien.getSpeed(),alien.getPower(),alien.getSpeedUp(),alien.getSpeedUpContainer(),alien.getIncrease(),alien.getIncreaseContainer());}
 
-        if(player2 == 0) {spriteInGame1.setTexture(frogT2); ::player2.setStatistics(frog.getSpeed(),frog.getPower(),frog.getSpeedUp(),frog.getSpeedUpContainer(),frog.getIncrease(),frog.getIncreaseContainer());}
+        if(player2 == 0) {spriteInGame2.setTexture(frogT2); ::player2.setStatistics(frog.getSpeed(),frog.getPower(),frog.getSpeedUp(),frog.getSpeedUpContainer(),frog.getIncrease(),frog.getIncreaseContainer());}
         else if(player2 == 1) {spriteInGame2.setTexture(gatoT2); ::player2.setStatistics(gato.getSpeed(),gato.getPower(),gato.getSpeedUp(),gato.getSpeedUpContainer(),gato.getIncrease(),gato.getIncreaseContainer());}
         else if(player2 == 2) {spriteInGame2.setTexture(kuszczakT2); ::player2.setStatistics(kuszczak.getSpeed(),kuszczak.getPower(),kuszczak.getSpeedUp(),kuszczak.getSpeedUpContainer(),kuszczak.getIncrease(),kuszczak.getIncreaseContainer());}
         else if(player2 == 3) {spriteInGame2.setTexture(gandalfT2); ::player2.setStatistics(gandalf.getSpeed(),gandalf.getPower(),gandalf.getSpeedUp(),gandalf.getSpeedUpContainer(),gandalf.getIncrease(),gandalf.getIncreaseContainer());}
@@ -909,7 +916,7 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
         ///player 1
         if(Keyboard::isKeyPressed(Keyboard::A))
         {
-            if(!player1) player1 = 6;
+            if(player1 == 0) player1 = 6;
             else player1--;
             wasPressed = true;
             counter1 = 12;
@@ -929,7 +936,7 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
         ///player 2
         if(Keyboard::isKeyPressed(Keyboard::Left))
         {
-            if(!player2) player2 = 6;
+            if(player2 == 0) player2 = 6;
             else player2--;
             wasPressed = true;
             counter2 = 12;
