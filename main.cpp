@@ -26,7 +26,7 @@ int oneOr2Players;
 bool gamePause{true};
 bool showControlTip{true};
 int lengthOfTheMatch{4};
-int paddle1Control, paddle2Control, controlIn1player;
+int paddle1Control, paddle2Control, controlIn1player{1};
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
 Texture frogT2; Texture gatoT2; Texture kuszczakT2; Texture gandalfT2; Texture lennonT2; Texture blackManT2; Texture alienT2;
 Character player1;
@@ -462,7 +462,7 @@ int main()
                 else isPositionCorect = false;
             }
 
-            if((counterMatchStart > 0)&&(score1 < 4)&&(score2 < 4))
+            if((counterMatchStart > 0)&&(score1 < lengthOfTheMatch)&&(score2 < lengthOfTheMatch))
             {
                 window.draw(matchStartT);
                 counterMatchStart--;
@@ -580,10 +580,20 @@ int main()
                     {
                         state = Tstate::characterChoise;
                         oneOr2Players = 1;
-                        paddle1Control = 0;
-                        paddle2Control = 1;
-                        characterChoiseT2.setString("computer");
-                        characterChoiseT3.setString("player");
+                        if(controlIn1player == 2)
+                        {
+                            paddle1Control = 2;
+                            paddle2Control = 0;
+                            characterChoiseT2.setString("player");
+                            characterChoiseT3.setString("computer");
+                        }
+                        else
+                        {
+                            paddle1Control = 0;
+                            paddle2Control = 1;
+                            characterChoiseT2.setString("computer");
+                            characterChoiseT3.setString("player");
+                        }
                     }
                     else if(isSelected == 2)
                     {
@@ -631,7 +641,8 @@ int main()
             }
             else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
             {
-                if(oneOr2Players == 2)state = Tstate::controlsTip;
+                if((oneOr2Players == 2)&&(showControlTip))state = Tstate::controlsTip;
+                else if((oneOr2Players == 2)&&(!showControlTip))state = Tstate::game;
                 else state = Tstate::dificultyLevel;
                 counter = 30;
 
@@ -723,12 +734,13 @@ int main()
             {
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    //state = Tstate::game;
                     state = Tstate::game;
+                    counter = 20;
                 }
                 else if(Keyboard::isKeyPressed(Keyboard::Escape))
                 {
                     state = Tstate::characterChoise;
+                    counter = 20;
                 }
             }
             else counter--;
@@ -825,6 +837,7 @@ int main()
             {
                 state = Tstate::menu;
                 isSelected = 1;
+                counter = 12;
             }
 
             if(!counter)
@@ -846,8 +859,8 @@ int main()
                 {
                     if(isSelected == 1)
                     {
-                        if(is1Selected == 1){is1Selected++; controlIn1player = false;}
-                        else{is1Selected--; controlIn1player = true;}
+                        if(is1Selected == 1){is1Selected++; controlIn1player = 1;}
+                        else{is1Selected--; controlIn1player = 2;}
                         counter = 12;
                     }
                     if(isSelected == 2)
@@ -933,12 +946,10 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
         ball.setVelocity(10);
 
         score1++;
-        if(score1 == 1) s2.setString("1");
-        else if(score1 == 2) s2.setString("2");
-        else if(score1 == 3) s2.setString("3");
-        else if(score1 == 4)
+        s2.setString(floatTostring(score1));
+
+        if(score1 == lengthOfTheMatch)
         {
-            s2.setString("4");
             if(oneOr2Players == 2)t2.setString("Player 2 won");
             else t2.setString("Player won");
             gamePause = true;
@@ -953,12 +964,10 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
         ball.setVelocity(-10);
 
         score2++;
-        if(score2 == 1) s1.setString("1");
-        else if(score2 == 2) s1.setString("2");
-        else if(score2 == 3) s1.setString("3");
-        else if(score2 == 4)
+        s1.setString(floatTostring(score2));
+
+        if(score2 == lengthOfTheMatch)
         {
-            s1.setString("4");
             if(oneOr2Players == 2)t2.setString("Player 1 won");
             else t2.setString("Computer won");
             gamePause = true;
@@ -1255,7 +1264,8 @@ void setPaddlesSpeed(Character p2,Paddle& pad2)
 
 string floatTostring(float x)
 {
-    if(x == 2)return "2";
+    if(x == 1)return "1";
+    else if(x == 2)return "2";
     else if(x == 3)return "3";
     else if(x == 4)return "4";
     else if(x == 5)return "5";
