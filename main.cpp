@@ -334,7 +334,7 @@ int main()
             }
 
             ///player 1 speed & increase
-            if((Keyboard::isKeyPressed(Keyboard::A))&&(!gamePause))
+            if((Keyboard::isKeyPressed(Keyboard::A)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 2)))
             {
                 bool x;
                 if(!counterSpeedUpBox1)
@@ -349,7 +349,7 @@ int main()
             }
             else setPaddlesSpeed(paddle1,player1);
 
-            if((Keyboard::isKeyPressed(Keyboard::D))&&(!gamePause))
+            if((Keyboard::isKeyPressed(Keyboard::D)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 2)))
             {
                 bool x;
                 if(!counterIncreaseBox1)
@@ -365,7 +365,7 @@ int main()
             else paddle1.increaseStop(1,player1.getIncrease());
 
             ///player 2 speed & increase
-            if((Keyboard::isKeyPressed(Keyboard::Left))&&(!gamePause))
+            if((Keyboard::isKeyPressed(Keyboard::Left)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 1)))
             {
                 bool x;
                 if(!counterSpeedUpBox2)
@@ -380,7 +380,7 @@ int main()
             }
             else setPaddlesSpeed(player2,paddle2);
 
-            if((Keyboard::isKeyPressed(Keyboard::Right))&&(!gamePause))
+            if((Keyboard::isKeyPressed(Keyboard::Right)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 1)))
             {
                 bool x;
                 if(!counterIncreaseBox2)
@@ -579,6 +579,7 @@ int main()
                     if(isSelected == 1)
                     {
                         state = Tstate::characterChoise;
+                        oneOr2Players = 1;
 
                         if(controlIn1player == 2)
                         {
@@ -922,10 +923,6 @@ int main()
 
         }
         ///******************************state SETTINGS
-
-        std::cout<<"paddle1Control: "<<paddle1Control<<" |paddle2Control: "<<paddle2Control<<" |controlIn1player: "<<controlIn1player<<std::endl;
-
-
         window.display();
     }
 
