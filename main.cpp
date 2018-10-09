@@ -579,7 +579,7 @@ int main()
                     if(isSelected == 1)
                     {
                         state = Tstate::characterChoise;
-                        oneOr2Players = 1;
+
                         if(controlIn1player == 2)
                         {
                             paddle1Control = 2;
@@ -859,8 +859,8 @@ int main()
                 {
                     if(isSelected == 1)
                     {
-                        if(is1Selected == 1){is1Selected++; controlIn1player = 1;}
-                        else{is1Selected--; controlIn1player = 2;}
+                        if(is1Selected == 1){is1Selected++; controlIn1player = 2;}
+                        else{is1Selected--; controlIn1player = 1;}
                         counter = 12;
                     }
                     if(isSelected == 2)
@@ -922,6 +922,9 @@ int main()
 
         }
         ///******************************state SETTINGS
+
+        std::cout<<"paddle1Control: "<<paddle1Control<<" |paddle2Control: "<<paddle2Control<<" |controlIn1player: "<<controlIn1player<<std::endl;
+
 
         window.display();
     }

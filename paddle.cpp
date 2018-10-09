@@ -15,7 +15,7 @@ Paddle::Paddle(int X,int Y,int vel)
     rect.setPosition(Vector2f(X,Y));
 }
 
-void Paddle::movement(int control)///1-arrows | 2-awsd
+void Paddle::movement(int control)///1-arrows | 2-awsd | 0-AI
 {
     ///player control
     if(control == 1)///arrows

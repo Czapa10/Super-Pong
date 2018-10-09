@@ -8,7 +8,7 @@ class Paddle : public Entity
     bool isIncreasing{false};
 public:
     Paddle(int=10, int=400, int=6);
-    void movement(int = 1);
+    void movement(int control);
     bool AI(int difficultyLevel,int ballYposition,int ballXposition,float velocityLeftRight);
     void setVelocity(int);
     void increase(int padNumber,float increaseSize);
