@@ -161,6 +161,8 @@ int main()
     Text controlsTipRightArrowT("INCREASE",font2,65); controlsTipRightArrowT.setPosition(Vector2f(905,410));
     Text controlsTipUpArrowT("MOVE UP",font2,65); controlsTipUpArrowT.setPosition(Vector2f(915,510));
     Text controlsTipDownArrowT("MOVE DOWN",font2,65); controlsTipDownArrowT.setPosition(Vector2f(815,610));
+    RectangleShape blackBox(Vector2f(450,900)); blackBox.setFillColor(Color::Black);
+    RectangleShape blackBox2(Vector2f(200,200)); blackBox2.setFillColor(Color::Black);
     Texture awsd; awsd.loadFromFile("resources/awsd.png");
     Texture arrows; arrows.loadFromFile("resources/KeyboardArrows.jpg");
     Sprite A(awsd); A.setTextureRect(IntRect(7,96,94,89)); A.setPosition(Vector2f(10,300));
@@ -405,7 +407,6 @@ int main()
             paddle2.movement(paddle2Control);
             }
 
-            window.draw(ball.circle);
             window.draw(paddle1.rect);
             window.draw(paddle2.rect);
             window.draw(lane.rect);
@@ -427,6 +428,7 @@ int main()
             window.draw(gameIncreaseL);
             window.draw(gameIncreaseR);
             window.draw(gameSpeedR);
+            window.draw(ball.circle);
 
             if(Keyboard::isKeyPressed(Keyboard::Home))
             {
@@ -644,7 +646,13 @@ int main()
             {
                 if((oneOr2Players == 2)&&(showControlTip))state = Tstate::controlsTip;
                 else if((oneOr2Players == 2)&&(!showControlTip))state = Tstate::game;
-                else state = Tstate::dificultyLevel;
+                else if((oneOr2Players == 1)&&(!showControlTip))state = Tstate::dificultyLevel;
+                else if((oneOr2Players == 1)&&(showControlTip))
+                {
+                    state = Tstate::controlsTip;
+                    if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
+                    else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
+                }
                 counter = 30;
 
                 ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
@@ -722,20 +730,21 @@ int main()
             static int counter{20};
 
             window.draw(controlsTipT);
-            window.draw(controlsTipPlayT);
-            window.draw(controlsTipBackT);
-            window.draw(controlsTipPlayer1T);
-            window.draw(controlsTipPlayer2T);
+            if(oneOr2Players == 2){window.draw(controlsTipPlayer1T); window.draw(controlsTipPlayer2T);}
             window.draw(controlsTipAT); window.draw(controlsTipWT); window.draw(controlsTipST); window.draw(controlsTipDT);
             window.draw(controlsTipLeftArrowT); window.draw(controlsTipRightArrowT); window.draw(controlsTipDownArrowT); window.draw(controlsTipUpArrowT);
             window.draw(A); window.draw(W); window.draw(S); window.draw(D);
             window.draw(rightArrow); window.draw(leftArrow); window.draw(upArrow); window.draw(downArrow);
+            if(oneOr2Players == 1){window.draw(blackBox); window.draw(blackBox2);}
+            window.draw(controlsTipPlayT);
+            window.draw(controlsTipBackT);
 
             if(!counter)
             {
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    state = Tstate::game;
+                    if(oneOr2Players == 2)state = Tstate::game;
+                    else state = Tstate::dificultyLevel;
                     counter = 20;
                 }
                 else if(Keyboard::isKeyPressed(Keyboard::Escape))

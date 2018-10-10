@@ -56,7 +56,7 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
 void Ball::collision()
 {
     ///up & down colision
-    if((circle.getPosition().y < 100)||(circle.getPosition().y + 40 > WINDOW_HEIGTH))
+    if((circle.getPosition().y <= 110)||(circle.getPosition().y + 40 >= WINDOW_HEIGTH))
     {
         UpDownVelocity = -UpDownVelocity;
     }
