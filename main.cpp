@@ -7,7 +7,7 @@
 #include "lane.h"
 #include "character.h"
 
-#define VERSION "ALPHA 0.3"
+#define VERSION "ALPHA 0.4"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
@@ -401,7 +401,7 @@ int main()
             {
             getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2,counterMatchStart,counterMatchWin);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(),
-                            player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower());
+                           player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower());
             ball.updateMovement();
             paddle1.movement(paddle1Control);
             paddle2.movement(paddle2Control);
