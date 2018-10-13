@@ -53,7 +53,7 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
     }
 }
 
-void Ball::collision()
+void Ball::collision(int controlIn1player)
 {
     ///up & down colision
     if((circle.getPosition().y <= 100)||(circle.getPosition().y + 40 >= WINDOW_HEIGTH))
@@ -61,7 +61,12 @@ void Ball::collision()
         UpDownVelocity = -UpDownVelocity;
     }
     ///left wall colision
-    if(circle.getPosition().x < 15)
+    if((circle.getPosition().x < 15)&&(controlIn1player == 1))
+    {
+        setVelocity(0);
+    }
+    ///right wall colision
+    else if((circle.getPosition().x > 1285)&&(controlIn1player == 2))
     {
         setVelocity(0);
     }

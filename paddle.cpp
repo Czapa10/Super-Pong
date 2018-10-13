@@ -30,9 +30,17 @@ void Paddle::movement(int control)///1-arrows | 2-awsd | 0-AI
     }
 }
 
-bool Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight)
+bool Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight,int controlIn1player)
 {
+    ///control in 1 player = 1 (arrows)
     if((velocityLeftRight < 0)&&(AIballXposition < 900))
+    {
+        if(AIballYposition < rect.getPosition().y + 30)UP
+        if(AIballYposition > rect.getPosition().y + 30)DOWN
+    }
+
+    ///control in 1 player = 2 (AWSD)
+    if((velocityLeftRight > 0)&&(AIballXposition > 400))
     {
         if(AIballYposition < rect.getPosition().y + 30)UP
         if(AIballYposition > rect.getPosition().y + 30)DOWN

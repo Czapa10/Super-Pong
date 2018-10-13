@@ -444,9 +444,14 @@ int main()
                 else if(difficultyLevel == Tlevel::medium){AIballSpeed = 3; AIlevel = 2;}
                 else if(difficultyLevel == Tlevel::hard){AIballSpeed = 3.5; AIlevel = 3.5;}
 
-                if(!gamePause) paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight());
+                if(!gamePause)
+                {
+                    if(controlIn1player == 1)paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), controlIn1player);
+                    if(controlIn1player == 2)paddle2.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), controlIn1player);
+                }
 
-                if((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 1250))
+                if(((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 1250)&&(controlIn1player == 1))||
+                   ((ball.getVelocityLeftRight() > 0)&&(ball.circle.getPosition().x > 50)&&(controlIn1player == 2)))
                 {
                     if(!isPositionCorect)
                     {
@@ -457,7 +462,7 @@ int main()
                     }
                     if(!gamePause)
                     {
-                        AIball.collision();
+                        AIball.collision(controlIn1player);
                         AIball.updateMovement();
                     }
                 }
@@ -676,13 +681,21 @@ int main()
                 {
                     ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
                     if(oneOr2Players == 2)matchStartT.setString("Player 1 will begin");
-                    else matchStartT.setString("Computer will begin");
+                    else
+                    {
+                        if(controlIn1player == 1)matchStartT.setString("Computer will begin");
+                        else matchStartT.setString("Player will begin");
+                    }
                 }
                 else//2
                 {
                     ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
                     if(oneOr2Players == 2)matchStartT.setString("Player 2 will begin");
-                    else matchStartT.setString("Player will begin");
+                    else
+                    {
+                        if(controlIn1player == 1)matchStartT.setString("Player will begin");
+                        else matchStartT.setString("Computer will begin");
+                    }
                 }
             }
             if(counter) counter--;
@@ -951,7 +964,11 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     {
         ball.circle.setPosition(Vector2f(45, WINDOW_HEIGTH/2 - 20));
         if(oneOr2Players == 2)t1.setString("Player 1 will serw");
-        else t1.setString("Computer will serw");
+        else
+        {
+            if(controlIn1player == 1)t1.setString("Computer will serw");
+            else t1.setString("Player will serw");
+        }
         ball.setVelocity(10);
 
         score1++;
@@ -960,7 +977,11 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
         if(score1 == lengthOfTheMatch)
         {
             if(oneOr2Players == 2)t2.setString("Player 2 won");
-            else t2.setString("Player won");
+            else
+            {
+                if(controlIn1player == 1)t2.setString("Player won");
+                else t2.setString("Computer won");
+            }
             gamePause = true;
             counterMatchWin = 230;
         }
@@ -969,7 +990,11 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
     {
         ball.circle.setPosition(Vector2f(1215, WINDOW_HEIGTH/2 - 20));
         if(oneOr2Players == 2)t1.setString("Player 2 will serw");
-        else t1.setString("Player will serw");
+        else
+        {
+            if(controlIn1player == 1)t1.setString("Player will serw");
+            else t1.setString("Computer will serw");
+        }
         ball.setVelocity(-10);
 
         score2++;
@@ -978,7 +1003,11 @@ void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Pad
         if(score2 == lengthOfTheMatch)
         {
             if(oneOr2Players == 2)t2.setString("Player 1 won");
-            else t2.setString("Computer won");
+            else
+            {
+                if(controlIn1player == 1)t2.setString("Computer won");
+                else t2.setString("Player won");
+            }
             gamePause = true;
             counterMatchWin = 230;
         }
