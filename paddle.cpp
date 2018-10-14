@@ -30,41 +30,55 @@ void Paddle::movement(int control)///1-arrows | 2-awsd | 0-AI
     }
 }
 
-int Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight,int ballXposition,int controlIn1player,
-                bool strategyIsSpeedUp, int AIpaddleSpeed, bool thereIsSpeedUp, bool thereIsIncrease)
+int Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight,int ballYposition,int ballXposition,int controlIn1player,
+                bool strategyIsSpeedUp, int AIpaddleSpeed, bool thereIsSpeedUp, bool thereIsIncrease, int speedUp)
 {
     ///control in 1 player = 1 (arrows)
-    if((velocityLeftRight < 0)&&(AIballXposition < 900))
+    if((velocityLeftRight < 0)&&(AIballXposition < 900)&&(ballXposition > 200))
     {
         if(AIballYposition < rect.getPosition().y + 30)UP
         if(AIballYposition > rect.getPosition().y + 30)DOWN
     }
+    else if((velocityLeftRight < 0)&&(ballXposition < 200))
+    {
+        if(ballYposition < rect.getPosition().y + 30)UP
+        if(ballYposition > rect.getPosition().y + 30)DOWN
+    }
 
     ///control in 1 player = 2 (AWSD)
-    if((velocityLeftRight > 0)&&(AIballXposition > 400))
+    else if((velocityLeftRight > 0)&&(AIballXposition > 400)&&(ballXposition < 1100))
     {
         if(AIballYposition < rect.getPosition().y + 30)UP
         if(AIballYposition > rect.getPosition().y + 30)DOWN
+    }
+    else if((velocityLeftRight > 0)&&(ballXposition > 1100))
+    {
+        if(ballYposition < rect.getPosition().y + 30)UP
+        if(ballYposition > rect.getPosition().y + 30)DOWN
     }
 
     ///speed up & increase
     if(difficultyLevel > 1)
     {
         int distanceBetweenPaddleAndAIBall;
-        if(rect.getPosition().y > AIballYposition) distanceBetweenPaddleAndAIBall = rect.getPosition().y - AIballYposition;
-        else if(rect.getPosition().y + 100 < AIballYposition) distanceBetweenPaddleAndAIBall = AIballYposition - rect.getPosition().y;
+        if(rect.getPosition().y > AIballYposition) distanceBetweenPaddleAndAIBall = rect.getPosition().y - AIballYposition - 40;
+        else if(rect.getPosition().y + 100 < AIballYposition) distanceBetweenPaddleAndAIBall = AIballYposition - rect.getPosition().y - 100;
         else distanceBetweenPaddleAndAIBall = 0;
 
         int paddleRunTime;
+        int paddleRunTimePlus;
         paddleRunTime = distanceBetweenPaddleAndAIBall / velocity;
+        if(difficultyLevel == 3) paddleRunTimePlus = distanceBetweenPaddleAndAIBall / velocity + speedUp;
 
         int ballRunTime;
         if(controlIn1player == 1) ballRunTime = (ballXposition - 10) / velocityLeftRight;
         else ballRunTime = (1265 - ballXposition) / velocityLeftRight;
 
-        if((((velocityLeftRight < 0)&&(AIballXposition < 100)&&(controlIn1player == 1))||((velocityLeftRight > 0)&&(AIballXposition > 1200)&&(controlIn1player == 2)))&&(paddleRunTime > ballRunTime))
+        if((((velocityLeftRight < 0)&&(AIballXposition < 20)&&(controlIn1player == 1))||((velocityLeftRight > 0)&&(AIballXposition > 1280)&&(controlIn1player == 2)))&&(paddleRunTime > ballRunTime))
         {
             if(AIballYposition == rect.getPosition().y + 30) return 0;
+
+            if((difficultyLevel == 3)&&(paddleRunTimePlus > ballRunTime)) return 3;
 
             if(strategyIsSpeedUp)
             {

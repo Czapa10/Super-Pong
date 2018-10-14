@@ -356,7 +356,7 @@ int main()
             }
 
             ///player 1 speed & increase
-            if((((controlIn1player == 1)&&(BonusAI == 1)) || ((Keyboard::isKeyPressed(Keyboard::A))&&((oneOr2Players == 2)||(controlIn1player == 2)))) && (!gamePause))
+            if((((controlIn1player == 1)&&((BonusAI == 1)||(BonusAI == 3))) || ((Keyboard::isKeyPressed(Keyboard::A))&&((oneOr2Players == 2)||(controlIn1player == 2)))) && (!gamePause))
             {
                 bool x;
                 if(!counterSpeedUpBox1)
@@ -372,7 +372,7 @@ int main()
             }
             else setPaddlesSpeed(paddle1,player1);
 
-            if((((controlIn1player == 1)&&(BonusAI == 2)) || ((Keyboard::isKeyPressed(Keyboard::D))&&((oneOr2Players == 2)||(controlIn1player == 2)))) && (!gamePause))
+            if((((controlIn1player == 1)&&((BonusAI == 2)||(BonusAI == 3))) || ((Keyboard::isKeyPressed(Keyboard::D))&&((oneOr2Players == 2)||(controlIn1player == 2)))) && (!gamePause))
             {
                 bool x;
                 if(!counterIncreaseBox1)
@@ -389,7 +389,7 @@ int main()
             else paddle1.increaseStop(1,player1.getIncrease());
 
             ///player 2 speed & increase
-            if((((controlIn1player == 2)&&(BonusAI == 1)) || ((Keyboard::isKeyPressed(Keyboard::Left))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
+            if((((controlIn1player == 2)&&((BonusAI == 1)||(BonusAI == 3))) || ((Keyboard::isKeyPressed(Keyboard::Left))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
             {
                 bool x;
                 if(!counterSpeedUpBox2)
@@ -405,7 +405,7 @@ int main()
             }
             else setPaddlesSpeed(player2,paddle2);
 
-            if((((controlIn1player == 2)&&(BonusAI == 2)) || ((Keyboard::isKeyPressed(Keyboard::Right))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
+            if((((controlIn1player == 2)&&((BonusAI == 2)||(BonusAI == 3))) || ((Keyboard::isKeyPressed(Keyboard::Right))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
             {
                 bool x;
                 if(!counterIncreaseBox2)
@@ -470,8 +470,8 @@ int main()
 
                 if(!gamePause)
                 {
-                    if(controlIn1player == 1) BonusAI = paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player1.getSpeed(), thereIsSpeedUp, thereIsIncrease);
-                    if(controlIn1player == 2) BonusAI = paddle2.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player2.getSpeed(), thereIsSpeedUp, thereIsIncrease);
+                    if(controlIn1player == 1) BonusAI = paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().y, ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player1.getSpeed(), thereIsSpeedUp, thereIsIncrease, player1.getSpeedUp());
+                    if(controlIn1player == 2) BonusAI = paddle2.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().y, ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player2.getSpeed(), thereIsSpeedUp, thereIsIncrease, player2.getSpeedUp());
                 }
 
                 if(((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 1250)&&(controlIn1player == 1))||
