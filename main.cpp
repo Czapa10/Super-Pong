@@ -299,6 +299,26 @@ int main()
             static int counterPauseScreen{};
             static int isSelectedPauseMenu{1};
 
+            static bool strategyIsMade{false};
+            static bool strategyIsSpeedUp; //true - speed up; false - increase;
+            static int BonusAI; //0-nothing; 1-speed up; 2-increase; 3-both;
+            static bool thereIsSpeedUp;
+            static bool thereIsIncrease;
+
+            if(strategyIsMade == false)
+            {
+                if(controlIn1player == 1)
+                {
+                    if(player1.getSpeedUp() >= player1.getIncrease()) strategyIsSpeedUp = true;
+                    else strategyIsSpeedUp = false;
+                }
+                else
+                {
+                    if(player2.getSpeedUp() >= player2.getIncrease()) strategyIsSpeedUp = true;
+                    else strategyIsSpeedUp = false;
+                }
+            }
+
             if(Keyboard::isKeyPressed(Keyboard::Space))
             {
                 window.setFramerateLimit(5);
@@ -336,12 +356,13 @@ int main()
             }
 
             ///player 1 speed & increase
-            if((Keyboard::isKeyPressed(Keyboard::A)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 2)))
+            if((((controlIn1player == 1)&&(BonusAI == 1)) || ((Keyboard::isKeyPressed(Keyboard::A))&&((oneOr2Players == 2)||(controlIn1player == 2)))) && (!gamePause))
             {
                 bool x;
                 if(!counterSpeedUpBox1)
                 {
                     x = lane.minusSpeed1(1);
+                    thereIsSpeedUp = x;
                     counterSpeedUpBox1 = player1.getSpeedUpContainer();
                 }
                 else counterSpeedUpBox1--;
@@ -351,12 +372,13 @@ int main()
             }
             else setPaddlesSpeed(paddle1,player1);
 
-            if((Keyboard::isKeyPressed(Keyboard::D)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 2)))
+            if((((controlIn1player == 1)&&(BonusAI == 2)) || ((Keyboard::isKeyPressed(Keyboard::D))&&((oneOr2Players == 2)||(controlIn1player == 2)))) && (!gamePause))
             {
                 bool x;
                 if(!counterIncreaseBox1)
                 {
                     x = lane.minusIncrease1(1);
+                    thereIsIncrease = x;
                     counterIncreaseBox1 = player1.getIncreaseContainer();
                 }
                 else counterIncreaseBox1--;
@@ -367,12 +389,13 @@ int main()
             else paddle1.increaseStop(1,player1.getIncrease());
 
             ///player 2 speed & increase
-            if((Keyboard::isKeyPressed(Keyboard::Left)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 1)))
+            if((((controlIn1player == 2)&&(BonusAI == 1)) || ((Keyboard::isKeyPressed(Keyboard::Left))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
             {
                 bool x;
                 if(!counterSpeedUpBox2)
                 {
                     x = lane.minusSpeed2(1);
+                    thereIsSpeedUp = x;
                     counterSpeedUpBox2 = player2.getSpeedUpContainer();
                 }
                 else counterSpeedUpBox2--;
@@ -382,12 +405,13 @@ int main()
             }
             else setPaddlesSpeed(player2,paddle2);
 
-            if((Keyboard::isKeyPressed(Keyboard::Right)) && (!gamePause) && ((oneOr2Players == 2)||(controlIn1player == 1)))
+            if((((controlIn1player == 2)&&(BonusAI == 2)) || ((Keyboard::isKeyPressed(Keyboard::Right))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
             {
                 bool x;
                 if(!counterIncreaseBox2)
                 {
                     x = lane.minusIncrease2(1);
+                    thereIsIncrease = x;
                     counterIncreaseBox2 = player2.getIncreaseContainer();
                 }
                 else counterIncreaseBox2--;
@@ -446,8 +470,8 @@ int main()
 
                 if(!gamePause)
                 {
-                    if(controlIn1player == 1)paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), controlIn1player);
-                    if(controlIn1player == 2)paddle2.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), controlIn1player);
+                    if(controlIn1player == 1) BonusAI = paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player1.getSpeed(), thereIsSpeedUp, thereIsIncrease);
+                    if(controlIn1player == 2) BonusAI = paddle2.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player2.getSpeed(), thereIsSpeedUp, thereIsIncrease);
                 }
 
                 if(((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 1250)&&(controlIn1player == 1))||

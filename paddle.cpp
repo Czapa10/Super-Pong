@@ -30,7 +30,8 @@ void Paddle::movement(int control)///1-arrows | 2-awsd | 0-AI
     }
 }
 
-bool Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight,int controlIn1player)
+int Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight,int ballXposition,int controlIn1player,
+                bool strategyIsSpeedUp, int AIpaddleSpeed, bool thereIsSpeedUp, bool thereIsIncrease)
 {
     ///control in 1 player = 1 (arrows)
     if((velocityLeftRight < 0)&&(AIballXposition < 900))
@@ -45,6 +46,43 @@ bool Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,floa
         if(AIballYposition < rect.getPosition().y + 30)UP
         if(AIballYposition > rect.getPosition().y + 30)DOWN
     }
+
+    ///speed up & increase
+    if(difficultyLevel > 1)
+    {
+        int distanceBetweenPaddleAndAIBall;
+        if(rect.getPosition().y > AIballYposition) distanceBetweenPaddleAndAIBall = rect.getPosition().y - AIballYposition;
+        else if(rect.getPosition().y + 100 < AIballYposition) distanceBetweenPaddleAndAIBall = AIballYposition - rect.getPosition().y;
+        else distanceBetweenPaddleAndAIBall = 0;
+
+        int paddleRunTime;
+        paddleRunTime = distanceBetweenPaddleAndAIBall / velocity;
+
+        int ballRunTime;
+        if(controlIn1player == 1) ballRunTime = (ballXposition - 10) / velocityLeftRight;
+        else ballRunTime = (1265 - ballXposition) / velocityLeftRight;
+
+        if((((velocityLeftRight < 0)&&(AIballXposition < 100)&&(controlIn1player == 1))||((velocityLeftRight > 0)&&(AIballXposition > 1200)&&(controlIn1player == 2)))&&(paddleRunTime > ballRunTime))
+        {
+            if(AIballYposition == rect.getPosition().y + 30) return 0;
+
+            if(strategyIsSpeedUp)
+            {
+                if(thereIsSpeedUp) return 1;
+                else if(thereIsIncrease) return 2;
+                else return 0;
+            }
+            else
+            {
+                if(thereIsIncrease) return 2;
+                else if(thereIsSpeedUp) return 1;
+                else return 0;
+            }
+
+        }
+        else return 0;
+    }
+    else return 0;
 }
 
 void Paddle::setVelocity(int x)

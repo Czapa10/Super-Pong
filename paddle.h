@@ -9,7 +9,7 @@ class Paddle : public Entity
 public:
     Paddle(int=10, int=400, int=6);
     void movement(int control);
-    bool AI(int difficultyLevel,int ballYposition,int ballXposition,float velocityLeftRight,int controlIn1player);
+    int AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight,int ballXposition,int controlIn1player, bool strategyIsSpeedUp, int AIpaddleSpeed, bool thereIsSpeedUp, bool thereIsIncrease);
     void setVelocity(int);
     void increase(int padNumber,float increaseSize);
     void increaseStop(int padNumber,float increaseSize);

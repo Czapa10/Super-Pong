@@ -66,7 +66,7 @@ void Ball::collision(int controlIn1player)
         setVelocity(0);
     }
     ///right wall colision
-    else if((circle.getPosition().x > 1285)&&(controlIn1player == 2))
+    else if((circle.getPosition().x > 1245)&&(controlIn1player == 2))
     {
         setVelocity(0);
     }
