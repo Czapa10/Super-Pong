@@ -18,7 +18,7 @@ void Ball::updateMovement()
 }
 
 void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool isIncreasing2,
-                     float increase1, float increase2, float powerP1, float powerP2)
+                     float increase1, float increase2, float powerP1, float powerP2, int godMode)
 {
     ///up & down colision
     if((circle.getPosition().y <= 100)||(circle.getPosition().y + 40 >= WINDOW_HEIGTH))
@@ -39,16 +39,32 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
     {
         float randomNumber = random(10)/4;
 
-        if(LeftRightVelocity < 0)
+        if((LeftRightVelocity < 0)&&(godMode != 2))
         {
             LeftRightVelocity -= (powerP1/10);
             UpDownVelocity -= (powerP1/10 + randomNumber);
+            LeftRightVelocity = - LeftRightVelocity;
         }
-        else
+        else if(godMode != 1)
         {
             LeftRightVelocity += (powerP2/10);
             UpDownVelocity -= (powerP2/10 + randomNumber);
+            LeftRightVelocity = - LeftRightVelocity;
         }
+    }
+
+    if((godMode == 1)&&(circle.getPosition().x > 1225))
+    {
+        float randomNumber = random(10)/4;
+        LeftRightVelocity += (powerP2/10);
+        UpDownVelocity -= (powerP2/10 + randomNumber);
+        LeftRightVelocity = - LeftRightVelocity;
+    }
+    if((godMode == 2)&&(circle.getPosition().x < 35))
+    {
+        float randomNumber = random(10)/4;
+        LeftRightVelocity -= (powerP1/10);
+        UpDownVelocity -= (powerP1/10 + randomNumber);
         LeftRightVelocity = - LeftRightVelocity;
     }
 }

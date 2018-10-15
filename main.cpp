@@ -25,6 +25,7 @@ int score1, score2;
 int oneOr2Players;
 bool gamePause{true};
 bool showControlTip{true};
+bool developerMode{false};
 int lengthOfTheMatch{4};
 int paddle1Control, paddle2Control, controlIn1player{1};
 Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
@@ -187,6 +188,8 @@ int main()
     Text settingsTControlsInOnePlayer("Control in one player match:  Arrows",font2,60); settingsTControlsInOnePlayer.setPosition(Vector2f(50,200)); settingsTControlsInOnePlayer.setFillColor(Color::Yellow);
     Text settingsTShowControlsTip("Show control tip before match:  Yes",font2,60); settingsTShowControlsTip.setPosition(Vector2f(50,300));
     Text settingsTLengthOfMatch("Length Of Match:  4",font2,60); settingsTLengthOfMatch.setPosition(Vector2f(50,400));
+    Text devT("Dev Mode",font2,20); devT.setPosition(Vector2f(5,870));
+    Text devTgodMode("God Mode",font2,20); devTgodMode.setPosition(Vector2f(180,870));
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
@@ -298,12 +301,15 @@ int main()
             static int counterMatchWin{};
             static int counterPauseScreen{};
             static int isSelectedPauseMenu{1};
+            static int godMode{};
 
             static bool strategyIsMade{false};
             static bool strategyIsSpeedUp; //true - speed up; false - increase;
             static int BonusAI; //0-nothing; 1-speed up; 2-increase; 3-both;
             static bool thereIsSpeedUp;
             static bool thereIsIncrease;
+
+            if(!developerMode) window.setFramerateLimit(60);
 
             if(strategyIsMade == false)
             {
@@ -317,24 +323,6 @@ int main()
                     if(player2.getSpeedUp() >= player2.getIncrease()) strategyIsSpeedUp = true;
                     else strategyIsSpeedUp = false;
                 }
-            }
-
-            if(Keyboard::isKeyPressed(Keyboard::Space))
-            {
-                window.setFramerateLimit(5);
-            }
-            else window.setFramerateLimit(60);
-
-            if(Keyboard::isKeyPressed(Keyboard::R))
-            {
-                ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
-                ball.setVelocity(10);
-                paddle1.rect.setPosition(Vector2f(10,400));
-                paddle2.rect.setPosition(Vector2f(1265,400));
-                score1 = 0; score2 = 0;
-                score1T.setString("0"); score2T.setString("0");
-                lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
-                lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
             }
 
             ///pause screen
@@ -425,7 +413,7 @@ int main()
             {
             getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2,counterMatchStart,counterMatchWin);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(),
-                           player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower());
+                           player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower(), godMode);
             ball.updateMovement();
             paddle1.movement(paddle1Control);
             paddle2.movement(paddle2Control);
@@ -453,11 +441,6 @@ int main()
             window.draw(gameIncreaseR);
             window.draw(gameSpeedR);
             window.draw(ball.circle);
-
-            if(Keyboard::isKeyPressed(Keyboard::Home))
-            {
-                window.draw(AIball.circle);
-            }
 
             if(oneOr2Players == 1)
             {
@@ -512,6 +495,8 @@ int main()
                     gamePause = true;
                     counterMatchStart = 200;
                     counterMatchWin = 0;
+                    developerMode = false;
+                    godMode = 0;
                 }
             }
             if(pauseScreen)
@@ -547,6 +532,9 @@ int main()
                         gamePause = true;
                         counterMatchStart = 200;
                         counterMatchWin = 0;
+                        window.setFramerateLimit(100);
+                        developerMode = false;
+                        godMode = 0;
                     }
                 }
                 if(counterPauseScreen > 0)counterPauseScreen--;
@@ -559,6 +547,67 @@ int main()
                 window.draw(circle2);
             }
             if(counterPause > 0)counterPause--;
+
+
+            if(developerMode)
+            {
+                static int counter{0};
+                static bool slowMotion{false};
+                static bool visibleAIball{false};
+
+                if((Keyboard::isKeyPressed(Keyboard::LControl))&&(Keyboard::isKeyPressed(Keyboard::D))){developerMode = false; godMode = 0;}
+
+                if((Keyboard::isKeyPressed(Keyboard::Space))&&(!counter))
+                {
+                    if(!slowMotion){window.setFramerateLimit(5); slowMotion = true;}
+                    else{window.setFramerateLimit(60); slowMotion = false;}
+
+                    if(slowMotion) counter = 1;
+                    else counter = 12;
+                }
+
+                if((Keyboard::isKeyPressed(Keyboard::Home))&&(!counter))
+                {
+                    if(visibleAIball) visibleAIball = false;
+                    else visibleAIball = true;
+
+                    if(slowMotion) counter = 1;
+                    else counter = 12;
+                }
+
+                if((Keyboard::isKeyPressed(Keyboard::G))&&(!counter)&&(oneOr2Players == 1))
+                {
+                    if(godMode) godMode = 0;
+                    else
+                    {
+                        if(controlIn1player == 1)godMode = 1;
+                        else godMode = 2;
+                    }
+
+                    if(slowMotion) counter = 1;
+                    else counter = 12;
+                }
+
+                if(visibleAIball) window.draw(AIball.circle);
+
+                if(Keyboard::isKeyPressed(Keyboard::R))
+                {
+                    ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
+                    ball.setVelocity(10);
+                    paddle1.rect.setPosition(Vector2f(10,400));
+                    paddle2.rect.setPosition(Vector2f(1265,400));
+                    score1 = 0; score2 = 0;
+                    score1T.setString("0"); score2T.setString("0");
+                    lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                    lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
+                }
+
+                if(counter)counter--;
+
+                window.draw(devT);
+                if(godMode) window.draw(devTgodMode);
+            }
+            else if((Keyboard::isKeyPressed(Keyboard::LControl))&&(Keyboard::isKeyPressed(Keyboard::D))) developerMode = true;
         }
         ///******************************************state GAME
 
