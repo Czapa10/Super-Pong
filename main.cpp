@@ -442,6 +442,8 @@ int main()
             window.draw(gameSpeedR);
             window.draw(ball.circle);
 
+            ball.showVel();
+
             if(oneOr2Players == 1)
             {
                 static bool isPositionCorect{false};

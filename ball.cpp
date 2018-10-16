@@ -34,20 +34,20 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
     if(isIncreasing2) paddle2DownBound = 100 + (increase2 * 20);
     else paddle2DownBound = 100;
 
-    if((((circle.getPosition().x <= 35)&&(circle.getPosition().x >= 10))&&((circle.getPosition().y >= paddle1PosY - 40)&&(circle.getPosition().y <= paddle1PosY + paddle1DownBound)))
-    ||(((circle.getPosition().x >= 1225)&&(circle.getPosition().x <= 1250))&&((circle.getPosition().y >= paddle2PosY - 40)&&(circle.getPosition().y <= paddle2PosY + paddle2DownBound))))
+    if((((circle.getPosition().x <= 35)&&(circle.getPosition().x >= -15))&&((circle.getPosition().y >= paddle1PosY - 40)&&(circle.getPosition().y <= paddle1PosY + paddle1DownBound)))
+    ||(((circle.getPosition().x >= 1225)&&(circle.getPosition().x <= 1275))&&((circle.getPosition().y >= paddle2PosY - 40)&&(circle.getPosition().y <= paddle2PosY + paddle2DownBound))))
     {
         float randomNumber = random(10)/4;
 
         if((LeftRightVelocity < 0)&&(godMode != 2))
         {
-            LeftRightVelocity -= (powerP1/10);
+            if(LeftRightVelocity < 49) LeftRightVelocity -= (powerP1/10);
             UpDownVelocity -= (powerP1/10 + randomNumber);
             LeftRightVelocity = - LeftRightVelocity;
         }
         else if(godMode != 1)
         {
-            LeftRightVelocity += (powerP2/10);
+            if(LeftRightVelocity < 49) LeftRightVelocity += (powerP2/10);
             UpDownVelocity -= (powerP2/10 + randomNumber);
             LeftRightVelocity = - LeftRightVelocity;
         }
@@ -92,4 +92,9 @@ void Ball::setVelocity(float vel)
 {
     LeftRightVelocity = vel;
     UpDownVelocity = vel;
+}
+
+void Ball::showVel()
+{
+    std::cout<<LeftRightVelocity<<std::endl;
 }
