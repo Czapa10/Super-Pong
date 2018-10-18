@@ -17,5 +17,4 @@ public:
     float getVelocityUpDown(){return UpDownVelocity;};
     void setVelocityLeftRight(float x){LeftRightVelocity = x;};
     void setVelocityUpDown(float x){UpDownVelocity = x;};
-    void showVel();
 };

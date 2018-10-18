@@ -93,8 +93,3 @@ void Ball::setVelocity(float vel)
     LeftRightVelocity = vel;
     UpDownVelocity = vel;
 }
-
-void Ball::showVel()
-{
-    std::cout<<LeftRightVelocity<<std::endl;
-}

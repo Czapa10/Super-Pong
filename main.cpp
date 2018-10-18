@@ -12,7 +12,7 @@
 using namespace sf;
 using namespace std;
 
-enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel,settings};
+enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel,settings,LnewGameOrcontinue,LcharacterChoise};
 Tstate state{Tstate::logos};
 enum class Tlevel{easy,medium,hard};
 Tlevel difficultyLevel{Tlevel::easy};
@@ -51,9 +51,9 @@ int main()
     srand(time(NULL));
 
     ///loading*************************************************
-    Font font1; font1.loadFromFile("resources/font1.ttf");
-    Font font2; font2.loadFromFile("resources/font2.ttf");
-    Texture MaineCoonLogoT; MaineCoonLogoT.loadFromFile("resources/MaineCoonLogo.jpg");
+    Font font1; font1.loadFromFile("font1.ttf");
+    Font font2; font2.loadFromFile("font2.ttf");
+    Texture MaineCoonLogoT; MaineCoonLogoT.loadFromFile("MaineCoonLogo.jpg");
     Sprite MaineCoonLogoS(MaineCoonLogoT); MaineCoonLogoS.setScale(Vector2f(1.6,1.6));
     RectangleShape button1(BUTTON_SIZE);button1.setPosition(WINDOW_WIDTH/2 - 150, 250);
     button1.setFillColor(Color(12,147,4)); button1.setOutlineThickness(5);
@@ -64,7 +64,7 @@ int main()
     RectangleShape button4(BUTTON_SIZE);button4.setPosition(WINDOW_WIDTH/2 - 150, 700);
     button4.setFillColor(Color(213,2,34)); button4.setOutlineThickness(5);
     Text menuT1("SUPER PONG",font1,160); menuT1.setPosition(Vector2f(20, 20));
-    Text menuT2("Career",font2,50); menuT2.setPosition(Vector2f(button1.getPosition().x + 55,button1.getPosition().y + 10));
+    Text menuT2("League",font2,50); menuT2.setPosition(Vector2f(button1.getPosition().x + 55,button1.getPosition().y + 10));
     Text menuT3("Single match",font2,50); menuT3.setPosition(Vector2f(button2.getPosition().x + 5,button2.getPosition().y + 10));
     Text menuT4("Settings",font2,50); menuT4.setPosition(Vector2f(button3.getPosition().x + 60,button3.getPosition().y + 10));
     Text menuT5("Exit",font2,50); menuT5.setPosition(Vector2f(button4.getPosition().x + 95,button4.getPosition().y + 10));
@@ -96,27 +96,27 @@ int main()
     Text sinOr2pSingleT("1 player",font2,80); sinOr2pSingleT.setPosition(Vector2f(230,215));
     Text sinOr2pMultiT("2 players",font2,80); sinOr2pMultiT.setPosition(Vector2f(730,215));
     Text sinOr2pExitT("exit",font2,120); sinOr2pExitT.setPosition(Vector2f(530,660));
-    Texture sinOr2pSingleTexture; sinOr2pSingleTexture.loadFromFile("resources/1player.png");
+    Texture sinOr2pSingleTexture; sinOr2pSingleTexture.loadFromFile("1player.png");
     Sprite sinOr2pSingleSprite(sinOr2pSingleTexture); sinOr2pSingleSprite.setScale(Vector2f(0.5,0.5)); sinOr2pSingleSprite.setPosition(Vector2f(300,345));
-    Texture sinOr2pMultiTexture; sinOr2pMultiTexture.loadFromFile("resources/2player.png");
+    Texture sinOr2pMultiTexture; sinOr2pMultiTexture.loadFromFile("2player.png");
     Sprite sinOr2pMultiSprite(sinOr2pMultiTexture); sinOr2pMultiSprite.setScale(Vector2f(0.5,0.5)); sinOr2pMultiSprite.setPosition(Vector2f(700,345));
     Text characterChoiseT("CHARACTER CHOISE",font1,90); characterChoiseT.setPosition(Vector2f(100,10));
     Text characterChoiseT2("player 1",font2,85); characterChoiseT2.setPosition(Vector2f(480,105)); characterChoiseT2.setFillColor(Color(237,103,3));
     Text characterChoiseT3("player 2",font2,85); characterChoiseT3.setPosition(Vector2f(900,105)); characterChoiseT3.setFillColor(Color(26,64,215));
-    frogT.loadFromFile("resources/frog.jpg");
-    gatoT.loadFromFile("resources/gato.png");
-    kuszczakT.loadFromFile("resources/kuszczak.jpg");
-    gandalfT.loadFromFile("resources/gandalf.jpg");
-    lennonT.loadFromFile("resources/lennon.jpg");
-    blackManT.loadFromFile("resources/black-man.jpg");
-    alienT.loadFromFile("resources/alien.jpg");
-    frogT2.loadFromFile("resources/frog2.jpg");
-    gatoT2.loadFromFile("resources/gato2.png");
-    kuszczakT2.loadFromFile("resources/kuszczak2.jpg");
-    gandalfT2.loadFromFile("resources/gandalf2.jpg");
-    lennonT2.loadFromFile("resources/lennon2.jpg");
-    blackManT2.loadFromFile("resources/black-man2.jpg");
-    alienT2.loadFromFile("resources/alien2.jpg");
+    frogT.loadFromFile("frog.jpg");
+    gatoT.loadFromFile("gato.png");
+    kuszczakT.loadFromFile("kuszczak.jpg");
+    gandalfT.loadFromFile("gandalf.jpg");
+    lennonT.loadFromFile("lennon.jpg");
+    blackManT.loadFromFile("black-man.jpg");
+    alienT.loadFromFile("alien.jpg");
+    frogT2.loadFromFile("frog2.jpg");
+    gatoT2.loadFromFile("gato2.png");
+    kuszczakT2.loadFromFile("kuszczak2.jpg");
+    gandalfT2.loadFromFile("gandalf2.jpg");
+    lennonT2.loadFromFile("lennon2.jpg");
+    blackManT2.loadFromFile("black-man2.jpg");
+    alienT2.loadFromFile("alien2.jpg");
     Sprite player1S(frogT); player1S.setPosition(Vector2f(565,245)); player1S.setTextureRect(IntRect(0,0,120,120));
     Sprite player2S(gatoT); player2S.setPosition(Vector2f(1015,245)); player2S.setTextureRect(IntRect(0,0,120,120));
     Sprite gameLeftPicture(frogT2); gameLeftPicture.setPosition(Vector2f(-5,0));
@@ -164,8 +164,9 @@ int main()
     Text controlsTipDownArrowT("MOVE DOWN",font2,65); controlsTipDownArrowT.setPosition(Vector2f(815,610));
     RectangleShape blackBox(Vector2f(450,900)); blackBox.setFillColor(Color::Black);
     RectangleShape blackBox2(Vector2f(200,200)); blackBox2.setFillColor(Color::Black);
-    Texture awsd; awsd.loadFromFile("resources/awsd.png");
-    Texture arrows; arrows.loadFromFile("resources/KeyboardArrows.jpg");
+    RectangleShape blackBox3(Vector2f(850,680)); blackBox3.setFillColor(Color::Black); blackBox3.setPosition(Vector2f(0,110));
+    Texture awsd; awsd.loadFromFile("awsd.png");
+    Texture arrows; arrows.loadFromFile("KeyboardArrows.jpg");
     Sprite A(awsd); A.setTextureRect(IntRect(7,96,94,89)); A.setPosition(Vector2f(10,300));
     Sprite W(awsd); W.setTextureRect(IntRect(99,5,94,89)); W.setPosition(Vector2f(10,400));
     Sprite S(awsd); S.setTextureRect(IntRect(106,96,94,89)); S.setPosition(Vector2f(10,500));
@@ -190,6 +191,10 @@ int main()
     Text settingsTLengthOfMatch("Length Of Match:  4",font2,60); settingsTLengthOfMatch.setPosition(Vector2f(50,400));
     Text devT("Dev Mode",font2,20); devT.setPosition(Vector2f(5,870));
     Text devTgodMode("God Mode",font2,20); devTgodMode.setPosition(Vector2f(180,870));
+    Text LcharacterChoiseT1("Welcome in the League Mode.",font2,47); LcharacterChoiseT1.setPosition(Vector2f(10,200));
+    Text LcharacterChoiseT2("You'll play one match with every character.",font2,47); LcharacterChoiseT2.setPosition(Vector2f(10,300));
+    Text LcharacterChoiseT3("Points will be saving in league table.",font2,47); LcharacterChoiseT3.setPosition(Vector2f(10,400));
+    Text LcharacterChoiseT4("Choose your character and have a good fun!",font2,47); LcharacterChoiseT4.setPosition(Vector2f(10,500));
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
@@ -270,7 +275,11 @@ int main()
 
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    if(isSelected == 2)
+                    if(isSelected == 1)
+                    {
+                        state = Tstate::LnewGameOrcontinue;
+                    }
+                    else if(isSelected == 2)
                     {
                         state = Tstate::singleOr2players;
                     }
@@ -441,8 +450,6 @@ int main()
             window.draw(gameIncreaseR);
             window.draw(gameSpeedR);
             window.draw(ball.circle);
-
-            ball.showVel();
 
             if(oneOr2Players == 1)
             {
@@ -615,20 +622,38 @@ int main()
 
 
         ///state SINGLE OR 2 PLAYERS******************************
-        else if(state == Tstate::singleOr2players)
+        else if((state == Tstate::singleOr2players)||(state == Tstate::LnewGameOrcontinue))
         {
+            if(state == Tstate::singleOr2players)
+            {
+                sinOr2pChoiseT.setString("CHOISE MODE");
+                sinOr2pSingleT.setString("1 player");
+                sinOr2pMultiT.setString("2 players");
+                sinOr2pExitT.setString("exit");
+            }
+            else
+            {
+                sinOr2pChoiseT.setString("LEAGUE MODE");
+                sinOr2pSingleT.setString("New game");
+                sinOr2pMultiT.setString("Continue");
+                sinOr2pExitT.setString("exit");
+            }
+
             static int isSelected{1};
             static int counter{20};
 
+            window.draw(sinOr2pChoiseT);
             window.draw(sinOr2pSingle);
             window.draw(sinOr2pMulti);
             window.draw(sinOr2pExit);
-            window.draw(sinOr2pChoiseT);
             window.draw(sinOr2pSingleT);
             window.draw(sinOr2pMultiT);
             window.draw(sinOr2pExitT);
-            window.draw(sinOr2pSingleSprite);
-            window.draw(sinOr2pMultiSprite);
+            if(state == Tstate::singleOr2players)
+            {
+                window.draw(sinOr2pSingleSprite);
+                window.draw(sinOr2pMultiSprite);
+            }
 
             if(isSelected == 1) sinOr2pSingle.setOutlineThickness(5);
             else sinOr2pSingle.setOutlineThickness(0);
@@ -658,36 +683,50 @@ int main()
 
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
-                    if(isSelected == 1)
+                    if(state == Tstate::singleOr2players)
                     {
-                        state = Tstate::characterChoise;
-                        oneOr2Players = 1;
+                        if(isSelected == 1)
+                        {
+                            state = Tstate::characterChoise;
+                            oneOr2Players = 1;
 
-                        if(controlIn1player == 2)
+                            if(controlIn1player == 2)
+                            {
+                                paddle1Control = 2;
+                                paddle2Control = 0;
+                                characterChoiseT2.setString("player");
+                                characterChoiseT3.setString("computer");
+                            }
+                            else
+                            {
+                                paddle1Control = 0;
+                                paddle2Control = 1;
+                                characterChoiseT2.setString("computer");
+                                characterChoiseT3.setString("player");
+                            }
+                        }
+                        else if(isSelected == 2)
                         {
+                            state = Tstate::characterChoise;
+                            oneOr2Players = 2;
                             paddle1Control = 2;
-                            paddle2Control = 0;
-                            characterChoiseT2.setString("player");
-                            characterChoiseT3.setString("computer");
-                        }
-                        else
-                        {
-                            paddle1Control = 0;
                             paddle2Control = 1;
-                            characterChoiseT2.setString("computer");
-                            characterChoiseT3.setString("player");
+                            characterChoiseT2.setString("player 1");
+                            characterChoiseT3.setString("player 2");
                         }
                     }
-                    else if(isSelected == 2)
+                    else
                     {
-                        state = Tstate::characterChoise;
-                        oneOr2Players = 2;
-                        paddle1Control = 2;
-                        paddle2Control = 1;
-                        characterChoiseT2.setString("player 1");
-                        characterChoiseT3.setString("player 2");
+                        if(isSelected == 1)
+                        {
+                            state = Tstate::LcharacterChoise;
+                            oneOr2Players = 1;
+                            controlIn1player = 1;
+                        }
                     }
-                    else if(isSelected == 3)
+
+
+                    if(isSelected == 3)
                     {
                         state = Tstate::menu;
                         circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
@@ -702,7 +741,7 @@ int main()
 
 
         ///state CHARACTER CHOISE******************************
-        else if(state == Tstate::characterChoise)
+        else if((state == Tstate::characterChoise)||(state == Tstate::LcharacterChoise))
         {
             static int counter{30};
 
@@ -714,8 +753,9 @@ int main()
 
             if(Keyboard::isKeyPressed(Keyboard::Escape)&&(!counter))
             {
-                state = Tstate::singleOr2players;
-                counter = 30;
+                if(state == Tstate::characterChoise) state = Tstate::singleOr2players;
+                else state = Tstate::LnewGameOrcontinue;
+                                    counter = 30;
                 changeCharacterStatistics(2,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
                                       characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
@@ -777,7 +817,7 @@ int main()
 
             window.draw(characterChoiseT);
             window.draw(characterChoiseT2);
-            window.draw(characterChoiseT3);
+            if(state == Tstate::characterChoise) window.draw(characterChoiseT3);
             window.draw(player1S);
             window.draw(player2S);
             window.draw(triangle1);
@@ -808,6 +848,14 @@ int main()
             window.draw(characterChoiseIncreaseContainer3T);
             window.draw(characterChoiseExitT);
             window.draw(characterChoiseNextT);
+            if(state == Tstate::LcharacterChoise)
+            {
+                window.draw(blackBox3);
+                window.draw(LcharacterChoiseT1);
+                window.draw(LcharacterChoiseT2);
+                window.draw(LcharacterChoiseT3);
+                window.draw(LcharacterChoiseT4);
+            }
         }
         ///******************************state CHARACTER CHOISE
 
@@ -1020,6 +1068,7 @@ int main()
 
         }
         ///******************************state SETTINGS
+
         window.display();
     }
 
