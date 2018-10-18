@@ -7,12 +7,13 @@
 #include "lane.h"
 #include "character.h"
 
-#define VERSION "ALPHA 0.4"
+#define VERSION "BETA 0.5"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
 
-enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel,settings,LnewGameOrcontinue,LcharacterChoise};
+enum class Tstate{logos,menu,game,singleOr2players,characterChoise,controlsTip,dificultyLevel,settings,LnewGameOrcontinue,LcharacterChoise,
+                  LdificultyLevel,LeagueInterface,exitScreen};
 Tstate state{Tstate::logos};
 enum class Tlevel{easy,medium,hard};
 Tlevel difficultyLevel{Tlevel::easy};
@@ -195,6 +196,7 @@ int main()
     Text LcharacterChoiseT2("You'll play one match with every character.",font2,47); LcharacterChoiseT2.setPosition(Vector2f(10,300));
     Text LcharacterChoiseT3("Points will be saving in league table.",font2,47); LcharacterChoiseT3.setPosition(Vector2f(10,400));
     Text LcharacterChoiseT4("Choose your character and have a good fun!",font2,47); LcharacterChoiseT4.setPosition(Vector2f(10,500));
+    Text exitT("Game was made by",font1,80); exitT.setPosition(Vector2f(100,200)); Text exitT2("GRZEGORZ BEDNORZ",font2,100); exitT2.setPosition(Vector2f(150,350)); exitT2.setFillColor(Color::Yellow);
 
     Character frog(5,4,3,5,6,5,"Frog");
     Character elGato(8,3,7,2,6,5,"el Gato");
@@ -209,7 +211,7 @@ int main()
     while (window.isOpen())
     {
         Event event;
-        while (window.pollEvent(event)){if (event.type == Event::Closed)window.close();}
+        while (window.pollEvent(event)){if(event.type == Event::Closed)state = Tstate::exitScreen;}
 
         window.clear();
 
@@ -289,7 +291,7 @@ int main()
                     }
                     else if(isSelected == 4)
                     {
-                        window.close();
+                        state = Tstate::exitScreen;
                     }
 
                     isSelected = 1;
@@ -764,14 +766,21 @@ int main()
             }
             else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
             {
-                if((oneOr2Players == 2)&&(showControlTip))state = Tstate::controlsTip;
-                else if((oneOr2Players == 2)&&(!showControlTip))state = Tstate::game;
-                else if((oneOr2Players == 1)&&(!showControlTip))state = Tstate::dificultyLevel;
-                else if((oneOr2Players == 1)&&(showControlTip))
+                if(state == Tstate::characterChoise)
                 {
-                    state = Tstate::controlsTip;
-                    if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
-                    else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
+                    if((oneOr2Players == 2)&&(showControlTip))state = Tstate::controlsTip;
+                    else if((oneOr2Players == 2)&&(!showControlTip))state = Tstate::game;
+                    else if((oneOr2Players == 1)&&(!showControlTip))state = Tstate::dificultyLevel;
+                    else if((oneOr2Players == 1)&&(showControlTip))
+                    {
+                        state = Tstate::controlsTip;
+                        if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
+                        else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
+                    }
+                }
+                else
+                {
+                    state = Tstate::LdificultyLevel;
                 }
                 counter = 30;
 
@@ -895,7 +904,7 @@ int main()
 
 
         ///state DIFFICULTY LEVEL******************************
-        else if(state == Tstate::dificultyLevel)
+        else if((state == Tstate::dificultyLevel)||(state == Tstate::LdificultyLevel))
         {
             static int counter{0};
             static int counterEnter{25};
@@ -929,24 +938,49 @@ int main()
 
             if((!counterEnter)&&(Keyboard::isKeyPressed(Keyboard::Enter)))
             {
-                if(whereIsOutline == 1)
+                if(state == Tstate::dificultyLevel)
                 {
-                    state = Tstate::game;
-                    difficultyLevel = Tlevel::easy;
+                    if(whereIsOutline == 1)
+                    {
+                        state = Tstate::game;
+                        difficultyLevel = Tlevel::easy;
+                    }
+                    else if(whereIsOutline == 2)
+                    {
+                        state = Tstate::game;
+                        difficultyLevel = Tlevel::medium;
+                    }
+                    else if(whereIsOutline == 3)
+                    {
+                        state = Tstate::game;
+                        difficultyLevel = Tlevel::hard;
+                    }
+                    else if(whereIsOutline == 4)
+                    {
+                        state = Tstate::characterChoise;
+                    }
                 }
-                else if(whereIsOutline == 2)
+                else
                 {
-                    state = Tstate::game;
-                    difficultyLevel = Tlevel::medium;
-                }
-                else if(whereIsOutline == 3)
-                {
-                    state = Tstate::game;
-                    difficultyLevel = Tlevel::hard;
-                }
-                else if(whereIsOutline == 4)
-                {
-                    state = Tstate::characterChoise;
+                    if(whereIsOutline == 1)
+                    {
+                        state = Tstate::LeagueInterface;
+                        difficultyLevel = Tlevel::easy;
+                    }
+                    else if(whereIsOutline == 2)
+                    {
+                        state = Tstate::LeagueInterface;
+                        difficultyLevel = Tlevel::medium;
+                    }
+                    else if(whereIsOutline == 3)
+                    {
+                        state = Tstate::LeagueInterface;
+                        difficultyLevel = Tlevel::hard;
+                    }
+                    else if(whereIsOutline == 4)
+                    {
+                        state = Tstate::LcharacterChoise;
+                    }
                 }
 
                 counter = 0;
@@ -1068,6 +1102,18 @@ int main()
 
         }
         ///******************************state SETTINGS
+
+
+        ///state EXIT SCREEN******************************
+        else if(state == Tstate::exitScreen)
+        {
+            static int counter{200};
+            counter--;
+            window.draw(exitT);
+            window.draw(exitT2);
+            if(!counter)window.close();
+        }
+        ///******************************state EXIT SCREEN
 
         window.display();
     }
