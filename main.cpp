@@ -196,6 +196,33 @@ int main()
     Text LcharacterChoiseT2("You'll play one match with every character.",font2,47); LcharacterChoiseT2.setPosition(Vector2f(10,300));
     Text LcharacterChoiseT3("Points will be saving in league table.",font2,47); LcharacterChoiseT3.setPosition(Vector2f(10,400));
     Text LcharacterChoiseT4("Choose your character and have a good fun!",font2,47); LcharacterChoiseT4.setPosition(Vector2f(10,500));
+    Text LIexitT("Save & Exit - ESC",font2,80); LIexitT.setPosition(Vector2f(650,800)); LIexitT.setFillColor(Color::Red);
+    Text LInextMatchT("Next match",font2,90); LInextMatchT.setPosition(Vector2f(110,110)); LInextMatchT.setFillColor(Color::Cyan);
+    Text LIvsT("vs Frog",font2,90); LIvsT.setPosition(Vector2f(110,190)); LIvsT.setFillColor(Color::Cyan);
+    Sprite LIvsS(frogT); LIvsS.setPosition(Vector2f(110,350)); LIvsS.setScale(Vector2f(3,3));
+    Text LIlevelT("level of difficulty - Hard",font2,35); LIlevelT.setPosition(Vector2f(10,5));
+    Text LItableT("TABLE",font2,100); LItableT.setPosition(Vector2f(900,1)); LItableT.setFillColor(Color::Yellow);
+    Text LI1T("1.",font2,70); LI1T.setPosition(Vector2f(730,110)); LI1T.setFillColor(Color::Yellow);
+    Text LI2T("2.",font2,70); LI2T.setPosition(Vector2f(730,190)); LI2T.setFillColor(Color::Yellow);
+    Text LI3T("3.",font2,70); LI3T.setPosition(Vector2f(730,270)); LI3T.setFillColor(Color::Yellow);
+    Text LI4T("4.",font2,70); LI4T.setPosition(Vector2f(730,350)); LI4T.setFillColor(Color::Yellow);
+    Text LI5T("5.",font2,70); LI5T.setPosition(Vector2f(730,430)); LI5T.setFillColor(Color::Yellow);
+    Text LI6T("6.",font2,70); LI6T.setPosition(Vector2f(730,510)); LI6T.setFillColor(Color::Yellow);
+    Text LI7T("7.",font2,70); LI7T.setPosition(Vector2f(730,590)); LI7T.setFillColor(Color::Yellow);
+    Text LI1nameT("Alien",font2,70); LI1nameT.setPosition(Vector2f(810,110)); LI1nameT.setFillColor(Color::Yellow);
+    Text LI2nameT("Black Man",font2,70); LI2nameT.setPosition(Vector2f(810,190)); LI2nameT.setFillColor(Color::Yellow);
+    Text LI3nameT("Gandalf",font2,70); LI3nameT.setPosition(Vector2f(810,270)); LI3nameT.setFillColor(Color::Yellow);
+    Text LI4nameT("El Gato",font2,70); LI4nameT.setPosition(Vector2f(810,350)); LI4nameT.setFillColor(Color::Yellow);
+    Text LI5nameT("Frog",font2,70); LI5nameT.setPosition(Vector2f(810,430)); LI5nameT.setFillColor(Color::Yellow);
+    Text LI6nameT("Kuszczak",font2,70); LI6nameT.setPosition(Vector2f(810,510)); LI6nameT.setFillColor(Color::Yellow);
+    Text LI7nameT("Lennon",font2,70); LI7nameT.setPosition(Vector2f(810,590)); LI7nameT.setFillColor(Color::Yellow);
+    Text LI1pointsT("0",font2,70); LI1pointsT.setPosition(1200,110); LI1pointsT.setFillColor(Color::Yellow);
+    Text LI2pointsT("0",font2,70); LI2pointsT.setPosition(1200,190); LI2pointsT.setFillColor(Color::Yellow);
+    Text LI3pointsT("0",font2,70); LI3pointsT.setPosition(1200,270); LI3pointsT.setFillColor(Color::Yellow);
+    Text LI4pointsT("0",font2,70); LI4pointsT.setPosition(1200,350); LI4pointsT.setFillColor(Color::Yellow);
+    Text LI5pointsT("0",font2,70); LI5pointsT.setPosition(1200,430); LI5pointsT.setFillColor(Color::Yellow);
+    Text LI6pointsT("0",font2,70); LI6pointsT.setPosition(1200,510); LI6pointsT.setFillColor(Color::Yellow);
+    Text LI7pointsT("0",font2,70); LI7pointsT.setPosition(1200,590); LI7pointsT.setFillColor(Color::Yellow);
     Text exitT("Game was made by",font1,80); exitT.setPosition(Vector2f(100,200)); Text exitT2("GRZEGORZ BEDNORZ",font2,100); exitT2.setPosition(Vector2f(150,350)); exitT2.setFillColor(Color::Yellow);
 
     Character frog(5,4,3,5,6,5,"Frog");
@@ -1102,6 +1129,32 @@ int main()
 
         }
         ///******************************state SETTINGS
+
+
+        ///LeagueInterface******************************
+        else if(state == Tstate::LeagueInterface)
+        {
+            if(Keyboard::isKeyPressed(Keyboard::Escape))
+            {
+                state = Tstate::menu;
+            }
+
+            window.draw(LIlevelT);
+            window.draw(LItableT);
+            window.draw(LI1T); window.draw(LI1nameT); window.draw(LI1pointsT);
+            window.draw(LI2T); window.draw(LI2nameT); window.draw(LI2pointsT);
+            window.draw(LI3T); window.draw(LI3nameT); window.draw(LI3pointsT);
+            window.draw(LI4T); window.draw(LI4nameT); window.draw(LI4pointsT);
+            window.draw(LI5T); window.draw(LI5nameT); window.draw(LI5pointsT);
+            window.draw(LI6T); window.draw(LI6nameT); window.draw(LI6pointsT);
+            window.draw(LI7T); window.draw(LI7nameT); window.draw(LI7pointsT);
+            window.draw(LInextMatchT);
+            window.draw(LIvsT);
+            window.draw(LIvsS);
+            window.draw(controlsTipPlayT);
+            window.draw(LIexitT);
+        }
+        ///******************************LeagueInterface
 
 
         ///state EXIT SCREEN******************************
