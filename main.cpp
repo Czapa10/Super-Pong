@@ -225,13 +225,13 @@ int main()
     Text LI7pointsT("0",font2,70); LI7pointsT.setPosition(1200,590); LI7pointsT.setFillColor(Color::Yellow);
     Text exitT("Game was made by",font1,80); exitT.setPosition(Vector2f(100,200)); Text exitT2("GRZEGORZ BEDNORZ",font2,100); exitT2.setPosition(Vector2f(150,350)); exitT2.setFillColor(Color::Yellow);
 
-    Character frog(5,4,3,5,6,5,"Frog");
-    Character elGato(8,3,7,2,6,5,"el Gato");
-    Character kuszczak(4,6,4,4,10,10,"Kuszczak");
-    Character gandalf(4,10,7,7,6,6,"Gandalf");
-    Character lennon(6,7,7,6,3,5,"Lennon");
-    Character blackMan(10,8,10,10,2,3,"black Man");
-    Character alien(9,9,9,9,9,9,"Alien");
+    Character frog(5,4,3,5,6,5,"frog");
+    Character elGato(8,3,7,2,6,5,"gato");
+    Character kuszczak(4,6,4,4,10,10,"kuszczak");
+    Character gandalf(4,10,7,7,6,6,"gandalf");
+    Character lennon(6,7,7,6,3,5,"lennon");
+    Character blackMan(10,8,10,10,2,3,"black");
+    Character alien(9,9,9,9,9,9,"alien");
 
     ///end of the loading**************************************
 
@@ -1134,25 +1134,114 @@ int main()
         ///LeagueInterface******************************
         else if(state == Tstate::LeagueInterface)
         {
-            if(Keyboard::isKeyPressed(Keyboard::Escape))
-            {
-                state = Tstate::menu;
-            }
+            //STRING CODES: "alien" "black" "gandalf" "gato" "frog" "kuszczak" "lennon"
 
-            window.draw(LIlevelT);
-            window.draw(LItableT);
-            window.draw(LI1T); window.draw(LI1nameT); window.draw(LI1pointsT);
-            window.draw(LI2T); window.draw(LI2nameT); window.draw(LI2pointsT);
-            window.draw(LI3T); window.draw(LI3nameT); window.draw(LI3pointsT);
-            window.draw(LI4T); window.draw(LI4nameT); window.draw(LI4pointsT);
-            window.draw(LI5T); window.draw(LI5nameT); window.draw(LI5pointsT);
-            window.draw(LI6T); window.draw(LI6nameT); window.draw(LI6pointsT);
-            window.draw(LI7T); window.draw(LI7nameT); window.draw(LI7pointsT);
-            window.draw(LInextMatchT);
-            window.draw(LIvsT);
-            window.draw(LIvsS);
-            window.draw(controlsTipPlayT);
-            window.draw(LIexitT);
+            static int counter{20};
+            static int matchDay{};
+            static bool doNextMatches{true};
+            static string match1a{};
+            static string match1b{};
+            static string match2a{};
+            static string match2b{};
+            static string match3a{};
+            static string match3b{};
+            static string isPausing{};
+
+            if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter)) {counter = 50; doNextMatches = true;}
+
+            if((matchDay == 7)&&(doNextMatches == true)) state = Tstate::exitScreen;///end of the league
+
+            if(state == Tstate::LeagueInterface)
+            {
+                if(doNextMatches)
+                {
+                    matchDay++;
+                    static Character chara[7]{alien,blackMan,gandalf,elGato,frog,kuszczak,lennon};
+                    int whichMatchIsDoing{};
+
+                    int character{};
+                    match1a = ""; match1b = ""; match2a = ""; match2b = ""; match3a = ""; match3b = ""; isPausing = "";
+                    for(int i=0; i<7; i++) {chara[i].setAmIinMatch(false);}
+
+
+                    isPausing = chara[matchDay - 1].getName();
+                    chara[matchDay - 1].setPausedToTrue();
+
+                    while(((match1a=="")||(match1b=="")||(match2a=="")||(match1b=="")||(match2a=="")||(match1b=="")||(match2a=="")))
+                    {//whichMatchIsDoing <= 3                    {
+                        whichMatchIsDoing++;
+
+                        //if((match1a!="")&&(match1b!="")&&(match2a!="")&&(match1b!="")&&(match2a!="")&&(match1b!="")&&(match2a!=""))
+                        //break;
+                        if(character > 6) character = 0;
+
+                        if(chara[character].getPaused() == true) character++;
+                        while((chara[character].getAmIinMatch() == true)||(chara[character].getPaused())){character++;}
+
+                        if(whichMatchIsDoing == 3) {match3a = chara[character].getName(); cout<<endl<<"match 3a: "<<match3a<<endl;}
+                        if(whichMatchIsDoing == 1) match1a = chara[character].getName();
+                        if(whichMatchIsDoing == 2) match2a = chara[character].getName();
+
+
+                        int nextCharacter{};
+                        nextCharacter = 0;
+                        while(1)
+                        {
+                            do{nextCharacter++;}while(chara[character + nextCharacter].getAmIinMatch() == true);
+                            if(nextCharacter == 7) nextCharacter = 0;
+
+                            if((chara[character].didIplayVs(chara[character + nextCharacter].getName()) == false ) )
+                            {
+                                if(whichMatchIsDoing == 1) match1b = chara[character + nextCharacter].getName();
+                                else if(whichMatchIsDoing == 2) match2b = chara[character + nextCharacter].getName();
+                                else if(whichMatchIsDoing == 3) {match3b = chara[character + nextCharacter].getName(); cout<<endl<<"match 3b: "<<match3a<<endl;}
+
+                                chara[character].setIplayedVs(chara[character + nextCharacter].getName());
+                                chara[character + nextCharacter].setIplayedVs(chara[character].getName());
+
+                                chara[character].setAmIinMatch(true);
+                                chara[character + nextCharacter].setAmIinMatch(true);
+
+                                chara[character].showWithWhoIplayed();
+                                chara[character + nextCharacter].showWithWhoIplayed();
+
+                                break;
+                            }
+                        }
+                        character ++;
+                    }
+                    doNextMatches = false;
+
+                    cout<<endl<<"Match day: "<<matchDay<<endl;
+                    cout<<"1. "<<match1a<<" vs "<<match1b<<endl;
+                    cout<<"2. "<<match2a<<" vs "<<match2b<<endl;
+                    cout<<"3. "<<match3a<<" vs "<<match3b<<endl;
+                    cout<<"is pausing: "<<isPausing<<endl<<endl;
+                }
+
+                if(Keyboard::isKeyPressed(Keyboard::Escape))
+                {
+                    state = Tstate::menu;
+                }
+
+                window.draw(LIlevelT);
+                window.draw(LItableT);
+                window.draw(LI1T); window.draw(LI1nameT); window.draw(LI1pointsT);
+                window.draw(LI2T); window.draw(LI2nameT); window.draw(LI2pointsT);
+                window.draw(LI3T); window.draw(LI3nameT); window.draw(LI3pointsT);
+                window.draw(LI4T); window.draw(LI4nameT); window.draw(LI4pointsT);
+                window.draw(LI5T); window.draw(LI5nameT); window.draw(LI5pointsT);
+                window.draw(LI6T); window.draw(LI6nameT); window.draw(LI6pointsT);
+                window.draw(LI7T); window.draw(LI7nameT); window.draw(LI7pointsT);
+                window.draw(LInextMatchT);
+                window.draw(LIvsT);
+                window.draw(LIvsS);
+                window.draw(controlsTipPlayT);
+                window.draw(LIexitT);
+
+                if(counter)counter--;
+
+            }
         }
         ///******************************LeagueInterface
 
@@ -1543,3 +1632,4 @@ int random(int x)//how many lots
     lot = rand()%x;
     return lot;
 }
+
