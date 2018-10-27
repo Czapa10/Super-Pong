@@ -1134,7 +1134,7 @@ int main()
         ///LeagueInterface******************************
         else if(state == Tstate::LeagueInterface)
         {
-            //STRING CODES: "alien" "black" "gandalf" "gato" "frog" "kuszczak" "lennon"
+            #define CHECK cout<<endl<<"whichMatchIsDoing: "<<whichMatchIsDoing<<endl;
 
             static int counter{20};
             static int matchDay{};
@@ -1153,70 +1153,79 @@ int main()
 
             if(state == Tstate::LeagueInterface)
             {
-                if(doNextMatches)
+                try
                 {
-                    matchDay++;
-                    static Character chara[7]{alien,blackMan,gandalf,elGato,frog,kuszczak,lennon};
-                    int whichMatchIsDoing{};
+                    if(doNextMatches)
+                    {
+                        matchDay++;
+                        static Character chara[7]{alien,blackMan,gandalf,elGato,frog,kuszczak,lennon};
+                        int whichMatchIsDoing{};
+                        int baseCharacter{};
+                        int character{};
 
-                    int character{};
-                    match1a = ""; match1b = ""; match2a = ""; match2b = ""; match3a = ""; match3b = ""; isPausing = "";
-                    for(int i=0; i<7; i++) {chara[i].setAmIinMatch(false);}
+                        match1a = ""; match1b = ""; match2a = ""; match2b = ""; match3a = ""; match3b = ""; isPausing = "";
+                        for(int i=0; i<7; i++) {chara[i].setAmIinMatch(false); chara[i].setPaused(false);}
 
+                        isPausing = chara[matchDay - 1].getName();
+                        chara[matchDay - 1].setPaused(true);
 
-                    isPausing = chara[matchDay - 1].getName();
-                    chara[matchDay - 1].setPausedToTrue();
-
-                    while(((match1a=="")||(match1b=="")||(match2a=="")||(match1b=="")||(match2a=="")||(match1b=="")||(match2a=="")))
-                    {//whichMatchIsDoing <= 3                    {
-                        whichMatchIsDoing++;
-
-                        //if((match1a!="")&&(match1b!="")&&(match2a!="")&&(match1b!="")&&(match2a!="")&&(match1b!="")&&(match2a!=""))
-                        //break;
-                        if(character > 6) character = 0;
-
-                        if(chara[character].getPaused() == true) character++;
-                        while((chara[character].getAmIinMatch() == true)||(chara[character].getPaused())){character++;}
-
-                        if(whichMatchIsDoing == 3) {match3a = chara[character].getName(); cout<<endl<<"match 3a: "<<match3a<<endl;}
-                        if(whichMatchIsDoing == 1) match1a = chara[character].getName();
-                        if(whichMatchIsDoing == 2) match2a = chara[character].getName();
-
-
-                        int nextCharacter{};
-                        nextCharacter = 0;
-                        while(1)
+                        while(whichMatchIsDoing < 3)
                         {
-                            do{nextCharacter++;}while(chara[character + nextCharacter].getAmIinMatch() == true);
-                            if(nextCharacter == 7) nextCharacter = 0;
+                            whichMatchIsDoing++;
+                            CHECK
 
-                            if((chara[character].didIplayVs(chara[character + nextCharacter].getName()) == false ) )
+                            if(whichMatchIsDoing == 1)while(chara[character].getPaused() == false){character++;}
+                            while((chara[character].getAmIinMatch() == true)||(chara[character].getPaused())){character++;}
+
+                            if(character > 6) character = 0;
+
+                            if(whichMatchIsDoing == 1) match1a = chara[character].getName();
+                            if(whichMatchIsDoing == 2) match2a = chara[character].getName();
+                            if(whichMatchIsDoing == 3) match3a = chara[character].getName();
+
+                            baseCharacter = character;
+                            while(1)
                             {
-                                if(whichMatchIsDoing == 1) match1b = chara[character + nextCharacter].getName();
-                                else if(whichMatchIsDoing == 2) match2b = chara[character + nextCharacter].getName();
-                                else if(whichMatchIsDoing == 3) {match3b = chara[character + nextCharacter].getName(); cout<<endl<<"match 3b: "<<match3a<<endl;}
+                                do{
+                                    character++;
+                                    if(character == 7) character = 0;
+                                }
+                                while(chara[character].getAmIinMatch() == true);
 
-                                chara[character].setIplayedVs(chara[character + nextCharacter].getName());
-                                chara[character + nextCharacter].setIplayedVs(chara[character].getName());
+                                if((chara[baseCharacter].didIplayVs(chara[character].getName()) == false ) )
+                                {
+                                    if(whichMatchIsDoing == 1) match1b = chara[character].getName();
+                                    else if(whichMatchIsDoing == 2) match2b = chara[character].getName();
+                                    else if(whichMatchIsDoing == 3) match3b = chara[character].getName();
 
-                                chara[character].setAmIinMatch(true);
-                                chara[character + nextCharacter].setAmIinMatch(true);
+                                    chara[baseCharacter].setIplayedVs(chara[character].getName());
+                                    chara[character].setIplayedVs(chara[baseCharacter].getName());
 
-                                chara[character].showWithWhoIplayed();
-                                chara[character + nextCharacter].showWithWhoIplayed();
+                                    chara[baseCharacter].setAmIinMatch(true);
+                                    chara[character].setAmIinMatch(true);
 
-                                break;
+                                    chara[baseCharacter].showWithWhoIplayed();
+                                    chara[character].showWithWhoIplayed();
+
+
+                                    break;
+                                }
                             }
                         }
-                        character ++;
-                    }
-                    doNextMatches = false;
+                        doNextMatches = false;
 
-                    cout<<endl<<"Match day: "<<matchDay<<endl;
-                    cout<<"1. "<<match1a<<" vs "<<match1b<<endl;
-                    cout<<"2. "<<match2a<<" vs "<<match2b<<endl;
-                    cout<<"3. "<<match3a<<" vs "<<match3b<<endl;
-                    cout<<"is pausing: "<<isPausing<<endl<<endl;
+
+                        cout<<endl<<"Match day: "<<matchDay<<endl;
+                        cout<<"1. "<<match1a<<" vs "<<match1b<<endl;
+                        cout<<"2. "<<match2a<<" vs "<<match2b<<endl;
+                        cout<<"3. "<<match3a<<" vs "<<match3b<<endl;
+                        cout<<"is pausing: "<<isPausing<<endl;
+                        cout<<endl<<"-----------------------------------------------------------------\n\n";
+                    }
+                }
+                catch(logic_error)
+                {
+                    cout<<endl<<"logic_error"<<endl;
                 }
 
                 if(Keyboard::isKeyPressed(Keyboard::Escape))
@@ -1240,7 +1249,6 @@ int main()
                 window.draw(LIexitT);
 
                 if(counter)counter--;
-
             }
         }
         ///******************************LeagueInterface

@@ -17,7 +17,7 @@ public:
     bool didIplayVs(string checkingMan);
     void setIplayedVs(string man);
     bool getPaused(){return didIpaused;}
-    void setPausedToTrue(){didIpaused = true;}
+    void setPaused(bool x){didIpaused = x;}
     void setAmIinMatch(bool x){amIinMatch = x;}
     bool getAmIinMatch(){return amIinMatch;}
     string getName(){return name;}
