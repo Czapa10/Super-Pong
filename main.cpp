@@ -1134,8 +1134,6 @@ int main()
         ///LeagueInterface******************************
         else if(state == Tstate::LeagueInterface)
         {
-            #define CHECK cout<<endl<<"whichMatchIsDoing: "<<whichMatchIsDoing<<endl;
-
             static int counter{20};
             static int matchDay{};
             static bool doNextMatches{true};
@@ -1158,7 +1156,118 @@ int main()
                     if(doNextMatches)
                     {
                         matchDay++;
-                        static Character chara[7]{alien,blackMan,gandalf,elGato,frog,kuszczak,lennon};
+
+                        static Character nothing;
+                        static Character chara[7]{nothing};//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
+                        if(matchDay == 1)
+                        {
+                            int table[7]{10};
+                            int i2 = rand()%7;
+                            for(int i=0; i<7; i++)
+                            {
+                                table[i] = i2;
+                                i2++;
+                                if(i2 == 7) i2 = 0;
+                                cout<<i<<": "<<i2<<endl;
+                            }
+
+                            for(int i=0; i<10; i++)
+                            {
+                                int shuffling{rand()%4};
+                                int aux;//auxiliary
+
+                                cout<<"shuf: "<<shuffling<<endl;
+
+                                switch(shuffling)
+                                {
+                                case 0:
+                                    aux = table[0];
+                                    table[0] = table[1];
+                                    table[1] = aux;
+                                    aux = table[2];
+                                    table[2] = table[3];
+                                    table[3] = aux;
+                                    aux = table[4];
+                                    table[4] = table[5];
+                                    table[5] = aux;
+                                    break;
+
+                                case 1:
+                                    aux = table[0];
+                                    table[0] = table[6];
+                                    table[6] = aux;
+                                    aux = table[1];
+                                    table[1] = table[5];
+                                    table[5] = aux;
+                                    aux = table[2];
+                                    table[2] = table[4];
+                                    table[4] = aux;
+                                    break;
+
+                                case 2:
+                                    aux = table[0];
+                                    table[0] = table[4];
+                                    table[4] = aux;
+                                    aux = table[1];
+                                    table[1] = table[5];
+                                    table[5] = aux;
+                                    aux = table[3];
+                                    table[3] = table[6];
+                                    table[6] = aux;
+                                    break;
+
+                                case 3:
+                                    aux = table[0];
+                                    table[0] = table[2];
+                                    table[2] = aux;
+                                    aux = table[1];
+                                    table[1] = table[3];
+                                    table[3] = aux;
+                                    aux = table[4];
+                                    table[4] = table[6];
+                                    table[6] = aux;
+                                    break;
+                                }
+
+                                for(int i=0; i<7; i++)
+                                {
+                                    cout<<table[i]<<endl;
+                                }
+                            }
+
+                            int j{};
+                            while((chara[0].getName() == nothing.getName())||(chara[1].getName() == nothing.getName())||(chara[2].getName() == nothing.getName())||(chara[3].getName() == nothing.getName())||(chara[4].getName() == nothing.getName())||(chara[5].getName() == nothing.getName())||(chara[6].getName() == nothing.getName()))
+                            {
+                                switch(j)
+                                {
+                                    case 0:
+                                        chara[table[0]] = alien;
+                                        break;
+                                    case 1:
+                                        chara[table[1]] = blackMan;
+                                        break;
+                                    case 2:
+                                        chara[table[2]] = gandalf;
+                                        break;
+                                    case 3:
+                                        chara[table[3]] = elGato;
+                                        break;
+                                    case 4:
+                                        chara[table[4]] = frog;
+                                        break;
+                                    case 5:
+                                        chara[table[5]] = kuszczak;
+                                        break;
+                                    case 6:
+                                        chara[table[6]] = lennon;
+                                        break;
+                                }
+                                j++;
+                            }
+
+
+                        }
+
                         int whichMatchIsDoing{};
                         int baseCharacter{};
                         int character{};
@@ -1172,7 +1281,7 @@ int main()
                         while(whichMatchIsDoing < 3)
                         {
                             whichMatchIsDoing++;
-                            CHECK
+                            cout<<endl<<"whichMatchIsDoing: "<<whichMatchIsDoing<<endl;
 
                             if(whichMatchIsDoing == 1)while(chara[character].getPaused() == false){character++;}
                             while((chara[character].getAmIinMatch() == true)||(chara[character].getPaused())){character++;}
@@ -1261,7 +1370,7 @@ int main()
             counter--;
             window.draw(exitT);
             window.draw(exitT2);
-            if(!counter)window.close();
+            if(counter < 0)window.close();
         }
         ///******************************state EXIT SCREEN
 

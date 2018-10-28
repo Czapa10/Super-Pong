@@ -12,7 +12,7 @@ class Character : public Entity
     bool amIinMatch{false};
 
 public:
-    Character(float = 6, float = 6, float = 6, float = 6, float = 6, float = 6, std::string = "Frog");
+    Character(float = 6, float = 6, float = 6, float = 6, float = 6, float = 6, std::string = "nothing");
     void setStatistics(float speed_,float power_,float speedUp_,float speedUpContainer_,float increase_,float increaseContainer_);
     bool didIplayVs(string checkingMan);
     void setIplayedVs(string man);
