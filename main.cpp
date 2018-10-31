@@ -27,12 +27,17 @@ int oneOr2Players;
 bool gamePause{true};
 bool showControlTip{true};
 bool developerMode{false};
+bool leagueMode;
+bool doNextMatches;
+int leagueInitialization; //1 - new game | 2 - continue | 0 - do nothing
 int lengthOfTheMatch{4};
 int paddle1Control, paddle2Control, controlIn1player{1};
-Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT;
+Texture frogT; Texture gatoT; Texture kuszczakT; Texture gandalfT; Texture lennonT; Texture blackManT; Texture alienT; Texture pauseT;
 Texture frogT2; Texture gatoT2; Texture kuszczakT2; Texture gandalfT2; Texture lennonT2; Texture blackManT2; Texture alienT2;
 Character player1;
 Character player2;
+Character characterInLeague;
+string opponentInLeagueMode;
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2,int& counterMatchStart, int& counterMatchWin);
@@ -118,6 +123,7 @@ int main()
     lennonT2.loadFromFile("lennon2.jpg");
     blackManT2.loadFromFile("black-man2.jpg");
     alienT2.loadFromFile("alien2.jpg");
+    pauseT.loadFromFile("pause-button.jpg");
     Sprite player1S(frogT); player1S.setPosition(Vector2f(565,245)); player1S.setTextureRect(IntRect(0,0,120,120));
     Sprite player2S(gatoT); player2S.setPosition(Vector2f(1015,245)); player2S.setTextureRect(IntRect(0,0,120,120));
     Sprite gameLeftPicture(frogT2); gameLeftPicture.setPosition(Vector2f(-5,0));
@@ -307,10 +313,12 @@ int main()
                     if(isSelected == 1)
                     {
                         state = Tstate::LnewGameOrcontinue;
+                        leagueMode = true;
                     }
                     else if(isSelected == 2)
                     {
                         state = Tstate::singleOr2players;
+                        leagueMode = false;
                     }
                     else if(isSelected == 3)
                     {
@@ -527,8 +535,15 @@ int main()
                 if(counterMatchWin < 55) gamePause = true;
                 if(counterMatchWin == 1)
                 {
-                    state = Tstate::menu;
-                    circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
+                    if(leagueMode)
+                    {
+                        state = Tstate::LeagueInterface;
+                        doNextMatches = true;
+                    }
+                    else
+                    {
+                        state = Tstate::menu;
+                    }
                     pauseScreen = false;
                     gamePause = true;
                     counterMatchStart = 200;
@@ -749,16 +764,20 @@ int main()
                         if(isSelected == 1)
                         {
                             state = Tstate::LcharacterChoise;
-                            oneOr2Players = 1;
-                            controlIn1player = 1;
+                            leagueInitialization = 1;
                         }
+                        else if(isSelected == 2)
+                        {
+                            state = Tstate::LeagueInterface;
+                            leagueInitialization = 2;
+                        }
+                        oneOr2Players = 1;
                     }
 
 
                     if(isSelected == 3)
                     {
                         state = Tstate::menu;
-                        circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
                         counter = 20;
                     }
                     isSelected = 1;
@@ -805,13 +824,9 @@ int main()
                         else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
                     }
                 }
-                else
-                {
-                    state = Tstate::LdificultyLevel;
-                }
+
                 counter = 30;
 
-                ball.circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
                 ball.setVelocity(10);
                 paddle1.rect.setPosition(Vector2f(10,400));
                 paddle2.rect.setPosition(Vector2f(1265,400));
@@ -827,6 +842,11 @@ int main()
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
 
                 setPaddlesSpeed(paddle1,paddle2,player1,player2);
+
+                if(state == Tstate::LcharacterChoise)
+                {
+                    state = Tstate::LdificultyLevel;
+                }
 
                 if(random(2))//1
                 {
@@ -916,12 +936,14 @@ int main()
                 if(Keyboard::isKeyPressed(Keyboard::Enter))
                 {
                     if(oneOr2Players == 2)state = Tstate::game;
-                    else state = Tstate::dificultyLevel;
+                    else if(leagueMode == false) state = Tstate::dificultyLevel;
+                    else state = Tstate::game;
                     counter = 20;
                 }
                 else if(Keyboard::isKeyPressed(Keyboard::Escape))
                 {
-                    state = Tstate::characterChoise;
+                    if(leagueMode) state = Tstate::LeagueInterface;
+                    else state = Tstate::characterChoise;
                     counter = 20;
                 }
             }
@@ -1134,18 +1156,30 @@ int main()
         ///LeagueInterface******************************
         else if(state == Tstate::LeagueInterface)
         {
-            static int counter{20};
-            static int matchDay{};
-            static bool doNextMatches{true};
-            static string match1a{};
-            static string match1b{};
-            static string match2a{};
-            static string match2b{};
-            static string match3a{};
-            static string match3b{};
-            static string isPausing{};
+            static int counter;
+            static int matchDay;
+            static string match1a;
+            static string match1b;
+            static string match2a;
+            static string match2b;
+            static string match3a;
+            static string match3b;
+            static string isPausing;
+            static string inWhichMatchIsPlayer;
+            static string currentOpponentName;
 
-            if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter)) {counter = 50; doNextMatches = true;}
+            if(leagueInitialization == 1)///new league
+            {
+                counter = 30;
+                matchDay = 0;
+                doNextMatches = true;
+                match1a = ""; match1b = ""; match2a = ""; match2b = ""; match3a = ""; match3b = ""; isPausing = "";
+                leagueInitialization = 0;
+            }
+            else if(leagueInitialization == 2)///continue - loading save
+            {
+
+            }
 
             if((matchDay == 7)&&(doNextMatches == true)) state = Tstate::exitScreen;///end of the league
 
@@ -1330,6 +1364,54 @@ int main()
                         cout<<"3. "<<match3a<<" vs "<<match3b<<endl;
                         cout<<"is pausing: "<<isPausing<<endl;
                         cout<<endl<<"-----------------------------------------------------------------\n\n";
+
+                        ///checking in which match is player's character
+                        if(characterInLeague.getName() == match1a) inWhichMatchIsPlayer = "1a";
+                        else if(characterInLeague.getName() == match1b) inWhichMatchIsPlayer = "1b";
+                        else if(characterInLeague.getName() == match2a) inWhichMatchIsPlayer = "2a";
+                        else if(characterInLeague.getName() == match2b) inWhichMatchIsPlayer = "2b";
+                        else if(characterInLeague.getName() == match3a) inWhichMatchIsPlayer = "3a";
+                        else if(characterInLeague.getName() == match3b) inWhichMatchIsPlayer = "3b";
+                        else if(characterInLeague.getName() == isPausing) inWhichMatchIsPlayer = "pause";
+
+                        ///checking current opponent name
+                        if(inWhichMatchIsPlayer == "1a")currentOpponentName = match1b;
+                        else if(inWhichMatchIsPlayer == "1b") currentOpponentName = match1a;
+                        else if(inWhichMatchIsPlayer == "2a") currentOpponentName = match2b;
+                        else if(inWhichMatchIsPlayer == "2b") currentOpponentName = match2a;
+                        else if(inWhichMatchIsPlayer == "3a") currentOpponentName = match3b;
+                        else if(inWhichMatchIsPlayer == "3b") currentOpponentName = match3a;
+                        else if(inWhichMatchIsPlayer == "pause") currentOpponentName = "pause";
+
+                        ///set text with name of your character in League interface (LInextMatchT)
+                        if(characterInLeague.getName() == "alien") LInextMatchT.setString("Alien");
+                        else if(characterInLeague.getName() == "black") LInextMatchT.setString("Black men");
+                        else if(characterInLeague.getName() == "lennon") LInextMatchT.setString("Lennon");
+                        else if(characterInLeague.getName() == "gandalf") LInextMatchT.setString("Gandalf");
+                        else if(characterInLeague.getName() == "kuszczak") LInextMatchT.setString("Kuszczak");
+                        else if(characterInLeague.getName() == "gato") LInextMatchT.setString("El gato");
+                        else if(characterInLeague.getName() == "frog") LInextMatchT.setString("Frog");
+
+                        ///set next match opponent text (LIvsT)
+                        if(currentOpponentName == "alien") LIvsT.setString("vs Alien");
+                        else if(currentOpponentName == "black") LIvsT.setString("vs Black men");
+                        else if(currentOpponentName == "lennon") LIvsT.setString("vs Lennon");
+                        else if(currentOpponentName == "gandalf") LIvsT.setString("vs Gandalf");
+                        else if(currentOpponentName == "kuszczak") LIvsT.setString("vs Kuszczak");
+                        else if(currentOpponentName == "gato") LIvsT.setString("vs El gato");
+                        else if(currentOpponentName == "frog") LIvsT.setString("vs Frog");
+                        else if(currentOpponentName == "pause") LIvsT.setString("is pausing");
+
+                        ///set next match opponent portrait (LIvsS)
+                        if(currentOpponentName == "alien") LIvsS.setTexture(alienT);
+                        else if(currentOpponentName == "black") LIvsS.setTexture(blackManT);
+                        else if(currentOpponentName == "lennon") LIvsS.setTexture(lennonT);
+                        else if(currentOpponentName == "gandalf") LIvsS.setTexture(gandalfT);
+                        else if(currentOpponentName == "kuszczak") LIvsS.setTexture(kuszczakT);
+                        else if(currentOpponentName == "gato") LIvsS.setTexture(gatoT);
+                        else if(currentOpponentName == "frog") LIvsS.setTexture(frogT);
+                        else if(currentOpponentName == "pause") LIvsS.setTexture(pauseT);
+
                     }
                 }
                 catch(logic_error)
@@ -1337,9 +1419,68 @@ int main()
                     cout<<endl<<"logic_error"<<endl;
                 }
 
-                if(Keyboard::isKeyPressed(Keyboard::Escape))
+                if((Keyboard::isKeyPressed(Keyboard::Escape))&&(!counter))
                 {
                     state = Tstate::menu;
+                    counter = 30;
+                }
+                else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
+                {
+                    if(showControlTip == true) state = Tstate::controlsTip;
+                    else state = Tstate::game;
+
+                    opponentInLeagueMode = currentOpponentName;
+                    changeCharacterStatistics(4,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+                                      characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
+                                      characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
+                                      characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
+                                      frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+
+                    if(controlIn1player == 2)
+                    {
+                        paddle1Control = 2;
+                        paddle2Control = 0;
+                    }
+                    else
+                    {
+                        paddle1Control = 0;
+                        paddle2Control = 1;
+                    }
+
+                    if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
+                    else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
+
+                    ball.setVelocity(10);
+                    paddle1.rect.setPosition(Vector2f(10,400));
+                    paddle2.rect.setPosition(Vector2f(1265,400));
+                    score1 = 0; score2 = 0;
+                    score1T.setString("0"); score2T.setString("0");
+                    lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                    lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
+                    if(random(2))//1
+                    {
+                        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+                        if(oneOr2Players == 2)matchStartT.setString("Player 1 will begin");
+                        else
+                        {
+                            if(controlIn1player == 1)matchStartT.setString("Computer will begin");
+                            else matchStartT.setString("Player will begin");
+                        }
+                    }
+                    else//2
+                    {
+                        ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+                        if(oneOr2Players == 2)matchStartT.setString("Player 2 will begin");
+                        else
+                        {
+                            if(controlIn1player == 1)matchStartT.setString("Player will begin");
+                            else matchStartT.setString("Computer will begin");
+                        }
+                    }
+
+                    setPaddlesSpeed(paddle1,paddle2,player1,player2);
+
+                    counter = 30;
                 }
 
                 window.draw(LIlevelT);
@@ -1483,7 +1624,7 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
         increaseContainer2.setString(floatTostring(gato.getIncreaseContainer()));
     }
 
-    if(additionalMode == 3)
+    else if(additionalMode == 3)
     {
         if(player1 == 0) {spriteInGame1.setTexture(frogT2); ::player1.setStatistics(frog.getSpeed(),frog.getPower(),frog.getSpeedUp(),frog.getSpeedUpContainer(),frog.getIncrease(),frog.getIncreaseContainer());}
         else if(player1 == 1) {spriteInGame1.setTexture(gatoT2); ::player1.setStatistics(gato.getSpeed(),gato.getPower(),gato.getSpeedUp(),gato.getSpeedUpContainer(),gato.getIncrease(),gato.getIncreaseContainer());}
@@ -1500,6 +1641,65 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
         else if(player2 == 4) {spriteInGame2.setTexture(lennonT2); ::player2.setStatistics(lennon.getSpeed(),lennon.getPower(),lennon.getSpeedUp(),lennon.getSpeedUpContainer(),lennon.getIncrease(),lennon.getIncreaseContainer());}
         else if(player2 == 5) {spriteInGame2.setTexture(blackManT2); ::player2.setStatistics(black.getSpeed(),black.getPower(),black.getSpeedUp(),black.getSpeedUpContainer(),black.getIncrease(),black.getIncreaseContainer());}
         else if(player2 == 6) {spriteInGame2.setTexture(alienT2); ::player2.setStatistics(alien.getSpeed(),alien.getPower(),alien.getSpeedUp(),alien.getSpeedUpContainer(),alien.getIncrease(),alien.getIncreaseContainer());}
+
+        if(state == Tstate::LcharacterChoise)
+        {
+            characterInLeague.setStatistics(::player2.getSpeed(),::player2.getPower(),::player2.getSpeedUp(),::player2.getSpeedUpContainer(),::player2.getIncrease(),::player2.getIncreaseContainer());
+            switch(player2)
+            {
+                case 0: characterInLeague.setName(frog.getName());      break;
+                case 1: characterInLeague.setName(gato.getName());      break;
+                case 2: characterInLeague.setName(kuszczak.getName());  break;
+                case 3: characterInLeague.setName(gandalf.getName());   break;
+                case 4: characterInLeague.setName(lennon.getName());    break;
+                case 5: characterInLeague.setName(black.getName());     break;
+                case 6: characterInLeague.setName(alien.getName());     break;
+            }
+            cout<<"character in league: "<<characterInLeague.getName()<<endl<<endl;
+        }
+    }
+    else if(additionalMode == 4)
+    {
+        if(controlIn1player == 1)
+        {
+            if(opponentInLeagueMode == "frog") {spriteInGame1.setTexture(frogT2); ::player1.setStatistics(frog.getSpeed(),frog.getPower(),frog.getSpeedUp(),frog.getSpeedUpContainer(),frog.getIncrease(),frog.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "gato") {spriteInGame1.setTexture(gatoT2); ::player1.setStatistics(gato.getSpeed(),gato.getPower(),gato.getSpeedUp(),gato.getSpeedUpContainer(),gato.getIncrease(),gato.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "kuszczak") {spriteInGame1.setTexture(kuszczakT2); ::player1.setStatistics(kuszczak.getSpeed(),kuszczak.getPower(),kuszczak.getSpeedUp(),kuszczak.getSpeedUpContainer(),kuszczak.getIncrease(),kuszczak.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "gandalf") {spriteInGame1.setTexture(gandalfT2); ::player1.setStatistics(gandalf.getSpeed(),gandalf.getPower(),gandalf.getSpeedUp(),gandalf.getSpeedUpContainer(),gandalf.getIncrease(),gandalf.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "lennon") {spriteInGame1.setTexture(lennonT2); ::player1.setStatistics(lennon.getSpeed(),lennon.getPower(),lennon.getSpeedUp(),lennon.getSpeedUpContainer(),lennon.getIncrease(),lennon.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "black") {spriteInGame1.setTexture(blackManT2); ::player1.setStatistics(black.getSpeed(),black.getPower(),black.getSpeedUp(),black.getSpeedUpContainer(),black.getIncrease(),black.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "alien") {spriteInGame1.setTexture(alienT2); ::player1.setStatistics(alien.getSpeed(),alien.getPower(),alien.getSpeedUp(),alien.getSpeedUpContainer(),alien.getIncrease(),alien.getIncreaseContainer());}
+
+            ::player2.setStatistics(characterInLeague.getSpeed(),characterInLeague.getPower(),characterInLeague.getSpeedUp(),characterInLeague.getSpeedUpContainer(),characterInLeague.getIncrease(),characterInLeague.getIncreaseContainer());
+
+            if(characterInLeague.getName() == "frog")         spriteInGame2.setTexture(frogT2);
+            else if(characterInLeague.getName() == "gato")    spriteInGame2.setTexture(gatoT2);
+            else if(characterInLeague.getName() == "kuszczak")spriteInGame2.setTexture(kuszczakT2);
+            else if(characterInLeague.getName() == "gandalf") spriteInGame2.setTexture(gandalfT2);
+            else if(characterInLeague.getName() == "lennon")  spriteInGame2.setTexture(lennonT2);
+            else if(characterInLeague.getName() == "black")   spriteInGame2.setTexture(blackManT2);
+            else if(characterInLeague.getName() == "alien")   spriteInGame2.setTexture(alienT2);
+        }
+        else
+        {
+            if(opponentInLeagueMode == "frog") {spriteInGame2.setTexture(frogT2); ::player2.setStatistics(frog.getSpeed(),frog.getPower(),frog.getSpeedUp(),frog.getSpeedUpContainer(),frog.getIncrease(),frog.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "gato") {spriteInGame2.setTexture(gatoT2); ::player2.setStatistics(gato.getSpeed(),gato.getPower(),gato.getSpeedUp(),gato.getSpeedUpContainer(),gato.getIncrease(),gato.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "kuszczak") {spriteInGame2.setTexture(kuszczakT2); ::player2.setStatistics(kuszczak.getSpeed(),kuszczak.getPower(),kuszczak.getSpeedUp(),kuszczak.getSpeedUpContainer(),kuszczak.getIncrease(),kuszczak.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "gandalf") {spriteInGame2.setTexture(gandalfT2); ::player2.setStatistics(gandalf.getSpeed(),gandalf.getPower(),gandalf.getSpeedUp(),gandalf.getSpeedUpContainer(),gandalf.getIncrease(),gandalf.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "lennon") {spriteInGame2.setTexture(lennonT2); ::player2.setStatistics(lennon.getSpeed(),lennon.getPower(),lennon.getSpeedUp(),lennon.getSpeedUpContainer(),lennon.getIncrease(),lennon.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "black") {spriteInGame2.setTexture(blackManT2); ::player2.setStatistics(black.getSpeed(),black.getPower(),black.getSpeedUp(),black.getSpeedUpContainer(),black.getIncrease(),black.getIncreaseContainer());}
+            else if(opponentInLeagueMode == "alien") {spriteInGame2.setTexture(alienT2); ::player2.setStatistics(alien.getSpeed(),alien.getPower(),alien.getSpeedUp(),alien.getSpeedUpContainer(),alien.getIncrease(),alien.getIncreaseContainer());}
+
+            ::player1.setStatistics(characterInLeague.getSpeed(),characterInLeague.getPower(),characterInLeague.getSpeedUp(),characterInLeague.getSpeedUpContainer(),characterInLeague.getIncrease(),characterInLeague.getIncreaseContainer());
+
+            if(characterInLeague.getName() == "frog")         spriteInGame1.setTexture(frogT2);
+            else if(characterInLeague.getName() == "gato")    spriteInGame1.setTexture(gatoT2);
+            else if(characterInLeague.getName() == "kuszczak")spriteInGame1.setTexture(kuszczakT2);
+            else if(characterInLeague.getName() == "gandalf") spriteInGame1.setTexture(gandalfT2);
+            else if(characterInLeague.getName() == "lennon")  spriteInGame1.setTexture(lennonT2);
+            else if(characterInLeague.getName() == "black")   spriteInGame1.setTexture(blackManT2);
+            else if(characterInLeague.getName() == "alien")   spriteInGame1.setTexture(alienT2);
+        }
     }
 
     if(!counter1)

@@ -19,6 +19,7 @@ public:
     bool getPaused(){return didIpaused;}
     void setPaused(bool x){didIpaused = x;}
     void setAmIinMatch(bool x){amIinMatch = x;}
+    void setName(string _name){name = _name;}
     bool getAmIinMatch(){return amIinMatch;}
     string getName(){return name;}
     float getSpeed(){return speed;}
