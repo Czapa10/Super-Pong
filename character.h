@@ -29,4 +29,5 @@ public:
     float getIncrease(){return increase;}
     float getIncreaseContainer(){return increaseContainer;}
     void showWithWhoIplayed();
+    void resetLeague();
 };

@@ -51,3 +51,10 @@ void Character::showWithWhoIplayed()
          if(withWhoPlayed[i] != "") std::cout<<withWhoPlayed[i]<<std::endl;
     }
 }
+
+void Character::resetLeague()
+{
+    for(int i=0; i<6; i++){withWhoPlayed[i] = "";}
+    didIpaused = false;
+    amIinMatch = false;
+}

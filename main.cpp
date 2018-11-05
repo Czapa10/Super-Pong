@@ -53,7 +53,7 @@ pos posInTable[7];
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2,int& counterMatchStart, int& counterMatchWin);
 void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite2,Sprite& spriteInGame1,Sprite& spriteInGame2,Text& name1,Text& name2,Text& speed1,Text& speed2,Text& power1,Text& power2Text,Text& speedUp1,Text& speedUp2,Text& speedUpContainer1,Text& speedUpContainer2,Text& increase1,Text& increase2,Text& increaseContainer1, Text& increaseContainer2,Character frog,Character gato,Character kuszczak,Character gandalf,Character lennon,Character black,Character alien);
-void setLeagueTable(std::string nameOf1player,std::string nameOf2player,Text &name1,Text &name2,Text &name3,Text &name4,Text &name5,Text &name6,Text &name7,Text &points1,Text &points2,Text &points3,Text &points4,Text &points5,Text &points6,Text &points7);
+void setLeagueTable(string nameOf1player,string nameOf2player, Text &name1,Text &name2,Text &name3,Text &name4,Text &name5,Text &name6,Text &name7,Text &points1,Text &points2,Text &points3,Text &points4,Text &points5,Text &points6,Text &points7);
 void setPaddlesSpeed(Paddle& pad1,Paddle& pad2,Character p1,Character p2);
 void setPaddlesSpeed(Paddle& pad1,Character p1);
 void setPaddlesSpeed(Character p2,Paddle& pad2);
@@ -1190,6 +1190,8 @@ int main()
 
             if(leagueInitialization == 1)///new league
             {
+                cout<<"\nLEAGUE INITIALIZATION == 1 - New game\n";
+
                 counter = 30;
                 matchDay = 0;
                 doNextMatches = true;
@@ -1202,11 +1204,15 @@ int main()
                 posInTable[5]={"kuszczak",0};
                 posInTable[6]={"lennon",0};
 
+                alien.resetLeague(); blackMan.resetLeague(); gandalf.resetLeague(); elGato.resetLeague();
+                frog.resetLeague(); kuszczak.resetLeague(); lennon.resetLeague();
+
                 leagueInitialization = 0;
             }
             else if(leagueInitialization == 2)///continue - loading save
             {
-
+                cout<<"\nLEAGUE INITIALIZATION == 2 - New game\n";
+                leagueInitialization = 0;
             }
 
             if((matchDay == 7)&&(doNextMatches == true)) state = Tstate::exitScreen;///end of the league
@@ -1458,6 +1464,13 @@ int main()
                             nameMatch1a = match1a;  nameMatch1b = match1b;
                             inWhichMatchIsPlayerGLOBAL = 3;
                         }
+                        else
+                        {
+                            nameMatch1a = match1a;  nameMatch1b = match1b;
+                            nameMatch2a = match2a;  nameMatch2b = match2b;
+                            nameMatch3a = match3a;  nameMatch3b = match3b;
+                            inWhichMatchIsPlayerGLOBAL = 0;
+                        }
                     }
                 }
                 catch(logic_error)
@@ -1472,6 +1485,15 @@ int main()
                 }
                 else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
                 {
+                    if(isPausing == characterInLeague.getName())//while player is pausing in league
+                    {
+                        setLeagueTable(nameOfPlayer1, nameOfPlayer2,
+                                       LI1nameT, LI2nameT, LI3nameT, LI4nameT, LI5nameT, LI6nameT, LI7nameT,
+                                       LI1pointsT, LI2pointsT, LI3pointsT, LI4pointsT, LI5pointsT, LI6pointsT, LI7pointsT);
+                        doNextMatches = true;
+                        continue;
+                        cout<<endl<<"Tu mialo byc continue"<<endl;
+                    }
                     if(showControlTip == true) state = Tstate::controlsTip;
                     else state = Tstate::game;
 
@@ -1978,23 +2000,30 @@ void setLeagueTable(string nameOf1player, string nameOf2player,
         if(posInTable[i].name == nameOf2player) secondPlayerPosInTable = i;
     }
 
-    ///adding points to table
-    int x;
-    if(controlIn1player == 1) x = 2;
-    else x = 1;
-
-    if(whoWon == x)
+    if(inWhichMatchIsPlayerGLOBAL)
     {
-        posInTable[firstPlayerPosInTable].numberOfPoints += 5;
-        posInTable[secondPlayerPosInTable].numberOfPoints += score2;
-    }
-    else
-    {
-        posInTable[secondPlayerPosInTable].numberOfPoints += 5;
-        posInTable[firstPlayerPosInTable].numberOfPoints += score1;
+        ///adding points to table
+        int x;
+        if(controlIn1player == 1) x = 2;
+        else x = 1;
+
+        if(whoWon == x)
+        {
+            posInTable[firstPlayerPosInTable].numberOfPoints += 5;
+            posInTable[secondPlayerPosInTable].numberOfPoints += score2;
+        }
+        else
+        {
+            posInTable[secondPlayerPosInTable].numberOfPoints += 5;
+            posInTable[firstPlayerPosInTable].numberOfPoints += score1;
+        }
     }
 
-    string matchA[2], matchB[2];
+    int sizeOfTable;
+    if(inWhichMatchIsPlayerGLOBAL == 0) sizeOfTable = 3;
+    else sizeOfTable = 2;
+
+    string matchA[sizeOfTable], matchB[sizeOfTable];
 
     ///data capture
     if(inWhichMatchIsPlayerGLOBAL == 1)
@@ -2012,9 +2041,15 @@ void setLeagueTable(string nameOf1player, string nameOf2player,
         matchA[0] = nameMatch2a; matchB[0] = nameMatch2b;
         matchA[1] = nameMatch1a; matchB[1] = nameMatch1b;
     }
+    else//player is pausing
+    {
+        matchA[0] = nameMatch1a; matchB[0] = nameMatch1b;
+        matchA[1] = nameMatch2a; matchB[1] = nameMatch2b;
+        matchA[2] = nameMatch3a; matchB[2] = nameMatch3b;
+    }
 
     ///simulation of other matches algorithm
-    for(int i=0; i<2; i++)
+    for(int i=0; i<sizeOfTable; i++)
     {
         int powerA, powerB;
         if(matchA[i] == "alien")    powerA = 10;
@@ -2067,7 +2102,7 @@ void setLeagueTable(string nameOf1player, string nameOf2player,
         {
             int aux = random(2);
             if(aux){pointsA = 5; pointsB = 3;}
-            else{pointsB = 5; pointsA = 5;}
+            else{pointsB = 5; pointsA = 3;}
         }
         cout<<endl<<"pointsA: "<<pointsA<<endl;
         cout<<"pointsB: "<<pointsB<<endl<<endl;
@@ -2078,15 +2113,27 @@ void setLeagueTable(string nameOf1player, string nameOf2player,
             if(!i)
             {
                 if(posInTable[j].name == matchA[0]) posInTable[j].numberOfPoints += pointsA;
-                if(posInTable[j].name == matchA[1]) posInTable[j].numberOfPoints += pointsB;
+                else if(posInTable[j].name == matchB[0]) posInTable[j].numberOfPoints += pointsB;
             }
-            else
+            else if(i == 1)
             {
-                if(posInTable[j].name == matchB[0]) posInTable[j].numberOfPoints += pointsA;
-                if(posInTable[j].name == matchB[1]) posInTable[j].numberOfPoints += pointsB;
+                if(posInTable[j].name == matchA[1]) posInTable[j].numberOfPoints += pointsA;
+                else if(posInTable[j].name == matchB[1]) posInTable[j].numberOfPoints += pointsB;
+            }
+            else//i==2
+            {
+                if(posInTable[j].name == matchA[2]) posInTable[j].numberOfPoints += pointsA;
+                else if(posInTable[j].name == matchB[2]) posInTable[j].numberOfPoints += pointsB;
             }
         }
     }
+
+    cout<<endl;
+    for(int i=0; i<7; i++)
+    {
+        cout<<posInTable[i].name<<"  : "<<posInTable[i].numberOfPoints<<endl;
+    }
+    cout<<endl;
 
     ///sorting table - bubble sort
     for(int i=0; i<7; i++)
