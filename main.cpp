@@ -2,13 +2,14 @@
 #include <iostream>
 #include <time.h>
 #include <string>
+#include <fstream>
 #include "entity.h"
 #include "ball.h"
 #include "paddle.h"
 #include "lane.h"
 #include "character.h"
 
-#define VERSION "BETA 0.5"
+#define VERSION "BETA 0.6"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
@@ -788,8 +789,14 @@ int main()
                         }
                         else if(isSelected == 2)
                         {
-                            state = Tstate::LeagueInterface;
-                            leagueInitialization = 2;
+                            fstream file;
+                            file.open("save.txt",ios::in);
+
+                            if(file.good() == true)
+                            {
+                                state = Tstate::LeagueInterface;
+                                leagueInitialization = 2;
+                            }
                         }
                         oneOr2Players = 1;
                     }
@@ -1207,12 +1214,107 @@ int main()
                 alien.resetLeague(); blackMan.resetLeague(); gandalf.resetLeague(); elGato.resetLeague();
                 frog.resetLeague(); kuszczak.resetLeague(); lennon.resetLeague();
 
+                if(difficultyLevel == Tlevel::easy)LIlevelT.setString("level of difficulty - Easy");
+                else if(difficultyLevel == Tlevel::medium)LIlevelT.setString("level of difficulty - Medium");
+                else LIlevelT.setString("level of difficulty - Hard");
+
                 leagueInitialization = 0;
             }
             else if(leagueInitialization == 2)///continue - loading save
             {
                 cout<<"\nLEAGUE INITIALIZATION == 2 - New game\n";
+
+                fstream file;
+                file.open("save.txt",ios::in);
+
+                string line;
+                int lineNumber{1};
+                int diffLevel; //auxiliary variable to take level of difficulty
+
+                while(getline(file,line))
+                {
+                    switch(lineNumber)
+                    {
+                        case 1:     matchDay = atoi(line.c_str());                      break;
+                        case 2:     match1a = line;                                     break;
+                        case 3:     match1b = line;                                     break;
+                        case 4:     match2a = line;                                     break;
+                        case 5:     match2b = line;                                     break;
+                        case 6:     match3a = line;                                     break;
+                        case 7:     match3b = line;                                     break;
+                        case 8:     isPausing = line;                                   break;
+                        case 9:     inWhichMatchIsPlayer = line;                        break;
+                        case 10:    currentOpponentName = line;
+                                    if(line == "frog")LIvsS.setTexture(frogT);
+                                    else if(line == "alien")LIvsS.setTexture(alienT);
+                                    else if(line == "black")LIvsS.setTexture(blackManT);
+                                    else if(line == "gandalf")LIvsS.setTexture(gandalfT);
+                                    else if(line == "gato")LIvsS.setTexture(gatoT);
+                                    else if(line == "lennon")LIvsS.setTexture(lennonT);
+                                    else if(line == "kuszczak")LIvsS.setTexture(kuszczakT);
+                                                                                        break;
+                        case 11:    characterInLeague.setName(line);                    break;
+                        case 12:    nameMatch1a = line;                                 break;
+                        case 13:    nameMatch1b = line;                                 break;
+                        case 14:    nameMatch2a = line;                                 break;
+                        case 15:    nameMatch2b = line;                                 break;
+                        case 16:    nameMatch3a = line;                                 break;
+                        case 17:    nameMatch3b = line;                                 break;
+                        case 18:    inWhichMatchIsPlayerGLOBAL = atoi(line.c_str());    break;
+                        case 19:    posInTable[0].name = line;                          break;
+                        case 20:    posInTable[0].numberOfPoints = atoi(line.c_str());  break;
+                        case 21:    posInTable[1].name = line;                          break;
+                        case 22:    posInTable[1].numberOfPoints = atoi(line.c_str());  break;
+                        case 23:    posInTable[2].name = line;                          break;
+                        case 24:    posInTable[2].numberOfPoints = atoi(line.c_str());  break;
+                        case 25:    posInTable[3].name = line;                          break;
+                        case 26:    posInTable[3].numberOfPoints = atoi(line.c_str());  break;
+                        case 27:    posInTable[4].name = line;                          break;
+                        case 28:    posInTable[4].numberOfPoints = atoi(line.c_str());  break;
+                        case 29:    posInTable[5].name = line;                          break;
+                        case 30:    posInTable[5].numberOfPoints = atoi(line.c_str());  break;
+                        case 31:    posInTable[6].name = line;                          break;
+                        case 32:    posInTable[6].numberOfPoints = atoi(line.c_str());  break;
+                        case 33:    diffLevel = atoi(line.c_str());                     break;
+                    }
+
+                    lineNumber++;
+                }
+                file.close();
+
+                ///load difficulty level
+                if(diffLevel == 1)difficultyLevel = Tlevel::easy;
+                else if(diffLevel == 2)difficultyLevel = Tlevel::medium;
+                else difficultyLevel = Tlevel::hard;
+
+                if(difficultyLevel == Tlevel::easy)LIlevelT.setString("level of difficulty - Easy");
+                else if(difficultyLevel == Tlevel::medium)LIlevelT.setString("level of difficulty - Medium");
+                else LIlevelT.setString("level of difficulty - Hard");
+
+                ///draw changes in table
+                LI1nameT.setString(posInTable[0].name);
+                LI1pointsT.setString(intToStr(posInTable[0].numberOfPoints));
+
+                LI2nameT.setString(posInTable[1].name);
+                LI2pointsT.setString(intToStr(posInTable[1].numberOfPoints));
+
+                LI3nameT.setString(posInTable[2].name);
+                LI3pointsT.setString(intToStr(posInTable[2].numberOfPoints));
+
+                LI4nameT.setString(posInTable[3].name);
+                LI4pointsT.setString(intToStr(posInTable[3].numberOfPoints));
+
+                LI5nameT.setString(posInTable[4].name);
+                LI5pointsT.setString(intToStr(posInTable[4].numberOfPoints));
+
+                LI6nameT.setString(posInTable[5].name);
+                LI6pointsT.setString(intToStr(posInTable[5].numberOfPoints));
+
+                LI7nameT.setString(posInTable[6].name);
+                LI7pointsT.setString(intToStr(posInTable[6].numberOfPoints));
+
                 leagueInitialization = 0;
+                counter = 30;
             }
 
             if((matchDay == 7)&&(doNextMatches == true)) state = Tstate::exitScreen;///end of the league
@@ -1482,6 +1584,41 @@ int main()
                 {
                     state = Tstate::menu;
                     counter = 30;
+
+                    ///save in file
+                    fstream file;
+                    file.open("save.txt",ios::out);
+
+                    file<<matchDay<<endl;
+                    file<<match1a<<endl;
+                    file<<match1b<<endl;
+                    file<<match2a<<endl;
+                    file<<match2b<<endl;
+                    file<<match3a<<endl;
+                    file<<match3b<<endl;
+                    file<<isPausing<<endl;
+                    file<<inWhichMatchIsPlayer<<endl;
+                    file<<currentOpponentName<<endl;
+                    file<<characterInLeague.getName()<<endl;
+                    file<<nameMatch1a<<endl;
+                    file<<nameMatch1b<<endl;
+                    file<<nameMatch2a<<endl;
+                    file<<nameMatch2b<<endl;
+                    file<<nameMatch3a<<endl;
+                    file<<nameMatch3b<<endl;
+                    file<<inWhichMatchIsPlayerGLOBAL<<endl;
+
+                    for(int i=0; i<7; i++)
+                    {
+                        file<<posInTable[i].name<<endl;
+                        file<<posInTable[i].numberOfPoints<<endl;
+                    }
+
+                    if(difficultyLevel == Tlevel::easy)file<<1<<endl;
+                    else if(difficultyLevel == Tlevel::medium)file<<2<<endl;
+                    else file<<3<<endl;
+
+                    file.close();
                 }
                 else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
                 {
@@ -1492,7 +1629,6 @@ int main()
                                        LI1pointsT, LI2pointsT, LI3pointsT, LI4pointsT, LI5pointsT, LI6pointsT, LI7pointsT);
                         doNextMatches = true;
                         continue;
-                        cout<<endl<<"Tu mialo byc continue"<<endl;
                     }
                     if(showControlTip == true) state = Tstate::controlsTip;
                     else state = Tstate::game;
@@ -2142,8 +2278,6 @@ void setLeagueTable(string nameOf1player, string nameOf2player,
         {
             if(posInTable[j].numberOfPoints < posInTable[j+1].numberOfPoints)
             {
-                cout<<"\nHERE\n";
-
                 string auxName = posInTable[j].name;
                 int auxPoints{posInTable[j].numberOfPoints};
 
