@@ -3,6 +3,7 @@
 #include <time.h>
 #include <string>
 #include <fstream>
+#include <algorithm>
 #include "entity.h"
 #include "ball.h"
 #include "paddle.h"
@@ -58,13 +59,11 @@ void setLeagueTable(string nameOf1player,string nameOf2player, Text &name1,Text 
 void setPaddlesSpeed(Paddle& pad1,Paddle& pad2,Character p1,Character p2);
 void setPaddlesSpeed(Paddle& pad1,Character p1);
 void setPaddlesSpeed(Character p2,Paddle& pad2);
+void myToUpper(char *letter);
 string floatTostring(float x);
 string intToStr(int n);
 int random(int x);
 ///--------------------------------------------------
-
-
-
 
 int main()
 {
@@ -73,7 +72,7 @@ int main()
 
     srand(time(NULL));
 
-    ///loading*************************************************
+    ///loading graphics*************************************************
     Font font1; font1.loadFromFile("font1.ttf");
     Font font2; font2.loadFromFile("font2.ttf");
     Texture MaineCoonLogoT; MaineCoonLogoT.loadFromFile("MaineCoonLogo.jpg");
@@ -189,6 +188,8 @@ int main()
     RectangleShape blackBox(Vector2f(450,900)); blackBox.setFillColor(Color::Black);
     RectangleShape blackBox2(Vector2f(200,200)); blackBox2.setFillColor(Color::Black);
     RectangleShape blackBox3(Vector2f(850,680)); blackBox3.setFillColor(Color::Black); blackBox3.setPosition(Vector2f(0,110));
+    RectangleShape blackBox4(Vector2f(650,900)); blackBox4.setFillColor(Color::Black);
+    RectangleShape blackBox5(Vector2f(1300,200)); blackBox5.setFillColor(Color::Black); blackBox5.setPosition(Vector2f(0,700));
     Texture awsd; awsd.loadFromFile("awsd.png");
     Texture arrows; arrows.loadFromFile("KeyboardArrows.jpg");
     Sprite A(awsd); A.setTextureRect(IntRect(7,96,94,89)); A.setPosition(Vector2f(10,300));
@@ -246,7 +247,18 @@ int main()
     Text LI5pointsT("0",font2,70); LI5pointsT.setPosition(1200,430); LI5pointsT.setFillColor(Color::Yellow);
     Text LI6pointsT("0",font2,70); LI6pointsT.setPosition(1200,510); LI6pointsT.setFillColor(Color::Yellow);
     Text LI7pointsT("0",font2,70); LI7pointsT.setPosition(1200,590); LI7pointsT.setFillColor(Color::Yellow);
-    Text exitT("Game was made by",font1,80); exitT.setPosition(Vector2f(100,200)); Text exitT2("GRZEGORZ BEDNORZ",font2,100); exitT2.setPosition(Vector2f(150,350)); exitT2.setFillColor(Color::Yellow);
+    Text LIsummaryT1("LEAGUE SUMMARY",font1,75); LIsummaryT1.setPosition(Vector2f(15,15)); LIsummaryT1.setFillColor(Color::Magenta);
+    Text LIsummaryT2("CONGRATULATIONS!",font2,75); LIsummaryT2.setPosition(Vector2f(20,110)); LIsummaryT2.setFillColor(Color::Cyan);
+    Text LIsummaryT3("You won the league",font2,75); LIsummaryT3.setPosition(Vector2f(20,200)); LIsummaryT3.setFillColor(Color::Cyan);
+    Text LIsummaryT4("------------------",font2,75); LIsummaryT4.setPosition(Vector2f(20,290)); LIsummaryT4.setFillColor(Color::Cyan);
+    Text LIsummaryT5("------------------",font2,75); LIsummaryT5.setPosition(Vector2f(20,380)); LIsummaryT5.setFillColor(Color::Cyan);
+    Text LIsummaryTexit("ENTER - go to main menu",font2,90); LIsummaryTexit.setPosition(Vector2f(150,760)); LIsummaryTexit.setFillColor(Color::Green);
+    Sprite LIsummaryS2_1(frogT); LIsummaryS2_1.setPosition(Vector2f(70,450)); LIsummaryS2_1.setScale(Vector2f(2,2));
+    Sprite LIsummaryS2_2(gatoT); LIsummaryS2_2.setPosition(Vector2f(390,450)); LIsummaryS2_2.setScale(Vector2f(2,2));
+    Sprite LIsummaryS3_1(frogT); LIsummaryS3_1.setPosition(Vector2f(30,510)); LIsummaryS3_1.setScale(Vector2f(1.5,1.5));
+    Sprite LIsummaryS3_2(gatoT); LIsummaryS3_2.setPosition(Vector2f(260,510)); LIsummaryS3_2.setScale(Vector2f(1.5,1.5));
+    Sprite LIsummaryS3_3(gandalfT); LIsummaryS3_3.setPosition(Vector2f(490,510)); LIsummaryS3_3.setScale(Vector2f(1.5,1.5));
+    Text exitT("Game was made by",font1,90); exitT.setPosition(Vector2f(100,200)); Text exitT2("GRZEGORZ BEDNORZ",font2,100); exitT2.setPosition(Vector2f(150,350)); exitT2.setFillColor(Color::Yellow);
 
     Character frog(5,4,3,5,6,5,"frog");
     Character elGato(8,3,7,2,6,5,"gato");
@@ -1195,6 +1207,10 @@ int main()
             static string inWhichMatchIsPlayer;
             static string currentOpponentName;
 
+            int howManyWinners{1};
+            bool isPlayerWinner;
+            static int leagueSumationOption{};
+
             if(leagueInitialization == 1)///new league
             {
                 cout<<"\nLEAGUE INITIALIZATION == 1 - New game\n";
@@ -1317,9 +1333,121 @@ int main()
                 counter = 30;
             }
 
-            if((matchDay == 7)&&(doNextMatches == true)) state = Tstate::exitScreen;///end of the league
+            if((matchDay == 7)&&(doNextMatches == true))///end of the league screen (logic)
+            {
+                ///check who won and how many persons won
 
-            if(state == Tstate::LeagueInterface)
+                ///There are 6 options:
+                ///1 - Only player won the league               (1 winner)
+                ///2 - Player and one another character won     (2 winners)
+                ///3 - Player and two another characters won    (3 winners)
+                ///4 - Only one bot won the league              (1 winner)
+                ///5 - Two bots won                             (2 winners)
+                ///6 - Three bots won                           (3 winners)
+
+                if(!leagueSumationOption)
+                {
+                    if(posInTable[0].numberOfPoints == posInTable[1].numberOfPoints)
+                    {
+                        howManyWinners = 2;
+
+                        if(posInTable[0].numberOfPoints == posInTable[2].numberOfPoints)
+                        howManyWinners = 3;
+                    }
+
+                    for(int i=0; i<7; i++)
+                    {
+                        if(characterInLeague.getName() == posInTable[i].name)
+                        {
+                            if(posInTable[i].numberOfPoints == posInTable[0].numberOfPoints) isPlayerWinner = true;
+                            else isPlayerWinner = false;
+                            break;
+                        }
+                    }
+
+                    if(isPlayerWinner)
+                    {
+                        LIsummaryT1.setString("CONGRATULATIONS!");
+                        char *letterPointer = nullptr;
+
+                        switch(howManyWinners)
+                        {
+                        case 1:
+                            leagueSumationOption = 1;
+
+                            LIsummaryT2.setString("You won the league");
+                            break;
+
+                        case 2:
+                            {
+                                leagueSumationOption = 2;
+                                string toSubtitle("You and ");
+                                LIsummaryT3.setString("won the league");
+
+                                string aux{posInTable[0].name};
+                                if(aux == "gato") aux.insert(0,"el ");
+                                else if(aux == "black") aux.insert(5," man");
+                                letterPointer = &aux[0];
+                                myToUpper(letterPointer);
+                                toSubtitle += aux;
+
+                                LIsummaryT2.setString(toSubtitle);
+
+                                break;
+                            }
+                        case 3:
+                            {
+                                leagueSumationOption = 3;
+
+                                string toSubtitle("You, ");
+                                for(int i=0; i<2; i++)
+                                {
+                                    if(i == 2) toSubtitle = "and ";
+
+                                    string aux{posInTable[i].name};
+                                    if(aux == "gato") aux.insert(0,"el ");
+                                    else if(aux == "black") aux.insert(5," man");
+                                    letterPointer = &aux[0];
+                                    myToUpper(letterPointer);
+                                    toSubtitle += aux;
+
+                                    if(i == 1) LIsummaryT2.setString(toSubtitle);
+                                    else LIsummaryT3.setString(toSubtitle);
+                                }
+
+                                LIsummaryT4.setString("won the league");
+
+                            break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        LIsummaryT1.setString("You finished .th");
+
+                        switch(howManyWinners)
+                        {
+                        case 1:
+                            leagueSumationOption = 4;
+                            LIsummaryT2.setString("... won the league");///<-- tu bedzie za dlugi napis
+                            break;
+                        case 2:
+                            leagueSumationOption = 5;
+                            LIsummaryT2.setString("... and ...");
+                            LIsummaryT3.setString("won the league");
+                            break;
+                        case 3:
+                            leagueSumationOption = 6;
+                            LIsummaryT2.setString("... and ...");
+                            LIsummaryT3.setString("and ...");
+                            LIsummaryT4.setString("won the league");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if((state == Tstate::LeagueInterface)&&(matchDay < 7))
             {
                 try
                 {
@@ -1705,6 +1833,45 @@ int main()
                 window.draw(LIvsS);
                 window.draw(controlsTipPlayT);
                 window.draw(LIexitT);
+
+                char *letterPointer = nullptr;
+                string toSubtitle("You and ");
+                LIsummaryT3.setString("won the league");
+
+                string aux{posInTable[0].name};
+                if(aux == "gato") aux.insert(0,"el ");
+                else if(aux == "black") aux.insert(5," man");
+                letterPointer = &aux[0];
+                myToUpper(letterPointer);
+                toSubtitle += aux;
+
+                LIsummaryT2.setString(toSubtitle);
+
+
+                howManyWinners = 2;
+                //if((matchDay == 7)&&(doNextMatches == true))///end of the league screen (drawing)
+                //{
+                    window.draw(blackBox4); window.draw(blackBox5);
+                    window.draw(LIsummaryT1); window.draw(LIsummaryT2); window.draw(LIsummaryT3);
+                    window.draw(LIsummaryTexit);
+                    switch(howManyWinners)//sprites
+                    {
+                    case 1:
+                        window.draw(LIvsS);
+                        break;
+                    case 2:
+                        window.draw(LIsummaryS2_1); window.draw(LIsummaryS2_2);
+                        break;
+                    case 3:
+                        window.draw(LIsummaryS3_1); window.draw(LIsummaryS3_2); window.draw(LIsummaryS3_3);
+                        break;
+                    }
+                    switch(howManyWinners)//texts
+                    {
+                        case 3: window.draw(LIsummaryT4);
+                        case 2: window.draw(LIsummaryT3);
+                    }
+                //}
 
                 if(counter)counter--;
             }
@@ -2361,5 +2528,17 @@ int random(int x)//how many lots
     int lot;
     lot = rand()%x;
     return lot;
+}
+
+//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
+void myToUpper(char *letter)
+{
+    if(*letter == 'e') *letter = 'E';
+    else if(*letter == 'g') *letter = 'G';
+    else if(*letter == 'f') *letter = 'F';
+    else if(*letter == 'a') *letter = 'A';
+    else if(*letter == 'k') *letter = 'K';
+    else if(*letter == 'l') *letter = 'L';
+    letter = nullptr;
 }
 
