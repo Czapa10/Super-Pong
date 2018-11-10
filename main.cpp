@@ -1209,7 +1209,6 @@ int main()
 
             int howManyWinners{1};
             bool isPlayerWinner;
-            static int leagueSumationOption{};
 
             if(leagueInitialization == 1)///new league
             {
@@ -1333,7 +1332,7 @@ int main()
                 counter = 30;
             }
 
-            if((matchDay == 7)&&(doNextMatches == true))///end of the league screen (logic)
+            if(matchDay > 6)///end of the league screen (logic)
             {
                 ///check who won and how many persons won
 
@@ -1345,536 +1344,643 @@ int main()
                 ///5 - Two bots won                             (2 winners)
                 ///6 - Three bots won                           (3 winners)
 
-                if(!leagueSumationOption)
+                if(posInTable[0].numberOfPoints == posInTable[1].numberOfPoints)
                 {
-                    if(posInTable[0].numberOfPoints == posInTable[1].numberOfPoints)
-                    {
-                        howManyWinners = 2;
+                    howManyWinners = 2;
 
-                        if(posInTable[0].numberOfPoints == posInTable[2].numberOfPoints)
-                        howManyWinners = 3;
+                    if(posInTable[0].numberOfPoints == posInTable[2].numberOfPoints)
+                    howManyWinners = 3;
+                }
+
+                int onWhichPlaceIsPlayer;
+
+                for(int i=0; i<7; i++)
+                {
+                    if(characterInLeague.getName() == posInTable[i].name)
+                    {
+                        if(posInTable[i].numberOfPoints == posInTable[0].numberOfPoints) isPlayerWinner = true;
+                        else isPlayerWinner = false;
+                        onWhichPlaceIsPlayer = i;
+                        break;
+                    }
+                }
+
+                char *letterPointer = nullptr;
+                if(isPlayerWinner)
+                {
+                    LIsummaryT2.setString("CONGRATULATIONS!");
+
+                    switch(howManyWinners)
+                    {
+                    case 1:
+
+                        LIsummaryT3.setString("You won the league");
+                        break;
+
+                    case 2:
+                        {
+                            string toSubtitle("You and ");
+                            LIsummaryT4.setString("won the league");
+
+                            string aux;
+                            if(!onWhichPlaceIsPlayer)aux = posInTable[1].name;
+                            else aux = posInTable[0].name;
+                            if(aux == "gato") aux.insert(0,"el ");
+                            letterPointer = &aux[0];
+                            myToUpper(letterPointer);
+                            if(aux == "black") aux = "Black man";
+                            toSubtitle += aux;
+
+                            LIsummaryT3.setString(toSubtitle);
+
+                            break;
+                        }
+                    case 3:
+                        {
+                            string toSubtitle("You, ");
+                            for(int i=0; i<2; i++)
+                            {
+                                if(i == 1) toSubtitle = "and ";
+
+                                string aux;
+                                if(onWhichPlaceIsPlayer == 0)aux = posInTable[i+1].name;
+                                else if((onWhichPlaceIsPlayer == 1)&&(i == 0))aux = posInTable[i+1].name;
+                                else if((onWhichPlaceIsPlayer == 1)&&(i == 1))aux = posInTable[2].name;
+                                else aux = posInTable[i].name;
+
+                                if(aux == "gato") aux.insert(0,"el ");
+                                letterPointer = &aux[0];
+                                myToUpper(letterPointer);
+                                if(aux == "black") aux = "Black man";
+                                toSubtitle += aux;
+
+                                if(i == 0) LIsummaryT3.setString(toSubtitle);
+                                else LIsummaryT4.setString(toSubtitle);
+                            }
+
+                            LIsummaryT5.setString("won the league");
+
+                        break;
+                        }
+                    }
+                }
+                else
+                {
+                    {
+                        string toSubtitles;
+                        toSubtitles = "You finished ";
+
+                        switch(onWhichPlaceIsPlayer)
+                        {
+                            case 1: toSubtitles += "second"; break;
+                            case 2: toSubtitles += "third";  break;
+                            case 3: toSubtitles += "fourth"; break;
+                            case 4: toSubtitles += "fifth";  break;
+                            case 5: toSubtitles += "sixth";  break;
+                            case 6: toSubtitles += "seventh";break;
+                        }
+
+                        LIsummaryT2.setString(toSubtitles);
                     }
 
-                    for(int i=0; i<7; i++)
+                    switch(howManyWinners)
                     {
-                        if(characterInLeague.getName() == posInTable[i].name)
+                    case 1:
                         {
-                            if(posInTable[i].numberOfPoints == posInTable[0].numberOfPoints) isPlayerWinner = true;
-                            else isPlayerWinner = false;
+                            string toSubtitles(" won the league");
+                            string aux(posInTable[0].name);
+                            if(aux == "gato") aux.insert(0,"El ");
+                            letterPointer = &aux[0];
+                            myToUpper(letterPointer);
+                            if(aux == "black") aux = "Black man";
+                            toSubtitles.insert(0,aux);
+
+                            LIsummaryT3.setString(toSubtitles);
+
+                            break;
+                        }
+                    case 2:
+                        {
+                            string toSubtitle(" and ");
+                            LIsummaryT4.setString("won the league");
+
+                            for(int i=0; i<2; i++)
+                            {
+                                string aux{posInTable[i].name};
+                                if(aux == "gato") aux.insert(0,"el ");
+                                letterPointer = &aux[0];
+                                myToUpper(letterPointer);
+                                if(aux == "black") aux = "Black man";
+                                if(!i)toSubtitle.insert(0,aux);
+                                else toSubtitle += aux;
+                            }
+
+                            LIsummaryT3.setString(toSubtitle);
+
+                            break;
+                        }
+                    case 3:
+                        {
+                            string toSubtitle(" , ");
+                            for(int i=0; i<3; i++)
+                            {
+                                if(i == 2) toSubtitle = "and ";
+
+                                string aux{posInTable[i].name};
+                                if(aux == "gato") aux.insert(0,"el ");
+                                letterPointer = &aux[0];
+                                myToUpper(letterPointer);
+                                if(aux == "black") aux = "Black man";
+                                if(i == 0)toSubtitle.insert(0,aux);
+                                else toSubtitle += aux;
+
+                                if(i == 1) LIsummaryT3.setString(toSubtitle);
+                                else if(i == 2) LIsummaryT4.setString(toSubtitle);
+                            }
+
+                            LIsummaryT5.setString("won the league");
+
                             break;
                         }
                     }
+                }
 
-                    if(isPlayerWinner)
+                ///changing picture textures
+
+                switch(howManyWinners)
+                {
+                case 1:
+                    if(posInTable[0].name == "alien") LIvsS.setTexture(alienT);
+                    else if(posInTable[0].name == "black") LIvsS.setTexture(blackManT);
+                    else if(posInTable[0].name == "gato") LIvsS.setTexture(gatoT);
+                    else if(posInTable[0].name == "gandalf") LIvsS.setTexture(gandalfT);
+                    else if(posInTable[0].name == "lennon") LIvsS.setTexture(lennonT);
+                    else if(posInTable[0].name == "frog") LIvsS.setTexture(frogT);
+                    else if(posInTable[0].name == "kuszczak") LIvsS.setTexture(kuszczakT);
+                    break;
+
+                case 2:
+                    if(posInTable[0].name == "alien") LIsummaryS2_1.setTexture(alienT);
+                    else if(posInTable[0].name == "black") LIsummaryS2_1.setTexture(blackManT);
+                    else if(posInTable[0].name == "gato") LIsummaryS2_1.setTexture(gatoT);
+                    else if(posInTable[0].name == "gandalf") LIsummaryS2_1.setTexture(gandalfT);
+                    else if(posInTable[0].name == "lennon") LIsummaryS2_1.setTexture(lennonT);
+                    else if(posInTable[0].name == "frog") LIsummaryS2_1.setTexture(frogT);
+                    else if(posInTable[0].name == "kuszczak") LIsummaryS2_1.setTexture(kuszczakT);
+
+                    if(posInTable[1].name == "alien") LIsummaryS2_2.setTexture(alienT);
+                    else if(posInTable[1].name == "black") LIsummaryS2_2.setTexture(blackManT);
+                    else if(posInTable[1].name == "gato") LIsummaryS2_2.setTexture(gatoT);
+                    else if(posInTable[1].name == "gandalf") LIsummaryS2_2.setTexture(gandalfT);
+                    else if(posInTable[1].name == "lennon") LIsummaryS2_2.setTexture(lennonT);
+                    else if(posInTable[1].name == "frog") LIsummaryS2_2.setTexture(frogT);
+                    else if(posInTable[1].name == "kuszczak") LIsummaryS2_2.setTexture(kuszczakT);
+
+                case 3:
+                    if(posInTable[0].name == "alien") LIsummaryS3_1.setTexture(alienT);
+                    else if(posInTable[0].name == "black") LIsummaryS3_1.setTexture(blackManT);
+                    else if(posInTable[0].name == "gato") LIsummaryS3_1.setTexture(gatoT);
+                    else if(posInTable[0].name == "gandalf") LIsummaryS3_1.setTexture(gandalfT);
+                    else if(posInTable[0].name == "lennon") LIsummaryS3_1.setTexture(lennonT);
+                    else if(posInTable[0].name == "frog") LIsummaryS3_1.setTexture(frogT);
+                    else if(posInTable[0].name == "kuszczak") LIsummaryS3_1.setTexture(kuszczakT);
+
+                    if(posInTable[1].name == "alien") LIsummaryS3_2.setTexture(alienT);
+                    else if(posInTable[1].name == "black") LIsummaryS3_2.setTexture(blackManT);
+                    else if(posInTable[1].name == "gato") LIsummaryS3_2.setTexture(gatoT);
+                    else if(posInTable[1].name == "gandalf") LIsummaryS3_2.setTexture(gandalfT);
+                    else if(posInTable[1].name == "lennon") LIsummaryS3_2.setTexture(lennonT);
+                    else if(posInTable[1].name == "frog") LIsummaryS3_2.setTexture(frogT);
+                    else if(posInTable[1].name == "kuszczak") LIsummaryS3_2.setTexture(kuszczakT);
+
+                    if(posInTable[2].name == "alien") LIsummaryS3_3.setTexture(alienT);
+                    else if(posInTable[2].name == "black") LIsummaryS3_3.setTexture(blackManT);
+                    else if(posInTable[2].name == "gato") LIsummaryS3_3.setTexture(gatoT);
+                    else if(posInTable[2].name == "gandalf") LIsummaryS3_3.setTexture(gandalfT);
+                    else if(posInTable[2].name == "lennon") LIsummaryS3_3.setTexture(lennonT);
+                    else if(posInTable[2].name == "frog") LIsummaryS3_3.setTexture(frogT);
+                    else if(posInTable[2].name == "kuszczak") LIsummaryS3_3.setTexture(kuszczakT);
+                }
+
+            }
+
+
+            try
+            {
+                if((doNextMatches)&&(matchDay < 7))
+                {
+                    matchDay++;
+
+                    static Character nothing;
+                    static Character chara[7]{nothing};//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
+                    if(matchDay == 1)
                     {
-                        LIsummaryT1.setString("CONGRATULATIONS!");
-                        char *letterPointer = nullptr;
-
-                        switch(howManyWinners)
+                        int table[7]{10};
+                        int i2 = rand()%7;
+                        for(int i=0; i<7; i++)
                         {
-                        case 1:
-                            leagueSumationOption = 1;
+                            table[i] = i2;
+                            i2++;
+                            if(i2 == 7) i2 = 0;
+                            cout<<i<<": "<<i2<<endl;
+                        }
 
-                            LIsummaryT2.setString("You won the league");
-                            break;
+                        for(int i=0; i<10; i++)
+                        {
+                            int shuffling{rand()%4};
+                            int aux;//auxiliary
 
-                        case 2:
+                            cout<<"shuf: "<<shuffling<<endl;
+
+                            switch(shuffling)
                             {
-                                leagueSumationOption = 2;
-                                string toSubtitle("You and ");
-                                LIsummaryT3.setString("won the league");
+                            case 0:
+                                aux = table[0];
+                                table[0] = table[1];
+                                table[1] = aux;
+                                aux = table[2];
+                                table[2] = table[3];
+                                table[3] = aux;
+                                aux = table[4];
+                                table[4] = table[5];
+                                table[5] = aux;
+                                break;
 
-                                string aux{posInTable[0].name};
-                                if(aux == "gato") aux.insert(0,"el ");
-                                else if(aux == "black") aux.insert(5," man");
-                                letterPointer = &aux[0];
-                                myToUpper(letterPointer);
-                                toSubtitle += aux;
+                            case 1:
+                                aux = table[0];
+                                table[0] = table[6];
+                                table[6] = aux;
+                                aux = table[1];
+                                table[1] = table[5];
+                                table[5] = aux;
+                                aux = table[2];
+                                table[2] = table[4];
+                                table[4] = aux;
+                                break;
 
-                                LIsummaryT2.setString(toSubtitle);
+                            case 2:
+                                aux = table[0];
+                                table[0] = table[4];
+                                table[4] = aux;
+                                aux = table[1];
+                                table[1] = table[5];
+                                table[5] = aux;
+                                aux = table[3];
+                                table[3] = table[6];
+                                table[6] = aux;
+                                break;
+
+                            case 3:
+                                aux = table[0];
+                                table[0] = table[2];
+                                table[2] = aux;
+                                aux = table[1];
+                                table[1] = table[3];
+                                table[3] = aux;
+                                aux = table[4];
+                                table[4] = table[6];
+                                table[6] = aux;
+                                break;
+                            }
+
+                            for(int i=0; i<7; i++)
+                            {
+                                cout<<table[i]<<endl;
+                            }
+                        }
+
+                        int j{};
+                        while((chara[0].getName() == nothing.getName())||(chara[1].getName() == nothing.getName())||(chara[2].getName() == nothing.getName())||(chara[3].getName() == nothing.getName())||(chara[4].getName() == nothing.getName())||(chara[5].getName() == nothing.getName())||(chara[6].getName() == nothing.getName()))
+                        {
+                            switch(j)
+                            {
+                                case 0:
+                                    chara[table[0]] = alien;
+                                    break;
+                                case 1:
+                                    chara[table[1]] = blackMan;
+                                    break;
+                                case 2:
+                                    chara[table[2]] = gandalf;
+                                    break;
+                                case 3:
+                                    chara[table[3]] = elGato;
+                                    break;
+                                case 4:
+                                    chara[table[4]] = frog;
+                                    break;
+                                case 5:
+                                    chara[table[5]] = kuszczak;
+                                    break;
+                                case 6:
+                                    chara[table[6]] = lennon;
+                                    break;
+                            }
+                            j++;
+                        }
+
+
+                    }
+
+                    int whichMatchIsDoing{};
+                    int baseCharacter{};
+                    int character{};
+
+                    match1a = ""; match1b = ""; match2a = ""; match2b = ""; match3a = ""; match3b = ""; isPausing = "";
+                    for(int i=0; i<7; i++) {chara[i].setAmIinMatch(false); chara[i].setPaused(false);}
+
+                    isPausing = chara[matchDay - 1].getName();
+                    chara[matchDay - 1].setPaused(true);
+
+                    while(whichMatchIsDoing < 3)
+                    {
+                        whichMatchIsDoing++;
+                        cout<<endl<<"whichMatchIsDoing: "<<whichMatchIsDoing<<endl;
+
+                        if(whichMatchIsDoing == 1)while(chara[character].getPaused() == false){character++;}
+                        while((chara[character].getAmIinMatch() == true)||(chara[character].getPaused())){character++;}
+
+                        if(character > 6) character = 0;
+
+                        if(whichMatchIsDoing == 1) match1a = chara[character].getName();
+                        if(whichMatchIsDoing == 2) match2a = chara[character].getName();
+                        if(whichMatchIsDoing == 3) match3a = chara[character].getName();
+
+                        baseCharacter = character;
+                        while(1)
+                        {
+                            do{
+                                character++;
+                                if(character == 7) character = 0;
+                            }
+                            while(chara[character].getAmIinMatch() == true);
+
+                            if((chara[baseCharacter].didIplayVs(chara[character].getName()) == false ) )
+                            {
+                                if(whichMatchIsDoing == 1) match1b = chara[character].getName();
+                                else if(whichMatchIsDoing == 2) match2b = chara[character].getName();
+                                else if(whichMatchIsDoing == 3) match3b = chara[character].getName();
+
+                                chara[baseCharacter].setIplayedVs(chara[character].getName());
+                                chara[character].setIplayedVs(chara[baseCharacter].getName());
+
+                                chara[baseCharacter].setAmIinMatch(true);
+                                chara[character].setAmIinMatch(true);
+
+                                chara[baseCharacter].showWithWhoIplayed();
+                                chara[character].showWithWhoIplayed();
+
 
                                 break;
                             }
-                        case 3:
-                            {
-                                leagueSumationOption = 3;
-
-                                string toSubtitle("You, ");
-                                for(int i=0; i<2; i++)
-                                {
-                                    if(i == 2) toSubtitle = "and ";
-
-                                    string aux{posInTable[i].name};
-                                    if(aux == "gato") aux.insert(0,"el ");
-                                    else if(aux == "black") aux.insert(5," man");
-                                    letterPointer = &aux[0];
-                                    myToUpper(letterPointer);
-                                    toSubtitle += aux;
-
-                                    if(i == 1) LIsummaryT2.setString(toSubtitle);
-                                    else LIsummaryT3.setString(toSubtitle);
-                                }
-
-                                LIsummaryT4.setString("won the league");
-
-                            break;
-                            }
                         }
+                    }
+                    doNextMatches = false;
+
+
+                    cout<<endl<<"Match day: "<<matchDay<<endl;
+                    cout<<"1. "<<match1a<<" vs "<<match1b<<endl;
+                    cout<<"2. "<<match2a<<" vs "<<match2b<<endl;
+                    cout<<"3. "<<match3a<<" vs "<<match3b<<endl;
+                    cout<<"is pausing: "<<isPausing<<endl;
+                    cout<<endl<<"-----------------------------------------------------------------\n\n";
+
+                    ///checking in which match is player's character
+                    if(characterInLeague.getName() == match1a) inWhichMatchIsPlayer = "1a";
+                    else if(characterInLeague.getName() == match1b) inWhichMatchIsPlayer = "1b";
+                    else if(characterInLeague.getName() == match2a) inWhichMatchIsPlayer = "2a";
+                    else if(characterInLeague.getName() == match2b) inWhichMatchIsPlayer = "2b";
+                    else if(characterInLeague.getName() == match3a) inWhichMatchIsPlayer = "3a";
+                    else if(characterInLeague.getName() == match3b) inWhichMatchIsPlayer = "3b";
+                    else if(characterInLeague.getName() == isPausing) inWhichMatchIsPlayer = "pause";
+
+                    ///checking current opponent name
+                    if(inWhichMatchIsPlayer == "1a")currentOpponentName = match1b;
+                    else if(inWhichMatchIsPlayer == "1b") currentOpponentName = match1a;
+                    else if(inWhichMatchIsPlayer == "2a") currentOpponentName = match2b;
+                    else if(inWhichMatchIsPlayer == "2b") currentOpponentName = match2a;
+                    else if(inWhichMatchIsPlayer == "3a") currentOpponentName = match3b;
+                    else if(inWhichMatchIsPlayer == "3b") currentOpponentName = match3a;
+                    else if(inWhichMatchIsPlayer == "pause") currentOpponentName = "pause";
+
+                    ///set text with name of your character in League interface (LInextMatchT)
+                    if(characterInLeague.getName() == "alien") LInextMatchT.setString("Alien");
+                    else if(characterInLeague.getName() == "black") LInextMatchT.setString("Black men");
+                    else if(characterInLeague.getName() == "lennon") LInextMatchT.setString("Lennon");
+                    else if(characterInLeague.getName() == "gandalf") LInextMatchT.setString("Gandalf");
+                    else if(characterInLeague.getName() == "kuszczak") LInextMatchT.setString("Kuszczak");
+                    else if(characterInLeague.getName() == "gato") LInextMatchT.setString("El gato");
+                    else if(characterInLeague.getName() == "frog") LInextMatchT.setString("Frog");
+
+                    ///set next match opponent text (LIvsT)
+                    if(currentOpponentName == "alien") LIvsT.setString("vs Alien");
+                    else if(currentOpponentName == "black") LIvsT.setString("vs Black men");
+                    else if(currentOpponentName == "lennon") LIvsT.setString("vs Lennon");
+                    else if(currentOpponentName == "gandalf") LIvsT.setString("vs Gandalf");
+                    else if(currentOpponentName == "kuszczak") LIvsT.setString("vs Kuszczak");
+                    else if(currentOpponentName == "gato") LIvsT.setString("vs El gato");
+                    else if(currentOpponentName == "frog") LIvsT.setString("vs Frog");
+                    else if(currentOpponentName == "pause") LIvsT.setString("is pausing");
+
+                    ///set next match opponent portrait (LIvsS)
+                    if(currentOpponentName == "alien") LIvsS.setTexture(alienT);
+                    else if(currentOpponentName == "black") LIvsS.setTexture(blackManT);
+                    else if(currentOpponentName == "lennon") LIvsS.setTexture(lennonT);
+                    else if(currentOpponentName == "gandalf") LIvsS.setTexture(gandalfT);
+                    else if(currentOpponentName == "kuszczak") LIvsS.setTexture(kuszczakT);
+                    else if(currentOpponentName == "gato") LIvsS.setTexture(gatoT);
+                    else if(currentOpponentName == "frog") LIvsS.setTexture(frogT);
+                    else if(currentOpponentName == "pause") LIvsS.setTexture(pauseT);
+
+                    if((inWhichMatchIsPlayer == "1a")||(inWhichMatchIsPlayer == "1b"))
+                    {
+                        nameMatch2a = match2a;  nameMatch2b = match2b;
+                        nameMatch3a = match3a;  nameMatch3b = match3b;
+                        inWhichMatchIsPlayerGLOBAL = 1;
+                    }
+                    else if((inWhichMatchIsPlayer == "2a")||(inWhichMatchIsPlayer == "2b"))
+                    {
+                        nameMatch1a = match1a;  nameMatch1b = match1b;
+                        nameMatch3a = match3a;  nameMatch3b = match3b;
+                        inWhichMatchIsPlayerGLOBAL = 2;
+                    }
+                    else if((inWhichMatchIsPlayer == "3a")||(inWhichMatchIsPlayer == "3b"))
+                    {
+                        nameMatch2a = match2a;  nameMatch2b = match2b;
+                        nameMatch1a = match1a;  nameMatch1b = match1b;
+                        inWhichMatchIsPlayerGLOBAL = 3;
                     }
                     else
                     {
-                        LIsummaryT1.setString("You finished .th");
-
-                        switch(howManyWinners)
-                        {
-                        case 1:
-                            leagueSumationOption = 4;
-                            LIsummaryT2.setString("... won the league");///<-- tu bedzie za dlugi napis
-                            break;
-                        case 2:
-                            leagueSumationOption = 5;
-                            LIsummaryT2.setString("... and ...");
-                            LIsummaryT3.setString("won the league");
-                            break;
-                        case 3:
-                            leagueSumationOption = 6;
-                            LIsummaryT2.setString("... and ...");
-                            LIsummaryT3.setString("and ...");
-                            LIsummaryT4.setString("won the league");
-                            break;
-                        }
+                        nameMatch1a = match1a;  nameMatch1b = match1b;
+                        nameMatch2a = match2a;  nameMatch2b = match2b;
+                        nameMatch3a = match3a;  nameMatch3b = match3b;
+                        inWhichMatchIsPlayerGLOBAL = 0;
                     }
                 }
+                else if(doNextMatches) matchDay = 8;
             }
-
-            if((state == Tstate::LeagueInterface)&&(matchDay < 7))
+            catch(logic_error)
             {
-                try
+                cout<<endl<<"logic_error"<<endl;
+            }
+
+            if(((Keyboard::isKeyPressed(Keyboard::Escape))||((Keyboard::isKeyPressed(Keyboard::Enter))&&(matchDay == 8)))&&(!counter))
+            {
+                state = Tstate::menu;
+                counter = 30;
+
+                ///save in file
+                fstream file;
+                file.open("save.txt",ios::out);
+
+                file<<matchDay<<endl;
+                file<<match1a<<endl;
+                file<<match1b<<endl;
+                file<<match2a<<endl;
+                file<<match2b<<endl;
+                file<<match3a<<endl;
+                file<<match3b<<endl;
+                file<<isPausing<<endl;
+                file<<inWhichMatchIsPlayer<<endl;
+                file<<currentOpponentName<<endl;
+                file<<characterInLeague.getName()<<endl;
+                file<<nameMatch1a<<endl;
+                file<<nameMatch1b<<endl;
+                file<<nameMatch2a<<endl;
+                file<<nameMatch2b<<endl;
+                file<<nameMatch3a<<endl;
+                file<<nameMatch3b<<endl;
+                file<<inWhichMatchIsPlayerGLOBAL<<endl;
+
+                for(int i=0; i<7; i++)
                 {
-                    if(doNextMatches)
-                    {
-                        matchDay++;
-
-                        static Character nothing;
-                        static Character chara[7]{nothing};//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
-                        if(matchDay == 1)
-                        {
-                            int table[7]{10};
-                            int i2 = rand()%7;
-                            for(int i=0; i<7; i++)
-                            {
-                                table[i] = i2;
-                                i2++;
-                                if(i2 == 7) i2 = 0;
-                                cout<<i<<": "<<i2<<endl;
-                            }
-
-                            for(int i=0; i<10; i++)
-                            {
-                                int shuffling{rand()%4};
-                                int aux;//auxiliary
-
-                                cout<<"shuf: "<<shuffling<<endl;
-
-                                switch(shuffling)
-                                {
-                                case 0:
-                                    aux = table[0];
-                                    table[0] = table[1];
-                                    table[1] = aux;
-                                    aux = table[2];
-                                    table[2] = table[3];
-                                    table[3] = aux;
-                                    aux = table[4];
-                                    table[4] = table[5];
-                                    table[5] = aux;
-                                    break;
-
-                                case 1:
-                                    aux = table[0];
-                                    table[0] = table[6];
-                                    table[6] = aux;
-                                    aux = table[1];
-                                    table[1] = table[5];
-                                    table[5] = aux;
-                                    aux = table[2];
-                                    table[2] = table[4];
-                                    table[4] = aux;
-                                    break;
-
-                                case 2:
-                                    aux = table[0];
-                                    table[0] = table[4];
-                                    table[4] = aux;
-                                    aux = table[1];
-                                    table[1] = table[5];
-                                    table[5] = aux;
-                                    aux = table[3];
-                                    table[3] = table[6];
-                                    table[6] = aux;
-                                    break;
-
-                                case 3:
-                                    aux = table[0];
-                                    table[0] = table[2];
-                                    table[2] = aux;
-                                    aux = table[1];
-                                    table[1] = table[3];
-                                    table[3] = aux;
-                                    aux = table[4];
-                                    table[4] = table[6];
-                                    table[6] = aux;
-                                    break;
-                                }
-
-                                for(int i=0; i<7; i++)
-                                {
-                                    cout<<table[i]<<endl;
-                                }
-                            }
-
-                            int j{};
-                            while((chara[0].getName() == nothing.getName())||(chara[1].getName() == nothing.getName())||(chara[2].getName() == nothing.getName())||(chara[3].getName() == nothing.getName())||(chara[4].getName() == nothing.getName())||(chara[5].getName() == nothing.getName())||(chara[6].getName() == nothing.getName()))
-                            {
-                                switch(j)
-                                {
-                                    case 0:
-                                        chara[table[0]] = alien;
-                                        break;
-                                    case 1:
-                                        chara[table[1]] = blackMan;
-                                        break;
-                                    case 2:
-                                        chara[table[2]] = gandalf;
-                                        break;
-                                    case 3:
-                                        chara[table[3]] = elGato;
-                                        break;
-                                    case 4:
-                                        chara[table[4]] = frog;
-                                        break;
-                                    case 5:
-                                        chara[table[5]] = kuszczak;
-                                        break;
-                                    case 6:
-                                        chara[table[6]] = lennon;
-                                        break;
-                                }
-                                j++;
-                            }
-
-
-                        }
-
-                        int whichMatchIsDoing{};
-                        int baseCharacter{};
-                        int character{};
-
-                        match1a = ""; match1b = ""; match2a = ""; match2b = ""; match3a = ""; match3b = ""; isPausing = "";
-                        for(int i=0; i<7; i++) {chara[i].setAmIinMatch(false); chara[i].setPaused(false);}
-
-                        isPausing = chara[matchDay - 1].getName();
-                        chara[matchDay - 1].setPaused(true);
-
-                        while(whichMatchIsDoing < 3)
-                        {
-                            whichMatchIsDoing++;
-                            cout<<endl<<"whichMatchIsDoing: "<<whichMatchIsDoing<<endl;
-
-                            if(whichMatchIsDoing == 1)while(chara[character].getPaused() == false){character++;}
-                            while((chara[character].getAmIinMatch() == true)||(chara[character].getPaused())){character++;}
-
-                            if(character > 6) character = 0;
-
-                            if(whichMatchIsDoing == 1) match1a = chara[character].getName();
-                            if(whichMatchIsDoing == 2) match2a = chara[character].getName();
-                            if(whichMatchIsDoing == 3) match3a = chara[character].getName();
-
-                            baseCharacter = character;
-                            while(1)
-                            {
-                                do{
-                                    character++;
-                                    if(character == 7) character = 0;
-                                }
-                                while(chara[character].getAmIinMatch() == true);
-
-                                if((chara[baseCharacter].didIplayVs(chara[character].getName()) == false ) )
-                                {
-                                    if(whichMatchIsDoing == 1) match1b = chara[character].getName();
-                                    else if(whichMatchIsDoing == 2) match2b = chara[character].getName();
-                                    else if(whichMatchIsDoing == 3) match3b = chara[character].getName();
-
-                                    chara[baseCharacter].setIplayedVs(chara[character].getName());
-                                    chara[character].setIplayedVs(chara[baseCharacter].getName());
-
-                                    chara[baseCharacter].setAmIinMatch(true);
-                                    chara[character].setAmIinMatch(true);
-
-                                    chara[baseCharacter].showWithWhoIplayed();
-                                    chara[character].showWithWhoIplayed();
-
-
-                                    break;
-                                }
-                            }
-                        }
-                        doNextMatches = false;
-
-
-                        cout<<endl<<"Match day: "<<matchDay<<endl;
-                        cout<<"1. "<<match1a<<" vs "<<match1b<<endl;
-                        cout<<"2. "<<match2a<<" vs "<<match2b<<endl;
-                        cout<<"3. "<<match3a<<" vs "<<match3b<<endl;
-                        cout<<"is pausing: "<<isPausing<<endl;
-                        cout<<endl<<"-----------------------------------------------------------------\n\n";
-
-                        ///checking in which match is player's character
-                        if(characterInLeague.getName() == match1a) inWhichMatchIsPlayer = "1a";
-                        else if(characterInLeague.getName() == match1b) inWhichMatchIsPlayer = "1b";
-                        else if(characterInLeague.getName() == match2a) inWhichMatchIsPlayer = "2a";
-                        else if(characterInLeague.getName() == match2b) inWhichMatchIsPlayer = "2b";
-                        else if(characterInLeague.getName() == match3a) inWhichMatchIsPlayer = "3a";
-                        else if(characterInLeague.getName() == match3b) inWhichMatchIsPlayer = "3b";
-                        else if(characterInLeague.getName() == isPausing) inWhichMatchIsPlayer = "pause";
-
-                        ///checking current opponent name
-                        if(inWhichMatchIsPlayer == "1a")currentOpponentName = match1b;
-                        else if(inWhichMatchIsPlayer == "1b") currentOpponentName = match1a;
-                        else if(inWhichMatchIsPlayer == "2a") currentOpponentName = match2b;
-                        else if(inWhichMatchIsPlayer == "2b") currentOpponentName = match2a;
-                        else if(inWhichMatchIsPlayer == "3a") currentOpponentName = match3b;
-                        else if(inWhichMatchIsPlayer == "3b") currentOpponentName = match3a;
-                        else if(inWhichMatchIsPlayer == "pause") currentOpponentName = "pause";
-
-                        ///set text with name of your character in League interface (LInextMatchT)
-                        if(characterInLeague.getName() == "alien") LInextMatchT.setString("Alien");
-                        else if(characterInLeague.getName() == "black") LInextMatchT.setString("Black men");
-                        else if(characterInLeague.getName() == "lennon") LInextMatchT.setString("Lennon");
-                        else if(characterInLeague.getName() == "gandalf") LInextMatchT.setString("Gandalf");
-                        else if(characterInLeague.getName() == "kuszczak") LInextMatchT.setString("Kuszczak");
-                        else if(characterInLeague.getName() == "gato") LInextMatchT.setString("El gato");
-                        else if(characterInLeague.getName() == "frog") LInextMatchT.setString("Frog");
-
-                        ///set next match opponent text (LIvsT)
-                        if(currentOpponentName == "alien") LIvsT.setString("vs Alien");
-                        else if(currentOpponentName == "black") LIvsT.setString("vs Black men");
-                        else if(currentOpponentName == "lennon") LIvsT.setString("vs Lennon");
-                        else if(currentOpponentName == "gandalf") LIvsT.setString("vs Gandalf");
-                        else if(currentOpponentName == "kuszczak") LIvsT.setString("vs Kuszczak");
-                        else if(currentOpponentName == "gato") LIvsT.setString("vs El gato");
-                        else if(currentOpponentName == "frog") LIvsT.setString("vs Frog");
-                        else if(currentOpponentName == "pause") LIvsT.setString("is pausing");
-
-                        ///set next match opponent portrait (LIvsS)
-                        if(currentOpponentName == "alien") LIvsS.setTexture(alienT);
-                        else if(currentOpponentName == "black") LIvsS.setTexture(blackManT);
-                        else if(currentOpponentName == "lennon") LIvsS.setTexture(lennonT);
-                        else if(currentOpponentName == "gandalf") LIvsS.setTexture(gandalfT);
-                        else if(currentOpponentName == "kuszczak") LIvsS.setTexture(kuszczakT);
-                        else if(currentOpponentName == "gato") LIvsS.setTexture(gatoT);
-                        else if(currentOpponentName == "frog") LIvsS.setTexture(frogT);
-                        else if(currentOpponentName == "pause") LIvsS.setTexture(pauseT);
-
-                        if((inWhichMatchIsPlayer == "1a")||(inWhichMatchIsPlayer == "1b"))
-                        {
-                            nameMatch2a = match2a;  nameMatch2b = match2b;
-                            nameMatch3a = match3a;  nameMatch3b = match3b;
-                            inWhichMatchIsPlayerGLOBAL = 1;
-                        }
-                        else if((inWhichMatchIsPlayer == "2a")||(inWhichMatchIsPlayer == "2b"))
-                        {
-                            nameMatch1a = match1a;  nameMatch1b = match1b;
-                            nameMatch3a = match3a;  nameMatch3b = match3b;
-                            inWhichMatchIsPlayerGLOBAL = 2;
-                        }
-                        else if((inWhichMatchIsPlayer == "3a")||(inWhichMatchIsPlayer == "3b"))
-                        {
-                            nameMatch2a = match2a;  nameMatch2b = match2b;
-                            nameMatch1a = match1a;  nameMatch1b = match1b;
-                            inWhichMatchIsPlayerGLOBAL = 3;
-                        }
-                        else
-                        {
-                            nameMatch1a = match1a;  nameMatch1b = match1b;
-                            nameMatch2a = match2a;  nameMatch2b = match2b;
-                            nameMatch3a = match3a;  nameMatch3b = match3b;
-                            inWhichMatchIsPlayerGLOBAL = 0;
-                        }
-                    }
-                }
-                catch(logic_error)
-                {
-                    cout<<endl<<"logic_error"<<endl;
+                    file<<posInTable[i].name<<endl;
+                    file<<posInTable[i].numberOfPoints<<endl;
                 }
 
-                if((Keyboard::isKeyPressed(Keyboard::Escape))&&(!counter))
+                if(difficultyLevel == Tlevel::easy)file<<1<<endl;
+                else if(difficultyLevel == Tlevel::medium)file<<2<<endl;
+                else file<<3<<endl;
+
+                file.close();
+
+                continue;
+            }
+            else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
+            {
+                if(isPausing == characterInLeague.getName())//while player is pausing in league
                 {
-                    state = Tstate::menu;
+                    setLeagueTable(nameOfPlayer1, nameOfPlayer2,
+                                   LI1nameT, LI2nameT, LI3nameT, LI4nameT, LI5nameT, LI6nameT, LI7nameT,
+                                   LI1pointsT, LI2pointsT, LI3pointsT, LI4pointsT, LI5pointsT, LI6pointsT, LI7pointsT);
+                    doNextMatches = true;
                     counter = 30;
-
-                    ///save in file
-                    fstream file;
-                    file.open("save.txt",ios::out);
-
-                    file<<matchDay<<endl;
-                    file<<match1a<<endl;
-                    file<<match1b<<endl;
-                    file<<match2a<<endl;
-                    file<<match2b<<endl;
-                    file<<match3a<<endl;
-                    file<<match3b<<endl;
-                    file<<isPausing<<endl;
-                    file<<inWhichMatchIsPlayer<<endl;
-                    file<<currentOpponentName<<endl;
-                    file<<characterInLeague.getName()<<endl;
-                    file<<nameMatch1a<<endl;
-                    file<<nameMatch1b<<endl;
-                    file<<nameMatch2a<<endl;
-                    file<<nameMatch2b<<endl;
-                    file<<nameMatch3a<<endl;
-                    file<<nameMatch3b<<endl;
-                    file<<inWhichMatchIsPlayerGLOBAL<<endl;
-
-                    for(int i=0; i<7; i++)
-                    {
-                        file<<posInTable[i].name<<endl;
-                        file<<posInTable[i].numberOfPoints<<endl;
-                    }
-
-                    if(difficultyLevel == Tlevel::easy)file<<1<<endl;
-                    else if(difficultyLevel == Tlevel::medium)file<<2<<endl;
-                    else file<<3<<endl;
-
-                    file.close();
+                    continue;
                 }
-                else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
+
+                if(showControlTip == true) state = Tstate::controlsTip;
+                else state = Tstate::game;
+
+                opponentInLeagueMode = currentOpponentName;
+                changeCharacterStatistics(4,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+                                  characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
+                                  characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
+                                  characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
+                                  frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+
+                if(controlIn1player == 2)
                 {
-                    if(isPausing == characterInLeague.getName())//while player is pausing in league
-                    {
-                        setLeagueTable(nameOfPlayer1, nameOfPlayer2,
-                                       LI1nameT, LI2nameT, LI3nameT, LI4nameT, LI5nameT, LI6nameT, LI7nameT,
-                                       LI1pointsT, LI2pointsT, LI3pointsT, LI4pointsT, LI5pointsT, LI6pointsT, LI7pointsT);
-                        doNextMatches = true;
-                        continue;
-                    }
-                    if(showControlTip == true) state = Tstate::controlsTip;
-                    else state = Tstate::game;
+                    paddle1Control = 2;
+                    paddle2Control = 0;
+                    nameOfPlayer2 = characterInLeague.getName();
+                    nameOfPlayer1 = currentOpponentName;
+                }
+                else
+                {
+                    paddle1Control = 0;
+                    paddle2Control = 1;
+                    nameOfPlayer1 = characterInLeague.getName();
+                    nameOfPlayer2 = currentOpponentName;
+                }
 
-                    opponentInLeagueMode = currentOpponentName;
-                    changeCharacterStatistics(4,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
-                                      characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
-                                      characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
-                                      characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
-                                      frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+                if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
+                else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
 
-                    if(controlIn1player == 2)
-                    {
-                        paddle1Control = 2;
-                        paddle2Control = 0;
-                        nameOfPlayer2 = characterInLeague.getName();
-                        nameOfPlayer1 = currentOpponentName;
-                    }
+                ball.setVelocity(10);
+                paddle1.rect.setPosition(Vector2f(10,400));
+                paddle2.rect.setPosition(Vector2f(1265,400));
+                score1 = 0; score2 = 0;
+                score1T.setString("0"); score2T.setString("0");
+                lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
+                if(random(2))//1
+                {
+                    ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+                    if(oneOr2Players == 2)matchStartT.setString("Player 1 will begin");
                     else
                     {
-                        paddle1Control = 0;
-                        paddle2Control = 1;
-                        nameOfPlayer1 = characterInLeague.getName();
-                        nameOfPlayer2 = currentOpponentName;
+                        if(controlIn1player == 1)matchStartT.setString("Computer will begin");
+                        else matchStartT.setString("Player will begin");
                     }
-
-                    if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
-                    else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
-
-                    ball.setVelocity(10);
-                    paddle1.rect.setPosition(Vector2f(10,400));
-                    paddle2.rect.setPosition(Vector2f(1265,400));
-                    score1 = 0; score2 = 0;
-                    score1T.setString("0"); score2T.setString("0");
-                    lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
-                    lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
-                    if(random(2))//1
+                }
+                else//2
+                {
+                    ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+                    if(oneOr2Players == 2)matchStartT.setString("Player 2 will begin");
+                    else
                     {
-                        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
-                        if(oneOr2Players == 2)matchStartT.setString("Player 1 will begin");
-                        else
-                        {
-                            if(controlIn1player == 1)matchStartT.setString("Computer will begin");
-                            else matchStartT.setString("Player will begin");
-                        }
+                        if(controlIn1player == 1)matchStartT.setString("Player will begin");
+                        else matchStartT.setString("Computer will begin");
                     }
-                    else//2
-                    {
-                        ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
-                        if(oneOr2Players == 2)matchStartT.setString("Player 2 will begin");
-                        else
-                        {
-                            if(controlIn1player == 1)matchStartT.setString("Player will begin");
-                            else matchStartT.setString("Computer will begin");
-                        }
-                    }
-
-                    setPaddlesSpeed(paddle1,paddle2,player1,player2);
-
-                    counter = 30;
                 }
 
-                window.draw(LIlevelT);
-                window.draw(LItableT);
-                window.draw(LI1T); window.draw(LI1nameT); window.draw(LI1pointsT);
-                window.draw(LI2T); window.draw(LI2nameT); window.draw(LI2pointsT);
-                window.draw(LI3T); window.draw(LI3nameT); window.draw(LI3pointsT);
-                window.draw(LI4T); window.draw(LI4nameT); window.draw(LI4pointsT);
-                window.draw(LI5T); window.draw(LI5nameT); window.draw(LI5pointsT);
-                window.draw(LI6T); window.draw(LI6nameT); window.draw(LI6pointsT);
-                window.draw(LI7T); window.draw(LI7nameT); window.draw(LI7pointsT);
-                window.draw(LInextMatchT);
-                window.draw(LIvsT);
-                window.draw(LIvsS);
-                window.draw(controlsTipPlayT);
-                window.draw(LIexitT);
+                setPaddlesSpeed(paddle1,paddle2,player1,player2);
 
-                char *letterPointer = nullptr;
-                string toSubtitle("You and ");
-                LIsummaryT3.setString("won the league");
-
-                string aux{posInTable[0].name};
-                if(aux == "gato") aux.insert(0,"el ");
-                else if(aux == "black") aux.insert(5," man");
-                letterPointer = &aux[0];
-                myToUpper(letterPointer);
-                toSubtitle += aux;
-
-                LIsummaryT2.setString(toSubtitle);
-
-
-                howManyWinners = 2;
-                //if((matchDay == 7)&&(doNextMatches == true))///end of the league screen (drawing)
-                //{
-                    window.draw(blackBox4); window.draw(blackBox5);
-                    window.draw(LIsummaryT1); window.draw(LIsummaryT2); window.draw(LIsummaryT3);
-                    window.draw(LIsummaryTexit);
-                    switch(howManyWinners)//sprites
-                    {
-                    case 1:
-                        window.draw(LIvsS);
-                        break;
-                    case 2:
-                        window.draw(LIsummaryS2_1); window.draw(LIsummaryS2_2);
-                        break;
-                    case 3:
-                        window.draw(LIsummaryS3_1); window.draw(LIsummaryS3_2); window.draw(LIsummaryS3_3);
-                        break;
-                    }
-                    switch(howManyWinners)//texts
-                    {
-                        case 3: window.draw(LIsummaryT4);
-                        case 2: window.draw(LIsummaryT3);
-                    }
-                //}
-
-                if(counter)counter--;
+                counter = 30;
             }
+
+            window.draw(LIlevelT);
+            window.draw(LItableT);
+            window.draw(LI1T); window.draw(LI1nameT); window.draw(LI1pointsT);
+            window.draw(LI2T); window.draw(LI2nameT); window.draw(LI2pointsT);
+            window.draw(LI3T); window.draw(LI3nameT); window.draw(LI3pointsT);
+            window.draw(LI4T); window.draw(LI4nameT); window.draw(LI4pointsT);
+            window.draw(LI5T); window.draw(LI5nameT); window.draw(LI5pointsT);
+            window.draw(LI6T); window.draw(LI6nameT); window.draw(LI6pointsT);
+            window.draw(LI7T); window.draw(LI7nameT); window.draw(LI7pointsT);
+            window.draw(LInextMatchT);
+            window.draw(LIvsT);
+            window.draw(LIvsS);
+            window.draw(controlsTipPlayT);
+            window.draw(LIexitT);
+
+            if((matchDay == 8)/*&&(doNextMatches == true)*/)///end of the league screen (drawing)
+            {
+                window.draw(blackBox4); window.draw(blackBox5);
+                window.draw(LIsummaryT1); window.draw(LIsummaryT2); window.draw(LIsummaryT3);
+                window.draw(LIsummaryTexit);
+                switch(howManyWinners)//sprites
+                {
+                case 1:
+                    window.draw(LIvsS);
+                    break;
+                case 2:
+                    window.draw(LIsummaryS2_1); window.draw(LIsummaryS2_2);
+                    break;
+                case 3:
+                    window.draw(LIsummaryS3_1); window.draw(LIsummaryS3_2); window.draw(LIsummaryS3_3);
+                    break;
+                }
+                switch(howManyWinners)//texts
+                {
+                    case 3: window.draw(LIsummaryT5);
+                    case 2: window.draw(LIsummaryT4);
+                }
+            }
+
+            if(counter)counter--;
+
         }
         ///******************************LeagueInterface
 
