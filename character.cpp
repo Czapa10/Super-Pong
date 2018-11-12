@@ -1,7 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "character.h"
+#include <fstream>
 #include <string>
+#include "character.h"
 
 Character::Character(float speed_, float power_, float speedUp_, float speedUpContainer_,
                      float increase_, float increaseContainer_, std::string name_)
@@ -50,6 +51,19 @@ void Character::showWithWhoIplayed()
     {
          if(withWhoPlayed[i] != "") std::cout<<withWhoPlayed[i]<<std::endl;
     }
+}
+
+void Character::toFileWithWhoIplayed()
+{
+    fstream file;
+    file.open("save.txt",ios::out | ios::app);
+
+    for(int i=0; i<6; i++)
+    {
+         file<<withWhoPlayed[i]<<std::endl;
+    }
+
+    file.close();
 }
 
 void Character::resetLeague()

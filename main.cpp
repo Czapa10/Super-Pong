@@ -51,6 +51,9 @@ struct pos //auxiliary class to operate on league table
     int numberOfPoints;
 };
 pos posInTable[7];
+Character nothing;
+Character chara[7]{nothing};//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
+int table[7]{10}; //random chara
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2,int& counterMatchStart, int& counterMatchWin);
@@ -1245,6 +1248,7 @@ int main()
                 string line;
                 int lineNumber{1};
                 int diffLevel; //auxiliary variable to take level of difficulty
+                Character copyChara[7]{nothing};
 
                 while(getline(file,line))
                 {
@@ -1291,6 +1295,55 @@ int main()
                         case 31:    posInTable[6].name = line;                          break;
                         case 32:    posInTable[6].numberOfPoints = atoi(line.c_str());  break;
                         case 33:    diffLevel = atoi(line.c_str());                     break;
+                        case 34:    copyChara[0].setIplayedVs(line);                    break;
+                        case 35:    copyChara[0].setIplayedVs(line);                    break;
+                        case 36:    copyChara[0].setIplayedVs(line);                    break;
+                        case 37:    copyChara[0].setIplayedVs(line);                    break;
+                        case 38:    copyChara[0].setIplayedVs(line);                    break;
+                        case 39:    copyChara[0].setIplayedVs(line);                    break;
+                        case 40:    copyChara[1].setIplayedVs(line);                    break;
+                        case 41:    copyChara[1].setIplayedVs(line);                    break;
+                        case 42:    copyChara[1].setIplayedVs(line);                    break;
+                        case 43:    copyChara[1].setIplayedVs(line);                    break;
+                        case 44:    copyChara[1].setIplayedVs(line);                    break;
+                        case 45:    copyChara[1].setIplayedVs(line);                    break;
+                        case 46:    copyChara[2].setIplayedVs(line);                    break;
+                        case 47:    copyChara[2].setIplayedVs(line);                    break;
+                        case 48:    copyChara[2].setIplayedVs(line);                    break;
+                        case 49:    copyChara[2].setIplayedVs(line);                    break;
+                        case 50:    copyChara[2].setIplayedVs(line);                    break;
+                        case 51:    copyChara[2].setIplayedVs(line);                    break;
+                        case 52:    copyChara[3].setIplayedVs(line);                    break;
+                        case 53:    copyChara[3].setIplayedVs(line);                    break;
+                        case 54:    copyChara[3].setIplayedVs(line);                    break;
+                        case 55:    copyChara[3].setIplayedVs(line);                    break;
+                        case 56:    copyChara[3].setIplayedVs(line);                    break;
+                        case 57:    copyChara[3].setIplayedVs(line);                    break;
+                        case 58:    copyChara[4].setIplayedVs(line);                    break;
+                        case 59:    copyChara[4].setIplayedVs(line);                    break;
+                        case 60:    copyChara[4].setIplayedVs(line);                    break;
+                        case 61:    copyChara[4].setIplayedVs(line);                    break;
+                        case 62:    copyChara[4].setIplayedVs(line);                    break;
+                        case 63:    copyChara[4].setIplayedVs(line);                    break;
+                        case 64:    copyChara[5].setIplayedVs(line);                    break;
+                        case 65:    copyChara[5].setIplayedVs(line);                    break;
+                        case 66:    copyChara[5].setIplayedVs(line);                    break;
+                        case 67:    copyChara[5].setIplayedVs(line);                    break;
+                        case 68:    copyChara[5].setIplayedVs(line);                    break;
+                        case 69:    copyChara[5].setIplayedVs(line);                    break;
+                        case 70:    copyChara[6].setIplayedVs(line);                    break;
+                        case 71:    copyChara[6].setIplayedVs(line);                    break;
+                        case 72:    copyChara[6].setIplayedVs(line);                    break;
+                        case 73:    copyChara[6].setIplayedVs(line);                    break;
+                        case 74:    copyChara[6].setIplayedVs(line);                    break;
+                        case 75:    copyChara[6].setIplayedVs(line);                    break;
+                        case 76:    table[0] = atoi(line.c_str());                      break;
+                        case 77:    table[1] = atoi(line.c_str());                      break;
+                        case 78:    table[2] = atoi(line.c_str());                      break;
+                        case 79:    table[3] = atoi(line.c_str());                      break;
+                        case 80:    table[4] = atoi(line.c_str());                      break;
+                        case 81:    table[5] = atoi(line.c_str());                      break;
+                        case 82:    table[6] = atoi(line.c_str());                      break;
                     }
 
                     lineNumber++;
@@ -1327,6 +1380,48 @@ int main()
 
                 LI7nameT.setString(posInTable[6].name);
                 LI7pointsT.setString(intToStr(posInTable[6].numberOfPoints));
+
+                for(int i=0; i<7; i++)
+                {
+                    cout<<table[i]<<endl;
+                }
+
+                int j{};
+                while((copyChara[0].getName() == nothing.getName())||(copyChara[1].getName() == nothing.getName())||(copyChara[2].getName() == nothing.getName())||(copyChara[3].getName() == nothing.getName())||(copyChara[4].getName() == nothing.getName())||(copyChara[5].getName() == nothing.getName())||(copyChara[6].getName() == nothing.getName()))
+                {
+                    switch(j)
+                    {
+                        case 0:
+                            copyChara[table[0]].setName("alien");
+                            //copyChara[table[0]].setStatistics()
+                            break;
+                        case 1:
+                            copyChara[table[1]].setName("black");
+                            break;
+                        case 2:
+                            copyChara[table[2]].setName("gandalf");
+                            break;
+                        case 3:
+                            copyChara[table[3]].setName("gato");
+                            break;
+                        case 4:
+                            copyChara[table[4]].setName("frog");
+                            break;
+                        case 5:
+                            copyChara[table[5]].setName("kuszczak");
+                            break;
+                        case 6:
+                            copyChara[table[6]].setName("lennon");
+                            break;
+                    }
+                    j++;
+                }
+
+                for(int i=0; i<7; i++)
+                {
+                    cout<<copyChara[i].getName()<<endl;
+                    chara[i] = copyChara[i];
+                }
 
                 leagueInitialization = 0;
                 counter = 30;
@@ -1571,11 +1666,8 @@ int main()
                 {
                     matchDay++;
 
-                    static Character nothing;
-                    static Character chara[7]{nothing};//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
                     if(matchDay == 1)
                     {
-                        int table[7]{10};
                         int i2 = rand()%7;
                         for(int i=0; i<7; i++)
                         {
@@ -1730,7 +1822,6 @@ int main()
                                 chara[baseCharacter].showWithWhoIplayed();
                                 chara[character].showWithWhoIplayed();
 
-
                                 break;
                             }
                         }
@@ -1862,6 +1953,24 @@ int main()
                 if(difficultyLevel == Tlevel::easy)file<<1<<endl;
                 else if(difficultyLevel == Tlevel::medium)file<<2<<endl;
                 else file<<3<<endl;
+
+
+                //with who I played
+
+
+                file.close();
+
+                for(int i=0; i<7; i++)
+                {
+                    chara[i].toFileWithWhoIplayed();
+                }
+
+                file.open("save.txt",ios::out | ios::app);
+
+                for(int i=0; i<7; i++)
+                {
+                    file<<table[i]<<endl;
+                }
 
                 file.close();
 
