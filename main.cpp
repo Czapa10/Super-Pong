@@ -10,7 +10,7 @@
 #include "lane.h"
 #include "character.h"
 
-#define VERSION "BETA 0.6"
+#define VERSION "BETA 0.7"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
@@ -171,6 +171,14 @@ int main()
     Text characterChoiseIncrease3T("6",font2,50); characterChoiseIncrease3T.setPosition(Vector2f(1050,665)); characterChoiseIncrease3T.setFillColor(Color(64,155,96));
     Text characterChoiseIncreaseContainer2T("5",font2,50); characterChoiseIncreaseContainer2T.setPosition(Vector2f(600,715)); characterChoiseIncreaseContainer2T.setFillColor(Color(12,243,232));
     Text characterChoiseIncreaseContainer3T("5",font2,50); characterChoiseIncreaseContainer3T.setPosition(Vector2f(1050,715)); characterChoiseIncreaseContainer3T.setFillColor(Color(12,243,232));
+    /////////////////////////////////////////////////////////////////////////////////
+    Text LcharacterChoiseSpeedT("-speed",font2,21); LcharacterChoiseSpeedT.setPosition(Vector2f(1106,475)); LcharacterChoiseSpeedT.setColor(Color(4,200,29));
+    Text LcharacterChoisePowerT("-power",font2,21); LcharacterChoisePowerT.setPosition(Vector2f(1106,535)); LcharacterChoisePowerT.setColor(Color(208,21,35));
+    Text LcharacterChoiseSpeedUpT("-speed up",font2,21); LcharacterChoiseSpeedUpT.setPosition(Vector2f(1106,585)); LcharacterChoiseSpeedUpT.setColor(Color(11,107,149));
+    Text LcharacterChoiseSpeedUpContainerT("-speed up container",font2,21); LcharacterChoiseSpeedUpContainerT.setPosition(Vector2f(1106,635)); LcharacterChoiseSpeedUpContainerT.setColor(Color(230,207,2));
+    Text LcharacterChoiseIncreaseT("-increase",font2,21); LcharacterChoiseIncreaseT.setPosition(Vector2f(1106,685)); LcharacterChoiseIncreaseT.setColor(Color(64,155,96));
+    Text LcharacterChoiseIncreaseContainerT("-increase container",font2,21); LcharacterChoiseIncreaseContainerT.setPosition(Vector2f(1106,735)); LcharacterChoiseIncreaseContainerT.setColor(Color(12,243,232));
+    /////////////////////////////////////////////////////////////////////////////////
     Text characterChoiseExitT("Exit - ESC",font2,80); characterChoiseExitT.setPosition(Vector2f(150,780)); characterChoiseExitT.setFillColor(Color::Red);
     Text characterChoiseNextT("Next - ENTER",font2,80); characterChoiseNextT.setPosition(Vector2f(800,780)); characterChoiseNextT.setFillColor(Color::Green);
     Text characterChoiseAT("A",font2,20); characterChoiseAT.setPosition(Vector2f(540,290)); characterChoiseAT.setFillColor(Color::Black);
@@ -953,6 +961,12 @@ int main()
                 window.draw(LcharacterChoiseT2);
                 window.draw(LcharacterChoiseT3);
                 window.draw(LcharacterChoiseT4);
+                window.draw(LcharacterChoiseSpeedT);
+                window.draw(LcharacterChoisePowerT);
+                window.draw(LcharacterChoiseSpeedUpT);
+                window.draw(LcharacterChoiseSpeedUpContainerT);
+                window.draw(LcharacterChoiseIncreaseT);
+                window.draw(LcharacterChoiseIncreaseContainerT);
             }
         }
         ///******************************state CHARACTER CHOISE
@@ -1213,11 +1227,16 @@ int main()
             int howManyWinners{1};
             bool isPlayerWinner;
 
+            if(leagueInitialization > 0)
+            {
+                lengthOfTheMatch = 4;
+                counter = 30;
+            }
+
             if(leagueInitialization == 1)///new league
             {
                 cout<<"\nLEAGUE INITIALIZATION == 1 - New game\n";
 
-                counter = 30;
                 matchDay = 0;
                 doNextMatches = true;
                 match1a = ""; match1b = ""; match2a = ""; match2b = ""; match3a = ""; match3b = ""; isPausing = "";
@@ -1235,6 +1254,9 @@ int main()
                 if(difficultyLevel == Tlevel::easy)LIlevelT.setString("level of difficulty - Easy");
                 else if(difficultyLevel == Tlevel::medium)LIlevelT.setString("level of difficulty - Medium");
                 else LIlevelT.setString("level of difficulty - Hard");
+
+                LI1pointsT.setString("0"); LI2pointsT.setString("0"); LI3pointsT.setString("0"); LI4pointsT.setString("0"); LI5pointsT.setString("0"); LI6pointsT.setString("0"); LI7pointsT.setString("0");
+                LI1nameT.setString("Alien"); LI2nameT.setString("Black Man"); LI3nameT.setString("Gandalf"); LI4nameT.setString("El Gato"); LI5nameT.setString("Frog"); LI6nameT.setString("Kuszczak"); LI7nameT.setString("Lennon");
 
                 leagueInitialization = 0;
             }
@@ -1423,8 +1445,17 @@ int main()
                     chara[i] = copyChara[i];
                 }
 
+                ///set next match opponent text (LIvsT)
+                if(currentOpponentName == "alien") LIvsT.setString("vs Alien");
+                else if(currentOpponentName == "black") LIvsT.setString("vs Black men");
+                else if(currentOpponentName == "lennon") LIvsT.setString("vs Lennon");
+                else if(currentOpponentName == "gandalf") LIvsT.setString("vs Gandalf");
+                else if(currentOpponentName == "kuszczak") LIvsT.setString("vs Kuszczak");
+                else if(currentOpponentName == "gato") LIvsT.setString("vs El gato");
+                else if(currentOpponentName == "frog") LIvsT.setString("vs Frog");
+                else if(currentOpponentName == "pause") LIvsT.setString("is pausing");
+
                 leagueInitialization = 0;
-                counter = 30;
             }
 
             if(matchDay > 6)///end of the league screen (logic)
@@ -1973,6 +2004,12 @@ int main()
                 }
 
                 file.close();
+
+                ///deleting value from variables
+                for(int i=0; i<7; i++)
+                {
+                    chara[i] = nothing;
+                }
 
                 continue;
             }
