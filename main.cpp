@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <time.h>
 #include <string>
@@ -271,6 +272,15 @@ int main()
     Sprite LIsummaryS3_3(gandalfT); LIsummaryS3_3.setPosition(Vector2f(490,510)); LIsummaryS3_3.setScale(Vector2f(1.5,1.5));
     Text exitT("Game was made by",font1,90); exitT.setPosition(Vector2f(100,200)); Text exitT2("GRZEGORZ BEDNORZ",font2,100); exitT2.setPosition(Vector2f(150,350)); exitT2.setFillColor(Color::Yellow);
 
+    ///loading sound and music
+    SoundBuffer catSound; catSound.loadFromFile("cat.wav");
+    Sound sound(catSound);
+    sound.play();
+
+    Music music; music.openFromFile("menu.wav");
+
+
+    ///characters statistics
     Character frog(5,4,3,5,6,5,"frog");
     Character elGato(8,3,7,2,6,5,"gato");
     Character kuszczak(4,6,4,4,10,10,"kuszczak");
@@ -297,6 +307,9 @@ int main()
             if(counter>200)
             {
                 state = Tstate::menu;
+
+                sound.stop();
+                music.play();
             }
         }
         ///*****************************************state LOGOS
@@ -388,12 +401,20 @@ int main()
             static int counterPauseScreen{};
             static int isSelectedPauseMenu{1};
             static int godMode{};
+            static bool turnOnMusic{true};
 
             static bool strategyIsMade{false};
             static bool strategyIsSpeedUp; //true - speed up; false - increase;
             static int BonusAI; //0-nothing; 1-speed up; 2-increase; 3-both;
             static bool thereIsSpeedUp;
             static bool thereIsIncrease;
+
+            if(turnOnMusic)
+            {
+                music.openFromFile("game.wav");
+                music.play();
+                turnOnMusic = false;
+            }
 
             if(!developerMode) window.setFramerateLimit(60);
 
@@ -594,6 +615,9 @@ int main()
                     counterMatchWin = 0;
                     developerMode = false;
                     godMode = 0;
+                    turnOnMusic = true;
+                    music.openFromFile("menu.wav");
+                    music.play();
                 }
             }
             if(pauseScreen)
@@ -632,6 +656,10 @@ int main()
                         window.setFramerateLimit(100);
                         developerMode = false;
                         godMode = 0;
+
+                        turnOnMusic = true;
+                        music.openFromFile("menu.wav");
+                        music.play();
                     }
                 }
                 if(counterPauseScreen > 0)counterPauseScreen--;
