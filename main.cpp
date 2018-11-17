@@ -227,6 +227,8 @@ int main()
     Text settingsTControlsInOnePlayer("Control in one player match:  Arrows",font2,60); settingsTControlsInOnePlayer.setPosition(Vector2f(50,200)); settingsTControlsInOnePlayer.setFillColor(Color::Yellow);
     Text settingsTShowControlsTip("Show control tip before match:  Yes",font2,60); settingsTShowControlsTip.setPosition(Vector2f(50,300));
     Text settingsTLengthOfMatch("Length Of Match:  4",font2,60); settingsTLengthOfMatch.setPosition(Vector2f(50,400));
+    Text settingsTmusic("Music volume: 5",font2,60); settingsTmusic.setPosition(Vector2f(50,500));
+    Text settingsTsound("Sound volume: 5",font2,60); settingsTsound.setPosition(Vector2f(50,600));
     Text devT("Dev Mode",font2,20); devT.setPosition(Vector2f(5,870));
     Text devTgodMode("God Mode",font2,20); devTgodMode.setPosition(Vector2f(180,870));
     Text LcharacterChoiseT1("Welcome in the League Mode.",font2,47); LcharacterChoiseT1.setPosition(Vector2f(10,200));
@@ -284,7 +286,7 @@ int main()
 
 
     Music music; music.openFromFile("menu.wav");
-    music.setVolume(20.f);
+    music.setVolume(15.f);
     music.setLoop(true);
 
 
@@ -1176,6 +1178,8 @@ int main()
             static int is1Selected{1};
             static int is2Selected{1};
             static int is3Selected{4};
+            static int is4Selected{5};
+            static int is5Selected{5};
             static int counter{12};
 
             if(Keyboard::isKeyPressed(Keyboard::Escape))
@@ -1191,14 +1195,14 @@ int main()
             {
                 if(Keyboard::isKeyPressed(Keyboard::Down))
                 {
-                    if(isSelected == 3) isSelected = 1;
+                    if(isSelected == 5) isSelected = 1;
                     else isSelected++;
                     counter = 12;
                     moveS.play();
                 }
                 else if(Keyboard::isKeyPressed(Keyboard::Up))
                 {
-                    if(isSelected == 1) isSelected = 3;
+                    if(isSelected == 1) isSelected = 5;
                     else isSelected--;
                     counter = 12;
                     moveS.play();
@@ -1212,17 +1216,42 @@ int main()
                         else{is1Selected--; controlIn1player = 1;}
                         counter = 12;
                     }
-                    if(isSelected == 2)
+                    else if(isSelected == 2)
                     {
                         if(is2Selected == 1){is2Selected++; showControlTip = false;}
                         else{is2Selected--; showControlTip = true;}
                         counter = 12;
                     }
-                    if(isSelected == 3)
+                    else if(isSelected == 3)
                     {
                         if(is3Selected == 10)is3Selected = 1;
                         else is3Selected++;
                         lengthOfTheMatch = is3Selected;
+                        counter = 12;
+                    }
+                    else if(isSelected == 4)
+                    {
+                        if(is4Selected == 10)is4Selected = 0;
+                        else is4Selected++;
+
+                        float toMusicVolume{};
+                        toMusicVolume += is4Selected * 3;
+                        if(!is4Selected) toMusicVolume = 0;
+                        music.setVolume(toMusicVolume);
+
+                        counter = 12;
+                    }
+                    else if(isSelected == 5)
+                    {
+                        if(is5Selected == 10)is5Selected = 0;
+                        else is5Selected++;
+
+                        float toSoundVolume{};
+                        toSoundVolume += is5Selected * 3;
+                        if(!is5Selected) toSoundVolume = 0;
+                        sound.setVolume(toSoundVolume * 2);
+                        moveS.setVolume(toSoundVolume);
+
                         counter = 12;
                     }
 
@@ -1239,6 +1268,10 @@ int main()
                 else settingsTShowControlsTip.setFillColor(Color::White);
                 if(isSelected == 3)settingsTLengthOfMatch.setFillColor(Color::Yellow);
                 else settingsTLengthOfMatch.setFillColor(Color::White);
+                if(isSelected == 4)settingsTmusic.setFillColor(Color::Yellow);
+                else settingsTmusic.setFillColor(Color::White);
+                if(isSelected == 5)settingsTsound.setFillColor(Color::Yellow);
+                else settingsTsound.setFillColor(Color::White);
 
                 if(isSelected == 1)
                 {
@@ -1263,6 +1296,40 @@ int main()
                     else if(is3Selected == 9) settingsTLengthOfMatch.setString("Length Of Match:  9");
                     else if(is3Selected == 10) settingsTLengthOfMatch.setString("Length Of Match:  10");
                 }
+                else if(isSelected == 4)
+                {
+                    switch(is4Selected)
+                    {
+                        case 0: settingsTmusic.setString("Music volume: 0"); break;
+                        case 1: settingsTmusic.setString("Music volume: 1"); break;
+                        case 2: settingsTmusic.setString("Music volume: 2"); break;
+                        case 3: settingsTmusic.setString("Music volume: 3"); break;
+                        case 4: settingsTmusic.setString("Music volume: 4"); break;
+                        case 5: settingsTmusic.setString("Music volume: 5"); break;
+                        case 6: settingsTmusic.setString("Music volume: 6"); break;
+                        case 7: settingsTmusic.setString("Music volume: 7"); break;
+                        case 8: settingsTmusic.setString("Music volume: 8"); break;
+                        case 9: settingsTmusic.setString("Music volume: 9"); break;
+                        case 10: settingsTmusic.setString("Music volume: 10"); break;
+                    }
+                }
+                else if(isSelected == 5)
+                {
+                    switch(is5Selected)
+                    {
+                        case 0: settingsTsound.setString("Sound volume: 0"); break;
+                        case 1: settingsTsound.setString("Sound volume: 1"); break;
+                        case 2: settingsTsound.setString("Sound volume: 2"); break;
+                        case 3: settingsTsound.setString("Sound volume: 3"); break;
+                        case 4: settingsTsound.setString("Sound volume: 4"); break;
+                        case 5: settingsTsound.setString("Sound volume: 5"); break;
+                        case 6: settingsTsound.setString("Sound volume: 6"); break;
+                        case 7: settingsTsound.setString("Sound volume: 7"); break;
+                        case 8: settingsTsound.setString("Sound volume: 8"); break;
+                        case 9: settingsTsound.setString("Sound volume: 9"); break;
+                        case 10: settingsTsound.setString("Sound volume: 10"); break;
+                    }
+                }
             }
 
             window.draw(settingsT);
@@ -1270,7 +1337,8 @@ int main()
             window.draw(settingsTControlsInOnePlayer);
             window.draw(settingsTShowControlsTip);
             window.draw(settingsTLengthOfMatch);
-
+            window.draw(settingsTmusic);
+            window.draw(settingsTsound);
         }
         ///******************************state SETTINGS
 
