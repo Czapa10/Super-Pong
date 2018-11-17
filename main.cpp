@@ -11,7 +11,7 @@
 #include "lane.h"
 #include "character.h"
 
-#define VERSION "BETA 0.7"
+#define VERSION "BETA 0.8"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
@@ -575,8 +575,8 @@ int main()
 
                 int AIlevel; float AIballSpeed;
                 if(difficultyLevel == Tlevel::easy){AIballSpeed = 2; AIlevel = 1;}
-                else if(difficultyLevel == Tlevel::medium){AIballSpeed = 3; AIlevel = 2;}
-                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 3.5; AIlevel = 3.5;}
+                else if(difficultyLevel == Tlevel::medium){AIballSpeed = 3.5; AIlevel = 2;}
+                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 5; AIlevel = 3;}
 
                 if(!gamePause)
                 {
