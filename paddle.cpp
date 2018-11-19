@@ -65,8 +65,14 @@ int Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float
     if(difficultyLevel > 1)
     {
         int distanceBetweenPaddleAndAIBall;
-        if(rect.getPosition().y > AIballYposition) distanceBetweenPaddleAndAIBall = rect.getPosition().y - AIballYposition - 40;
-        else if(rect.getPosition().y + 100 < AIballYposition) distanceBetweenPaddleAndAIBall = AIballYposition - rect.getPosition().y - 100;
+        if(rect.getPosition().y > AIballYposition){
+            if(ballXposition < 1100) distanceBetweenPaddleAndAIBall = rect.getPosition().y - AIballYposition - 40;
+            else distanceBetweenPaddleAndAIBall = rect.getPosition().y - ballYposition - 40;
+        }
+        else if(rect.getPosition().y + 100 < AIballYposition){
+            if(ballXposition > 200) distanceBetweenPaddleAndAIBall = AIballYposition - rect.getPosition().y - 100;
+            else distanceBetweenPaddleAndAIBall = ballYposition - rect.getPosition().y - 100;
+        }
         else distanceBetweenPaddleAndAIBall = 0;
 
         int paddleRunTime;

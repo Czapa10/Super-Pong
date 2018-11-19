@@ -587,8 +587,8 @@ int main()
 
                 int AIlevel; float AIballSpeed;
                 if(difficultyLevel == Tlevel::easy){AIballSpeed = 2; AIlevel = 1;}
-                else if(difficultyLevel == Tlevel::medium){AIballSpeed = 2.5; AIlevel = 2;}
-                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 4; AIlevel = 3;}
+                else if(difficultyLevel == Tlevel::medium){AIballSpeed = 1.5; AIlevel = 2;}
+                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 3; AIlevel = 3;}
 
                 if(!gamePause)
                 {

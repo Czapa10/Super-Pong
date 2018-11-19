@@ -29,7 +29,7 @@ void Ball::updateMovement()
     }
     if((circle.getPosition().y + UpDownVelocity > 900)&&(circle.getPosition().y < 900)&&(UpDownVelocity > 0)&&(!wasCorrected))
     {
-        int toMoveUD{900 - circle.getPosition().y};
+        int toMoveUD{-(900 - circle.getPosition().y )};
         int proportion = UpDownVelocity / (900 - circle.getPosition().y);
         int toMoveLR{LeftRightVelocity / proportion};
         circle.move(Vector2f(toMoveLR, toMoveUD));
@@ -77,6 +77,9 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
             UpDownVelocity -= (powerP2/10 + randomNumber);
             LeftRightVelocity = - LeftRightVelocity;
         }
+
+        static int pickups{};
+        std::cout<<"################################ pickups: "<<++pickups<<std::endl;
     }
 
     if((godMode == 1)&&(circle.getPosition().x > 1225))
