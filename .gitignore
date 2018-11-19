@@ -1,0 +1,13 @@
+*.dll
+*.png
+*.jpg
+*.ico
+*.ttf
+*.wav
+*.txt
+bin/
+obj/
+resources/
+Super_Pong.*
+
+ 
