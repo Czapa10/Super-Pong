@@ -10,6 +10,7 @@
 #include "paddle.h"
 #include "lane.h"
 #include "character.h"
+#include "mouseEvents.h"
 
 #define VERSION "BETA 0.8"
 #define BUTTON_SIZE Vector2f(300,100)
@@ -56,6 +57,7 @@ Character nothing;
 Character chara[7]{nothing};//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
 int table[7]{10}; //random chara
 Sound moveS;
+MouseEvents mouseEvent;
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2,int& counterMatchStart, int& counterMatchWin);
@@ -173,14 +175,6 @@ int main()
     Text characterChoiseIncrease3T("6",font2,50); characterChoiseIncrease3T.setPosition(Vector2f(1050,665)); characterChoiseIncrease3T.setFillColor(Color(64,155,96));
     Text characterChoiseIncreaseContainer2T("5",font2,50); characterChoiseIncreaseContainer2T.setPosition(Vector2f(600,715)); characterChoiseIncreaseContainer2T.setFillColor(Color(12,243,232));
     Text characterChoiseIncreaseContainer3T("5",font2,50); characterChoiseIncreaseContainer3T.setPosition(Vector2f(1050,715)); characterChoiseIncreaseContainer3T.setFillColor(Color(12,243,232));
-    /////////////////////////////////////////////////////////////////////////////////
-    Text LcharacterChoiseSpeedT("-speed",font2,21); LcharacterChoiseSpeedT.setPosition(Vector2f(1106,475)); LcharacterChoiseSpeedT.setColor(Color(4,200,29));
-    Text LcharacterChoisePowerT("-power",font2,21); LcharacterChoisePowerT.setPosition(Vector2f(1106,535)); LcharacterChoisePowerT.setColor(Color(208,21,35));
-    Text LcharacterChoiseSpeedUpT("-speed up",font2,21); LcharacterChoiseSpeedUpT.setPosition(Vector2f(1106,585)); LcharacterChoiseSpeedUpT.setColor(Color(11,107,149));
-    Text LcharacterChoiseSpeedUpContainerT("-speed up container",font2,21); LcharacterChoiseSpeedUpContainerT.setPosition(Vector2f(1106,635)); LcharacterChoiseSpeedUpContainerT.setColor(Color(230,207,2));
-    Text LcharacterChoiseIncreaseT("-increase",font2,21); LcharacterChoiseIncreaseT.setPosition(Vector2f(1106,685)); LcharacterChoiseIncreaseT.setColor(Color(64,155,96));
-    Text LcharacterChoiseIncreaseContainerT("-increase container",font2,21); LcharacterChoiseIncreaseContainerT.setPosition(Vector2f(1106,735)); LcharacterChoiseIncreaseContainerT.setColor(Color(12,243,232));
-    /////////////////////////////////////////////////////////////////////////////////
     Text characterChoiseExitT("Exit - ESC",font2,80); characterChoiseExitT.setPosition(Vector2f(150,780)); characterChoiseExitT.setFillColor(Color::Red);
     Text characterChoiseNextT("Next - ENTER",font2,80); characterChoiseNextT.setPosition(Vector2f(800,780)); characterChoiseNextT.setFillColor(Color::Green);
     Text characterChoiseAT("A",font2,20); characterChoiseAT.setPosition(Vector2f(540,290)); characterChoiseAT.setFillColor(Color::Black);
@@ -235,6 +229,12 @@ int main()
     Text LcharacterChoiseT2("You'll play one match with every character.",font2,47); LcharacterChoiseT2.setPosition(Vector2f(10,300));
     Text LcharacterChoiseT3("Points will be saving in league table.",font2,47); LcharacterChoiseT3.setPosition(Vector2f(10,400));
     Text LcharacterChoiseT4("Choose your character and have a good fun!",font2,47); LcharacterChoiseT4.setPosition(Vector2f(10,500));
+    Text LcharacterChoiseSpeedT("-speed",font2,21); LcharacterChoiseSpeedT.setPosition(Vector2f(1106,475)); LcharacterChoiseSpeedT.setColor(Color(4,200,29));
+    Text LcharacterChoisePowerT("-power",font2,21); LcharacterChoisePowerT.setPosition(Vector2f(1106,535)); LcharacterChoisePowerT.setColor(Color(208,21,35));
+    Text LcharacterChoiseSpeedUpT("-speed up",font2,21); LcharacterChoiseSpeedUpT.setPosition(Vector2f(1106,585)); LcharacterChoiseSpeedUpT.setColor(Color(11,107,149));
+    Text LcharacterChoiseSpeedUpContainerT("-speed up container",font2,21); LcharacterChoiseSpeedUpContainerT.setPosition(Vector2f(1106,635)); LcharacterChoiseSpeedUpContainerT.setColor(Color(230,207,2));
+    Text LcharacterChoiseIncreaseT("-increase",font2,21); LcharacterChoiseIncreaseT.setPosition(Vector2f(1106,685)); LcharacterChoiseIncreaseT.setColor(Color(64,155,96));
+    Text LcharacterChoiseIncreaseContainerT("-increase container",font2,21); LcharacterChoiseIncreaseContainerT.setPosition(Vector2f(1106,735)); LcharacterChoiseIncreaseContainerT.setColor(Color(12,243,232));
     Text LIexitT("Save & Exit - ESC",font2,80); LIexitT.setPosition(Vector2f(650,800)); LIexitT.setFillColor(Color::Red);
     Text LInextMatchT("Next match",font2,90); LInextMatchT.setPosition(Vector2f(110,110)); LInextMatchT.setFillColor(Color::Cyan);
     Text LIvsT("vs Frog",font2,90); LIvsT.setPosition(Vector2f(110,190)); LIvsT.setFillColor(Color::Cyan);
@@ -349,62 +349,70 @@ int main()
             {
                 if(Keyboard::isKeyPressed(Keyboard::Down))
                 {
-                    if(isSelected == 4)
-                    {
-                        isSelected = 1;
-                        circle.move(0,-450);
-                    }else{
-                        isSelected++;
-                        circle.move(0,150);
-                    }
+                    if(isSelected == 4)isSelected = 1;
+                    else isSelected++;
                     counter = 12;
-
                     moveS.play();
                 }
-
                 if(Keyboard::isKeyPressed(Keyboard::Up))
                 {
-                    if(isSelected == 1)
-                    {
-                        isSelected = 4;
-                        circle.move(0,450);
-                    }else{
-                        isSelected--;
-                        circle.move(0,-150);
-                    }
+                    if(isSelected == 1)isSelected = 4;
+                    else isSelected--;
                     counter = 11;
-
                     moveS.play();
                 }
 
-                if(Keyboard::isKeyPressed(Keyboard::Enter))
-                {
-                    if(isSelected == 1)
-                    {
-                        state = Tstate::LnewGameOrcontinue;
-                        leagueMode = true;
-                    }
-                    else if(isSelected == 2)
-                    {
-                        state = Tstate::singleOr2players;
-                        leagueMode = false;
-                    }
-                    else if(isSelected == 3)
-                    {
-                        state = Tstate::settings;
-                    }
-                    else if(isSelected == 4)
-                    {
-                        state = Tstate::exitScreen;
-                    }
-
-                    isSelected = 1;
-                    counter = 20;
-                    circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
-
-                    sound.play();
-                }
             }else counter--;
+
+
+            ///mouse menu control
+            Vector2f mousePos{event.mouseMove.x, event.mouseMove.y};
+
+            static Vector2f mouseLastPos{mousePos.x, mousePos.y};
+
+            if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
+            {
+                if     (mouseEvent.isOnMouse(button1, mousePos)) isSelected = 1;
+                else if(mouseEvent.isOnMouse(button2, mousePos)) isSelected = 2;
+                else if(mouseEvent.isOnMouse(button3, mousePos)) isSelected = 3;
+                else if(mouseEvent.isOnMouse(button4, mousePos)) isSelected = 4;
+            }
+
+            ///setting menu circle position
+            Vector2f toSetBallPos;
+            switch(isSelected)
+            {
+            case 1: toSetBallPos = button1.getPosition(); break;
+            case 2: toSetBallPos = button2.getPosition(); break;
+            case 3: toSetBallPos = button3.getPosition(); break;
+            case 4: toSetBallPos = button4.getPosition(); break;
+            }
+            circle.setPosition(Vector2f(toSetBallPos.x - 50, toSetBallPos.y + 30));
+
+
+            ///choise next state logic
+            if( ((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter)) || (mouseEvent.left(event)) && (!counter) )
+            {
+                switch(isSelected)
+                {
+                case 1: state = Tstate::LnewGameOrcontinue;
+                        leagueMode = true;
+                        break;
+                case 2: state = Tstate::singleOr2players;
+                        leagueMode = false;
+                        break;
+                case 3: state = Tstate::settings;
+                        break;
+                case 4: state = Tstate::exitScreen;
+                        break;
+                }
+
+                isSelected = 1;
+                counter = 20;
+                circle.setPosition(Vector2f(button1.getPosition().x - 50, button1.getPosition().y + 30));
+
+                sound.play();
+            }
         }
         ///******************************************state MENU
 
