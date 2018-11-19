@@ -424,8 +424,20 @@ int main()
             static bool strategyIsMade{false};
             static bool strategyIsSpeedUp; //true - speed up; false - increase;
             static int BonusAI; //0-nothing; 1-speed up; 2-increase; 3-both;
-            static bool thereIsSpeedUp;
-            static bool thereIsIncrease;
+
+            bool thereIsSpeedUp;
+            bool thereIsIncrease;
+
+            if(controlIn1player == 1)
+            {
+                thereIsSpeedUp = lane.minusSpeed1(0);
+                thereIsIncrease = lane.minusIncrease1(0);
+            }
+            else
+            {
+                thereIsSpeedUp = lane.minusSpeed2(0);
+                thereIsIncrease = lane.minusIncrease2(0);
+            }
 
             if(turnOnMusic)
             {
@@ -575,13 +587,13 @@ int main()
 
                 int AIlevel; float AIballSpeed;
                 if(difficultyLevel == Tlevel::easy){AIballSpeed = 2; AIlevel = 1;}
-                else if(difficultyLevel == Tlevel::medium){AIballSpeed = 3.5; AIlevel = 2;}
-                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 5; AIlevel = 3;}
+                else if(difficultyLevel == Tlevel::medium){AIballSpeed = 2.5; AIlevel = 2;}
+                else if(difficultyLevel == Tlevel::hard){AIballSpeed = 4; AIlevel = 3;}
 
                 if(!gamePause)
                 {
-                    if(controlIn1player == 1) BonusAI = paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().y, ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player1.getSpeed(), thereIsSpeedUp, thereIsIncrease, player1.getSpeedUp());
-                    if(controlIn1player == 2) BonusAI = paddle2.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().y, ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player2.getSpeed(), thereIsSpeedUp, thereIsIncrease, player2.getSpeedUp());
+                    if(controlIn1player == 1) BonusAI = paddle1.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().y, ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player1.getSpeed(), thereIsSpeedUp, thereIsIncrease, player1.getSpeedUp(), player1.getIncrease(), player1.getSpeed());
+                    if(controlIn1player == 2) BonusAI = paddle2.AI(AIlevel, AIball.circle.getPosition().y, AIball.circle.getPosition().x, ball.getVelocityLeftRight(), ball.circle.getPosition().y, ball.circle.getPosition().x, controlIn1player, strategyIsSpeedUp, player2.getSpeed(), thereIsSpeedUp, thereIsIncrease, player2.getSpeedUp(), player2.getIncrease(), player2.getSpeed());
                 }
 
                 if(((ball.getVelocityLeftRight() < 0)&&(ball.circle.getPosition().x < 1250)&&(controlIn1player == 1))||

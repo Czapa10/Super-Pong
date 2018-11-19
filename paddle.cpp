@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "paddle.h"
 #include <iostream>
+#include <cstdlib>
 
 #define UP rect.move(Vector2f(0,-velocity));
 #define DOWN rect.move(Vector2f(0,velocity));
@@ -31,30 +32,33 @@ void Paddle::movement(int control)///1-arrows | 2-awsd | 0-AI
 }
 
 int Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float velocityLeftRight,int ballYposition,int ballXposition,int controlIn1player,
-                bool strategyIsSpeedUp, int AIpaddleSpeed, bool thereIsSpeedUp, bool thereIsIncrease, int speedUp)
+                bool strategyIsSpeedUp, int AIpaddleSpeed, bool thereIsSpeedUp, bool thereIsIncrease, int speedUp, int increase, int velWithoutSpeedUp)
 {
+    int centerPos{50};
+    if(thereIsIncrease)centerPos = increase * 10;
+
     ///control in 1 player = 1 (arrows)
     if((velocityLeftRight < 0)&&(AIballXposition < 900)&&(ballXposition > 200))
     {
-        if(AIballYposition < rect.getPosition().y + 30)UP
-        if(AIballYposition > rect.getPosition().y + 30)DOWN
+        if(AIballYposition < rect.getPosition().y + centerPos)UP
+        if(AIballYposition > rect.getPosition().y + centerPos)DOWN
     }
     else if((velocityLeftRight < 0)&&(ballXposition < 200))
     {
-        if(ballYposition < rect.getPosition().y + 30)UP
-        if(ballYposition > rect.getPosition().y + 30)DOWN
+        if(ballYposition < rect.getPosition().y + centerPos)UP
+        if(ballYposition > rect.getPosition().y + centerPos)DOWN
     }
 
     ///control in 1 player = 2 (AWSD)
     else if((velocityLeftRight > 0)&&(AIballXposition > 400)&&(ballXposition < 1100))
     {
-        if(AIballYposition < rect.getPosition().y + 30)UP
-        if(AIballYposition > rect.getPosition().y + 30)DOWN
+        if(AIballYposition < rect.getPosition().y + centerPos)UP
+        if(AIballYposition > rect.getPosition().y + centerPos)DOWN
     }
     else if((velocityLeftRight > 0)&&(ballXposition > 1100))
     {
-        if(ballYposition < rect.getPosition().y + 30)UP
-        if(ballYposition > rect.getPosition().y + 30)DOWN
+        if(ballYposition < rect.getPosition().y + centerPos)UP
+        if(ballYposition > rect.getPosition().y + centerPos)DOWN
     }
 
     ///speed up & increase
@@ -67,32 +71,34 @@ int Paddle::AI(int difficultyLevel,int AIballYposition,int AIballXposition,float
 
         int paddleRunTime;
         int paddleRunTimePlus;
-        paddleRunTime = distanceBetweenPaddleAndAIBall / velocity;
-        if(difficultyLevel == 3) paddleRunTimePlus = distanceBetweenPaddleAndAIBall / velocity + speedUp;
+        paddleRunTime = abs(distanceBetweenPaddleAndAIBall / velWithoutSpeedUp);
+        if(difficultyLevel == 3) paddleRunTimePlus = distanceBetweenPaddleAndAIBall / velWithoutSpeedUp + speedUp;
 
         int ballRunTime;
-        if(controlIn1player == 1) ballRunTime = (ballXposition - 10) / velocityLeftRight;
-        else ballRunTime = (1265 - ballXposition) / velocityLeftRight;
+        if(controlIn1player == 1) ballRunTime = abs((ballXposition - 25) / velocityLeftRight);
+        else ballRunTime = (1255 - ballXposition) / velocityLeftRight;
+
+        std::cout<<"paddle run time: "<<paddleRunTime<<"  | ball run time: "<<ballRunTime<<std::endl;
 
         if((((velocityLeftRight < 0)&&(AIballXposition < 20)&&(controlIn1player == 1))||((velocityLeftRight > 0)&&(AIballXposition > 1280)&&(controlIn1player == 2)))&&(paddleRunTime > ballRunTime))
         {
-            if(AIballYposition == rect.getPosition().y + 30) return 0;
+            if(AIballYposition == rect.getPosition().y + 30){std::cout<<"return 0; (1)"<<std::endl; return 0;}
 
-            if((difficultyLevel == 3)&&(paddleRunTimePlus > ballRunTime)) return 3;
+            if((difficultyLevel == 3)&&(paddleRunTimePlus > ballRunTime))
+                {std::cout<<"****************************************\nreturn 3;\n****************************************"<<std::endl; return 3;}
 
             if(strategyIsSpeedUp)
             {
-                if(thereIsSpeedUp) return 1;
-                else if(thereIsIncrease) return 2;
-                else return 0;
+                if(thereIsSpeedUp) {std::cout<<"return 1; (2)"<<std::endl; return 1;}
+                else if(thereIsIncrease) {std::cout<<"return 2; (3)"<<std::endl; return 2;}
+                else {std::cout<<"return 0; (4)"<<std::endl; return 0;}
             }
             else
             {
-                if(thereIsIncrease) return 2;
-                else if(thereIsSpeedUp) return 1;
-                else return 0;
+                if(thereIsIncrease) {std::cout<<"return 1; (5)"<<std::endl; return 2;}
+                else if(thereIsSpeedUp) {std::cout<<"return 2; (6)"<<std::endl; return 1;}
+                else {std::cout<<"return 0; (7)"<<std::endl; return 0;}
             }
-
         }
         else return 0;
     }

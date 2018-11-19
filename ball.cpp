@@ -14,7 +14,7 @@ Ball::Ball()
 
 void Ball::updateMovement()
 {
-    static bool wasCorrected{false}; //was position corected on moment ago
+    static bool wasCorrected{false}; //<--- was position corected a moment ago?
 
     if((circle.getPosition().y + UpDownVelocity < 100)&&(circle.getPosition().y > 100)&&(UpDownVelocity < 0)&&(!wasCorrected))
     {
@@ -27,7 +27,17 @@ void Ball::updateMovement()
         wasCorrected = 1;
         return;
     }
-    //if(wasCorrected) wasCorrected--;
+    if((circle.getPosition().y + UpDownVelocity > 900)&&(circle.getPosition().y < 900)&&(UpDownVelocity > 0)&&(!wasCorrected))
+    {
+        int toMoveUD{900 - circle.getPosition().y};
+        int proportion = UpDownVelocity / (900 - circle.getPosition().y);
+        int toMoveLR{LeftRightVelocity / proportion};
+        circle.move(Vector2f(toMoveLR, toMoveUD));
+        UpDownVelocity = -UpDownVelocity;
+
+        wasCorrected = 1;
+        return;
+    }
     wasCorrected = 0;
 
     circle.move(Vector2f(LeftRightVelocity,UpDownVelocity));
