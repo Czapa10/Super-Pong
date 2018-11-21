@@ -58,6 +58,7 @@ Character chara[7]{nothing};//alien,blackMan,gandalf,elGato,frog,kuszczak,lennon
 int table[7]{10}; //random chara
 Sound moveS;
 MouseEvents mouseEvent;
+Event event;
 
 ///------declarations of functions-------------------
 void getPoint(Ball& ball,Text& s1,Text& s2,Text& t1,Text& t2,Paddle& paddle1,Paddle& paddle2,int& counterMatchStart, int& counterMatchWin);
@@ -303,10 +304,11 @@ int main()
 
     while (window.isOpen())
     {
-        Event event;
         while (window.pollEvent(event)){if(event.type == Event::Closed)state = Tstate::exitScreen;}
 
         window.clear();
+
+        Vector2f mousePos{event.mouseMove.x, event.mouseMove.y};
 
         ///state LOGOS*****************************************
         if(state == Tstate::logos)
@@ -839,8 +841,24 @@ int main()
                     if(Keyboard::isKeyPressed(Keyboard::Left)){isSelected = 1; counter = 12; moveS.play();}
                     if(Keyboard::isKeyPressed(Keyboard::Right)){isSelected = 2; counter = 12; moveS.play();}
                 }
+            }else counter--;
 
-                if(Keyboard::isKeyPressed(Keyboard::Enter))
+            ///mouse menu control
+            Vector2f mousePos{event.mouseMove.x, event.mouseMove.y};
+
+            static Vector2f mouseLastPos{mousePos.x, mousePos.y};
+
+            if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
+            {
+                if     (mouseEvent.isOnMouse(sinOr2pSingle, mousePos)) isSelected = 1;
+                else if(mouseEvent.isOnMouse(sinOr2pMulti, mousePos)) isSelected = 2;
+                else if(mouseEvent.isOnMouse(sinOr2pExit, mousePos)) isSelected = 3;
+            }
+
+            mouseLastPos = mousePos;
+
+
+            if( (Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event)) && (!counter))
                 {
                     if(state == Tstate::singleOr2players)
                     {
@@ -906,7 +924,6 @@ int main()
 
                     sound.play();
                 }
-            }else counter--;
         }
         ///******************************state SINGLE OR 2 PLAYERS
 
@@ -915,6 +932,10 @@ int main()
         else if((state == Tstate::characterChoise)||(state == Tstate::LcharacterChoise))
         {
             static int counter{30};
+            static int isSelected{};
+
+            Vector2f mousePos{event.mouseMove.x, event.mouseMove.y};
+
 
             changeCharacterStatistics(1,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
                                       characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
@@ -922,7 +943,7 @@ int main()
                                       characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
 
-            if(Keyboard::isKeyPressed(Keyboard::Escape)&&(!counter))
+            if(Keyboard::isKeyPressed(Keyboard::Escape)||((isSelected == 1)&&(mouseEvent.left(event)))&&(!counter))
             {
                 if(state == Tstate::characterChoise) state = Tstate::singleOr2players;
                 else state = Tstate::LnewGameOrcontinue;
@@ -934,7 +955,7 @@ int main()
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
                 sound.play();
             }
-            else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
+            else if((Keyboard::isKeyPressed(Keyboard::Enter))||((isSelected == 2)&&(mouseEvent.left(event)))&&(!counter))
             {
                 if(state == Tstate::characterChoise)
                 {
@@ -997,6 +1018,20 @@ int main()
             }
             if(counter) counter--;
 
+            ///mouse menu control
+            static Vector2f mouseLastPos{mousePos.x, mousePos.y};
+
+            if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
+            {
+                if     (mouseEvent.isOnMouse(0,750,650,150, mousePos)) isSelected = 1;
+                else if(mouseEvent.isOnMouse(650,750,650,150, mousePos)) isSelected = 2;
+                else isSelected = 0;
+            }
+
+            mouseLastPos = mousePos;
+
+            cout<<"is Selected: "<<isSelected<<endl;
+
             window.draw(characterChoiseT);
             window.draw(characterChoiseT2);
             if(state == Tstate::characterChoise) window.draw(characterChoiseT3);
@@ -1051,7 +1086,9 @@ int main()
         ///state CONTROLS TIP******************************
         else if(state == Tstate::controlsTip)
         {
+            Event event;
             static int counter{20};
+            static int isSelected{};
 
             window.draw(controlsTipT);
             if(oneOr2Players == 2){window.draw(controlsTipPlayer1T); window.draw(controlsTipPlayer2T);}
@@ -1065,7 +1102,7 @@ int main()
 
             if(!counter)
             {
-                if(Keyboard::isKeyPressed(Keyboard::Enter))
+                if( (Keyboard::isKeyPressed(Keyboard::Enter)) || ((isSelected == 1)&&(mouseEvent.left(event))) )
                 {
                     if(oneOr2Players == 2)state = Tstate::game;
                     else if(leagueMode == false) state = Tstate::dificultyLevel;
@@ -1073,7 +1110,7 @@ int main()
                     counter = 20;
                     sound.play();
                 }
-                else if(Keyboard::isKeyPressed(Keyboard::Escape))
+                else if( (Keyboard::isKeyPressed(Keyboard::Escape)) || ((isSelected == 2)&&(mouseEvent.left(event))) )
                 {
                     if(leagueMode) state = Tstate::LeagueInterface;
                     else state = Tstate::characterChoise;
@@ -1082,6 +1119,19 @@ int main()
                 }
             }
             else counter--;
+
+            static Vector2f mouseLastPos{mousePos.x, mousePos.y};
+
+            if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
+            {
+                if     (mouseEvent.isOnMouse(0,750,650,150, mousePos)) isSelected = 1;
+                else if(mouseEvent.isOnMouse(650,750,650,150, mousePos)) isSelected = 2;
+                else isSelected = 0;
+            }
+
+            mouseLastPos = mousePos;
+
+            cout<<"is Selected: "<<isSelected<<endl;
         }
         ///******************************state CONTROLS TIP
 
@@ -2527,7 +2577,61 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
     }
     else counter2--;
 
-    if(wasPressed)
+    ///mouse menu control
+    static Vector2f mousePos;
+    mousePos.x = event.mouseMove.x;
+    mousePos.y = event.mouseMove.y;
+
+    static int isPointed{};
+
+    if     (mouseEvent.isOnMouse(515, 275, 50,  50,  mousePos)) {isPointed = 1; cout<<"isPointed = 1"<<endl;}//player 1 left
+    else if(mouseEvent.isOnMouse(565, 245, 170, 120, mousePos)) {isPointed = 2; cout<<"isPointed = 2"<<endl;}//player 1 right
+    else if(mouseEvent.isOnMouse(960, 275, 50,  50,  mousePos)) {isPointed = 3; cout<<"isPointed = 3"<<endl;}//player 2 left
+    else if(mouseEvent.isOnMouse(1015,245, 170, 120, mousePos)) {isPointed = 4; cout<<"isPointed = 4"<<endl;}//player 2 right
+    else {isPointed = 0; cout<<"isPointed = 0";}//is on nothing
+    //else if(mouseEvent.isOnMouse(515, 245, 700, 120, mousePos) == false) {isPointed = 0; cout<<"isPointed = 0"<<endl;}//cursor is on nothing
+
+    bool leftWasPressed{false};
+
+    if((mouseEvent.left(event))&&(!counter1))
+    {
+        cout<<"Left was pressed!"<<endl;
+        leftWasPressed = true;
+
+        switch(isPointed)
+        {
+        case 1:
+            if(player1 == 0) player1 = 6;
+            else player1--;
+            wasPressed = true;
+            counter1 = 12;
+            moveS.play();
+            break;
+        case 2:
+            if(player1 == 6) player1 = 0;
+            else player1++;
+            wasPressed = true;
+            counter1 = 12;
+            moveS.play();
+            break;
+        case 3:
+            if(player2 == 0) player2 = 6;
+            else player2--;
+            wasPressed = true;
+            counter1 = 12;
+            moveS.play();
+            break;
+        case 4:
+            if(player2 == 6) player2 = 0;
+            else player2++;
+            wasPressed = true;
+            counter1 = 12;
+            moveS.play();
+            break;
+        }
+    }
+
+    if((wasPressed)||(leftWasPressed))
     {
         ///frog
         if(player1 == 0)
@@ -2697,6 +2801,7 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
             increaseContainer2.setString(floatTostring(alien.getIncreaseContainer()));
         }
     }
+    wasPressed = false;
 }
 
 void setLeagueTable(string nameOf1player, string nameOf2player,
