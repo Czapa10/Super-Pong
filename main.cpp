@@ -368,8 +368,6 @@ int main()
 
 
             ///mouse menu control
-            Vector2f mousePos{event.mouseMove.x, event.mouseMove.y};
-
             static Vector2f mouseLastPos{mousePos.x, mousePos.y};
 
             if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
@@ -379,6 +377,15 @@ int main()
                 else if(mouseEvent.isOnMouse(button3, mousePos)) isSelected = 3;
                 else if(mouseEvent.isOnMouse(button4, mousePos)) isSelected = 4;
             }
+
+            ///move sound in mouse control
+            static int earlierWasSelected{isSelected};
+            if(earlierWasSelected != isSelected){
+                moveS.play();
+            }
+
+            earlierWasSelected = isSelected;
+            mouseLastPos = mousePos;
 
             ///setting menu circle position
             Vector2f toSetBallPos;
@@ -694,9 +701,18 @@ int main()
                         isSelectedPauseMenu--;
                         counterPauseScreen = 12;
                     }
+                }
 
+                ///move in menu sound
+                static int earlierWasPressed{isSelectedPauseMenu};
+
+                if(earlierWasPressed != isSelectedPauseMenu){
                     moveS.play();
                 }
+
+                earlierWasPressed = isSelectedPauseMenu;
+
+
                 if((Keyboard::isKeyPressed(Keyboard::Enter))||(mouseEvent.left(event)))
                 {
                     if(isSelectedPauseMenu == 1)
@@ -843,19 +859,19 @@ int main()
             {
                 if(isSelected == 1)
                 {
-                    if(Keyboard::isKeyPressed(Keyboard::Right)){isSelected = 2; counter = 12; moveS.play();}
-                    if(Keyboard::isKeyPressed(Keyboard::Down)){isSelected = 3; counter = 12; moveS.play();}
+                    if(Keyboard::isKeyPressed(Keyboard::Right)){isSelected = 2; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Down)){isSelected = 3; counter = 12;}
                 }
                 if(isSelected == 2)
                 {
-                    if(Keyboard::isKeyPressed(Keyboard::Left)){isSelected = 1; counter = 12; moveS.play();}
-                    if(Keyboard::isKeyPressed(Keyboard::Down)){isSelected = 3; counter = 12; moveS.play();}
+                    if(Keyboard::isKeyPressed(Keyboard::Left)){isSelected = 1; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Down)){isSelected = 3; counter = 12;}
                 }
                 if(isSelected == 3)
                 {
-                    if(Keyboard::isKeyPressed(Keyboard::Up)){isSelected = 1; counter = 12; moveS.play();}
-                    if(Keyboard::isKeyPressed(Keyboard::Left)){isSelected = 1; counter = 12; moveS.play();}
-                    if(Keyboard::isKeyPressed(Keyboard::Right)){isSelected = 2; counter = 12; moveS.play();}
+                    if(Keyboard::isKeyPressed(Keyboard::Up)){isSelected = 1; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Left)){isSelected = 1; counter = 12;}
+                    if(Keyboard::isKeyPressed(Keyboard::Right)){isSelected = 2; counter = 12;}
                 }
             }else counter--;
 
@@ -870,6 +886,15 @@ int main()
             }
 
             mouseLastPos = mousePos;
+
+            ///move in menu sound
+            static int earlierWasSelected{isSelected};
+
+            if(earlierWasSelected != isSelected){
+                moveS.play();
+            }
+
+            earlierWasSelected = isSelected;
 
 
             if( ((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event))) && (!counter))
@@ -1171,14 +1196,12 @@ int main()
                     if(whereIsOutline == 4) whereIsOutline = 1;
                     else whereIsOutline++;
                     counter = 12;
-                    moveS.play();
                 }
                 else if(Keyboard::isKeyPressed(Keyboard::Up))
                 {
                     if(whereIsOutline == 1) whereIsOutline = 4;
                     else whereIsOutline--;
                     counter = 12;
-                    moveS.play();
                 }
             }
             else counter--;
@@ -1194,6 +1217,15 @@ int main()
             }
 
             mouseLastPos = mousePos;
+
+            ///move in menu sound
+            static int earlierWasSelected{whereIsOutline};
+
+            if(earlierWasSelected != whereIsOutline){
+                moveS.play();
+            }
+
+            earlierWasSelected = whereIsOutline;
 
             if( ((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event))) && (!counter) )
             {
@@ -1322,6 +1354,16 @@ int main()
             if(makeCounter12)counter = 12;
 
             cout<<"is Selected: "<<isSelected<<endl;
+
+            ///move in menu sound
+            static int earlierWasSelected{isSelected};
+
+            if(earlierWasSelected != isSelected){
+                moveS.play();
+            }
+
+            earlierWasSelected = isSelected;
+
 
             if((Keyboard::isKeyPressed(Keyboard::Enter))||(mouseEvent.left(event)))
             {
