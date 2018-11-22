@@ -12,7 +12,7 @@
 #include "character.h"
 #include "mouseEvents.h"
 
-#define VERSION "BETA 0.8"
+#define VERSION "BETA 0.9"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
@@ -393,7 +393,7 @@ int main()
 
 
             ///choise next state logic
-            if( (Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event)) && (!counter) )
+            if( ((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event))) && (!counter) )
             {
                 switch(isSelected)
                 {
@@ -664,6 +664,22 @@ int main()
             }
             if(pauseScreen)
             {
+                static Vector2f mouseLastPos;
+
+                if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
+                {
+                    if(mouseEvent.isOnMouse(pauseResume, mousePos)){
+                        isSelectedPauseMenu = 1;
+                        circle2.setPosition(Vector2f(pauseResume.getPosition().x - 50, pauseResume.getPosition().y + 30));
+                    }
+                    else if(mouseEvent.isOnMouse(pauseExit, mousePos)){
+                        isSelectedPauseMenu = 2;
+                        circle2.setPosition(Vector2f(pauseExit.getPosition().x - 50, pauseExit.getPosition().y + 30));
+                    }
+                }
+
+                mouseLastPos = mousePos;
+
                 if(((Keyboard::isKeyPressed(Keyboard::Up))||(Keyboard::isKeyPressed(Keyboard::Down)))&&(!counterPauseScreen))
                 {
                     if(isSelectedPauseMenu == 1)
@@ -681,7 +697,7 @@ int main()
 
                     moveS.play();
                 }
-                if(Keyboard::isKeyPressed(Keyboard::Enter))
+                if((Keyboard::isKeyPressed(Keyboard::Enter))||(mouseEvent.left(event)))
                 {
                     if(isSelectedPauseMenu == 1)
                     {
@@ -856,7 +872,7 @@ int main()
             mouseLastPos = mousePos;
 
 
-            if( (Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event)) && (!counter))
+            if( ((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event))) && (!counter))
                 {
                     if(state == Tstate::singleOr2players)
                     {
@@ -953,7 +969,7 @@ int main()
                                       frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
                 sound.play();
             }
-            else if((Keyboard::isKeyPressed(Keyboard::Enter))||((isSelected == 2)&&(mouseEvent.left(event)))&&(!counter))
+            else if(((Keyboard::isKeyPressed(Keyboard::Enter))||((isSelected == 2)&&(mouseEvent.left(event))))&&(!counter))
             {
                 if(state == Tstate::characterChoise)
                 {
@@ -1179,7 +1195,7 @@ int main()
 
             mouseLastPos = mousePos;
 
-            if((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event)) && (!counter))
+            if( ((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event))) && (!counter) )
             {
                 if(state == Tstate::dificultyLevel)
                 {
@@ -1200,7 +1216,8 @@ int main()
                     }
                     else if(whereIsOutline == 4)
                     {
-                        state = Tstate::characterChoise;
+                        if(showControlTip) state = Tstate::controlsTip;
+                        else state = Tstate::characterChoise;
                     }
                 }
                 else
