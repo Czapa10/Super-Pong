@@ -844,8 +844,6 @@ int main()
             }else counter--;
 
             ///mouse menu control
-            Vector2f mousePos{event.mouseMove.x, event.mouseMove.y};
-
             static Vector2f mouseLastPos{mousePos.x, mousePos.y};
 
             if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
@@ -1086,7 +1084,6 @@ int main()
         ///state CONTROLS TIP******************************
         else if(state == Tstate::controlsTip)
         {
-            Event event;
             static int counter{20};
             static int isSelected{};
 
@@ -1139,8 +1136,7 @@ int main()
         ///state DIFFICULTY LEVEL******************************
         else if((state == Tstate::dificultyLevel)||(state == Tstate::LdificultyLevel))
         {
-            static int counter{0};
-            static int counterEnter{25};
+            static int counter{20};
             static int whereIsOutline{1};
 
             if(whereIsOutline == 1) dificultyLevelEasyR.setOutlineThickness(5);
@@ -1171,7 +1167,19 @@ int main()
             }
             else counter--;
 
-            if((!counterEnter)&&(Keyboard::isKeyPressed(Keyboard::Enter)))
+            static Vector2f mouseLastPos;
+
+            if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
+            {
+                if     (mouseEvent.isOnMouse(dificultyLevelEasyR, mousePos)) whereIsOutline = 1;
+                else if(mouseEvent.isOnMouse(dificultyLevelMediumR, mousePos)) whereIsOutline = 2;
+                else if(mouseEvent.isOnMouse(dificultyLevelHardR, mousePos)) whereIsOutline = 3;
+                else if(mouseEvent.isOnMouse(dificultyLevelExitR, mousePos)) whereIsOutline = 4;
+            }
+
+            mouseLastPos = mousePos;
+
+            if((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event)) && (!counter))
             {
                 if(state == Tstate::dificultyLevel)
                 {
@@ -1218,13 +1226,11 @@ int main()
                     }
                 }
 
-                counter = 0;
-                counterEnter = 25;
+                counter = 20;
                 whereIsOutline = 1;
 
                 sound.play();
             }
-            if(counterEnter > 0) counterEnter--;
 
             //rectangle shapes
             window.draw(dificultyLevelEasyR);
@@ -1251,8 +1257,9 @@ int main()
             static int is4Selected{5};
             static int is5Selected{5};
             static int counter{12};
+            static bool isCursorOnExit;
 
-            if(Keyboard::isKeyPressed(Keyboard::Escape))
+            if((Keyboard::isKeyPressed(Keyboard::Escape))||((isCursorOnExit)&&(mouseEvent.left(event))))
             {
                 state = Tstate::menu;
                 isSelected = 1;
@@ -1260,6 +1267,23 @@ int main()
 
                 sound.play();
             }
+
+
+            static Vector2f mouseLastPos{mousePos.x, mousePos.y};
+            bool makeCounter12{false};
+            if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
+            {
+                if     (mouseEvent.isOnMouse(0,190,1300,100, mousePos)) isSelected = 1; //control in 1 player
+                else if(mouseEvent.isOnMouse(0,290,1300,100, mousePos)) isSelected = 2; //show tip before match
+                else if(mouseEvent.isOnMouse(0,390,1300,100, mousePos)) isSelected = 3; //length of match
+                else if(mouseEvent.isOnMouse(0,490,1300,100, mousePos)) isSelected = 4; //music volume
+                else if(mouseEvent.isOnMouse(0,590,1300,100, mousePos)) isSelected = 5; //sound volume
+                if(mouseEvent.isOnMouse(0,750,1300,150, mousePos)) isCursorOnExit = true;//exit
+                else isCursorOnExit = false;
+                makeCounter12 = true;
+            }
+
+            mouseLastPos = mousePos;
 
             if(!counter)
             {
@@ -1278,137 +1302,149 @@ int main()
                     moveS.play();
                 }
 
-                else if(Keyboard::isKeyPressed(Keyboard::Enter))
-                {
-                    if(isSelected == 1)
-                    {
-                        if(is1Selected == 1){is1Selected++; controlIn1player = 2;}
-                        else{is1Selected--; controlIn1player = 1;}
-                        counter = 12;
-                    }
-                    else if(isSelected == 2)
-                    {
-                        if(is2Selected == 1){is2Selected++; showControlTip = false;}
-                        else{is2Selected--; showControlTip = true;}
-                        counter = 12;
-                    }
-                    else if(isSelected == 3)
-                    {
-                        if(is3Selected == 10)is3Selected = 1;
-                        else is3Selected++;
-                        lengthOfTheMatch = is3Selected;
-                        counter = 12;
-                    }
-                    else if(isSelected == 4)
-                    {
-                        if(is4Selected == 10)is4Selected = 0;
-                        else is4Selected++;
+            if(makeCounter12)counter = 12;
 
-                        float toMusicVolume{};
-                        toMusicVolume += is4Selected * 3;
-                        if(!is4Selected) toMusicVolume = 0;
-                        music.setVolume(toMusicVolume);
+            cout<<"is Selected: "<<isSelected<<endl;
 
-                        counter = 12;
-                    }
-                    else if(isSelected == 5)
-                    {
-                        if(is5Selected == 10)is5Selected = 0;
-                        else is5Selected++;
-
-                        float toSoundVolume{};
-                        toSoundVolume += is5Selected * 3;
-                        if(!is5Selected) toSoundVolume = 0;
-                        sound.setVolume(toSoundVolume * 2);
-                        moveS.setVolume(toSoundVolume);
-
-                        counter = 12;
-                    }
-
-                    sound.play();
-                }
-            }
-            else counter--;
-
-            if(counter == 12)
+            if((Keyboard::isKeyPressed(Keyboard::Enter))||(mouseEvent.left(event)))
             {
-                if(isSelected == 1) settingsTControlsInOnePlayer.setFillColor(Color::Yellow);
-                else settingsTControlsInOnePlayer.setFillColor(Color::White);
-                if(isSelected == 2)settingsTShowControlsTip.setFillColor(Color::Yellow);
-                else settingsTShowControlsTip.setFillColor(Color::White);
-                if(isSelected == 3)settingsTLengthOfMatch.setFillColor(Color::Yellow);
-                else settingsTLengthOfMatch.setFillColor(Color::White);
-                if(isSelected == 4)settingsTmusic.setFillColor(Color::Yellow);
-                else settingsTmusic.setFillColor(Color::White);
-                if(isSelected == 5)settingsTsound.setFillColor(Color::Yellow);
-                else settingsTsound.setFillColor(Color::White);
+                switch(isSelected)
+                {
+                case 1:
+                    {
+                    if(is1Selected == 1){is1Selected++; controlIn1player = 2;}
+                    else{is1Selected--; controlIn1player = 1;}
+                    counter = 12;
+                    break;
+                    }
+                case 2:
+                    {
+                    if(is2Selected == 1){is2Selected++; showControlTip = false;}
+                    else{is2Selected--; showControlTip = true;}
+                    counter = 12;
+                    break;
+                    }
+                case 3:
+                    {
+                    if(is3Selected == 10)is3Selected = 1;
+                    else is3Selected++;
+                    lengthOfTheMatch = is3Selected;
+                    counter = 12;
+                    break;
+                    }
+                case 4:
+                    {
+                    if(is4Selected == 10)is4Selected = 0;
+                    else is4Selected++;
 
-                if(isSelected == 1)
-                {
-                    if(is1Selected == 1) settingsTControlsInOnePlayer.setString("Control in one player match:  Arrows");
-                    else settingsTControlsInOnePlayer.setString("Control in one player match:  AWSD");
-                }
-                else if(isSelected == 2)
-                {
-                    if(is2Selected == 1) settingsTShowControlsTip.setString("Show control tip before match:  Yes");
-                    else settingsTShowControlsTip.setString("Show control tip before match:  No");
-                }
-                else if(isSelected == 3)
-                {
-                    if(is3Selected == 1) settingsTLengthOfMatch.setString("Length Of Match:  1");
-                    else if(is3Selected == 2) settingsTLengthOfMatch.setString("Length Of Match:  2");
-                    else if(is3Selected == 3) settingsTLengthOfMatch.setString("Length Of Match:  3");
-                    else if(is3Selected == 4) settingsTLengthOfMatch.setString("Length Of Match:  4");
-                    else if(is3Selected == 5) settingsTLengthOfMatch.setString("Length Of Match:  5");
-                    else if(is3Selected == 6) settingsTLengthOfMatch.setString("Length Of Match:  6");
-                    else if(is3Selected == 7) settingsTLengthOfMatch.setString("Length Of Match:  7");
-                    else if(is3Selected == 8) settingsTLengthOfMatch.setString("Length Of Match:  8");
-                    else if(is3Selected == 9) settingsTLengthOfMatch.setString("Length Of Match:  9");
-                    else if(is3Selected == 10) settingsTLengthOfMatch.setString("Length Of Match:  10");
-                }
-                else if(isSelected == 4)
-                {
-                    switch(is4Selected)
+                    float toMusicVolume{};
+                    toMusicVolume += is4Selected * 3;
+                    if(!is4Selected) toMusicVolume = 0;
+                    music.setVolume(toMusicVolume);
+
+                    counter = 12;
+                    break;
+                    }
+                case 5:
                     {
-                        case 0: settingsTmusic.setString("Music volume: 0"); break;
-                        case 1: settingsTmusic.setString("Music volume: 1"); break;
-                        case 2: settingsTmusic.setString("Music volume: 2"); break;
-                        case 3: settingsTmusic.setString("Music volume: 3"); break;
-                        case 4: settingsTmusic.setString("Music volume: 4"); break;
-                        case 5: settingsTmusic.setString("Music volume: 5"); break;
-                        case 6: settingsTmusic.setString("Music volume: 6"); break;
-                        case 7: settingsTmusic.setString("Music volume: 7"); break;
-                        case 8: settingsTmusic.setString("Music volume: 8"); break;
-                        case 9: settingsTmusic.setString("Music volume: 9"); break;
-                        case 10: settingsTmusic.setString("Music volume: 10"); break;
+                    if(is5Selected == 10)is5Selected = 0;
+                    else is5Selected++;
+
+                    float toSoundVolume{};
+                    toSoundVolume += is5Selected * 3;
+                    if(!is5Selected) toSoundVolume = 0;
+                    sound.setVolume(toSoundVolume * 2);
+                    moveS.setVolume(toSoundVolume);
+
+                    counter = 12;
+                    break;
                     }
                 }
-                else if(isSelected == 5)
+
+                sound.play();
+            }
+        }
+        else counter--;
+
+        if(counter == 12)
+        {
+            if(isSelected == 1) settingsTControlsInOnePlayer.setFillColor(Color::Yellow);
+            else settingsTControlsInOnePlayer.setFillColor(Color::White);
+            if(isSelected == 2)settingsTShowControlsTip.setFillColor(Color::Yellow);
+            else settingsTShowControlsTip.setFillColor(Color::White);
+            if(isSelected == 3)settingsTLengthOfMatch.setFillColor(Color::Yellow);
+            else settingsTLengthOfMatch.setFillColor(Color::White);
+            if(isSelected == 4)settingsTmusic.setFillColor(Color::Yellow);
+            else settingsTmusic.setFillColor(Color::White);
+            if(isSelected == 5)settingsTsound.setFillColor(Color::Yellow);
+            else settingsTsound.setFillColor(Color::White);
+
+            if(isSelected == 1)
+            {
+                if(is1Selected == 1) settingsTControlsInOnePlayer.setString("Control in one player match:  Arrows");
+                else settingsTControlsInOnePlayer.setString("Control in one player match:  AWSD");
+            }
+            else if(isSelected == 2)
+            {
+                if(is2Selected == 1) settingsTShowControlsTip.setString("Show control tip before match:  Yes");
+                else settingsTShowControlsTip.setString("Show control tip before match:  No");
+            }
+            else if(isSelected == 3)
+            {
+                if(is3Selected == 1) settingsTLengthOfMatch.setString("Length Of Match:  1");
+                else if(is3Selected == 2) settingsTLengthOfMatch.setString("Length Of Match:  2");
+                else if(is3Selected == 3) settingsTLengthOfMatch.setString("Length Of Match:  3");
+                else if(is3Selected == 4) settingsTLengthOfMatch.setString("Length Of Match:  4");
+                else if(is3Selected == 5) settingsTLengthOfMatch.setString("Length Of Match:  5");
+                else if(is3Selected == 6) settingsTLengthOfMatch.setString("Length Of Match:  6");
+                else if(is3Selected == 7) settingsTLengthOfMatch.setString("Length Of Match:  7");
+                else if(is3Selected == 8) settingsTLengthOfMatch.setString("Length Of Match:  8");
+                else if(is3Selected == 9) settingsTLengthOfMatch.setString("Length Of Match:  9");
+                else if(is3Selected == 10) settingsTLengthOfMatch.setString("Length Of Match:  10");
+            }
+            else if(isSelected == 4)
+            {
+                switch(is4Selected)
                 {
-                    switch(is5Selected)
-                    {
-                        case 0: settingsTsound.setString("Sound volume: 0"); break;
-                        case 1: settingsTsound.setString("Sound volume: 1"); break;
-                        case 2: settingsTsound.setString("Sound volume: 2"); break;
-                        case 3: settingsTsound.setString("Sound volume: 3"); break;
-                        case 4: settingsTsound.setString("Sound volume: 4"); break;
-                        case 5: settingsTsound.setString("Sound volume: 5"); break;
-                        case 6: settingsTsound.setString("Sound volume: 6"); break;
-                        case 7: settingsTsound.setString("Sound volume: 7"); break;
-                        case 8: settingsTsound.setString("Sound volume: 8"); break;
-                        case 9: settingsTsound.setString("Sound volume: 9"); break;
-                        case 10: settingsTsound.setString("Sound volume: 10"); break;
-                    }
+                    case 0: settingsTmusic.setString("Music volume: 0"); break;
+                    case 1: settingsTmusic.setString("Music volume: 1"); break;
+                    case 2: settingsTmusic.setString("Music volume: 2"); break;
+                    case 3: settingsTmusic.setString("Music volume: 3"); break;
+                    case 4: settingsTmusic.setString("Music volume: 4"); break;
+                    case 5: settingsTmusic.setString("Music volume: 5"); break;
+                    case 6: settingsTmusic.setString("Music volume: 6"); break;
+                    case 7: settingsTmusic.setString("Music volume: 7"); break;
+                    case 8: settingsTmusic.setString("Music volume: 8"); break;
+                    case 9: settingsTmusic.setString("Music volume: 9"); break;
+                    case 10: settingsTmusic.setString("Music volume: 10"); break;
                 }
             }
+            else if(isSelected == 5)
+            {
+                switch(is5Selected)
+                {
+                    case 0: settingsTsound.setString("Sound volume: 0"); break;
+                    case 1: settingsTsound.setString("Sound volume: 1"); break;
+                    case 2: settingsTsound.setString("Sound volume: 2"); break;
+                    case 3: settingsTsound.setString("Sound volume: 3"); break;
+                    case 4: settingsTsound.setString("Sound volume: 4"); break;
+                    case 5: settingsTsound.setString("Sound volume: 5"); break;
+                    case 6: settingsTsound.setString("Sound volume: 6"); break;
+                    case 7: settingsTsound.setString("Sound volume: 7"); break;
+                    case 8: settingsTsound.setString("Sound volume: 8"); break;
+                    case 9: settingsTsound.setString("Sound volume: 9"); break;
+                    case 10: settingsTsound.setString("Sound volume: 10"); break;
+                }
+            }
+        }
 
-            window.draw(settingsT);
-            window.draw(settingsTExit);
-            window.draw(settingsTControlsInOnePlayer);
-            window.draw(settingsTShowControlsTip);
-            window.draw(settingsTLengthOfMatch);
-            window.draw(settingsTmusic);
-            window.draw(settingsTsound);
+        window.draw(settingsT);
+        window.draw(settingsTExit);
+        window.draw(settingsTControlsInOnePlayer);
+        window.draw(settingsTShowControlsTip);
+        window.draw(settingsTLengthOfMatch);
+        window.draw(settingsTmusic);
+        window.draw(settingsTsound);
         }
         ///******************************state SETTINGS
 
@@ -1416,6 +1452,8 @@ int main()
         ///LeagueInterface******************************
         else if(state == Tstate::LeagueInterface)
         {
+            static int isSelected{};
+
             static int counter;
             static int matchDay;
             static string match1a;
@@ -2145,148 +2183,168 @@ int main()
             }
             else if(doNextMatches) matchDay = 8;
 
-            if(((Keyboard::isKeyPressed(Keyboard::Escape))||((Keyboard::isKeyPressed(Keyboard::Enter))&&(matchDay == 8)))&&(!counter))
+            ///menu mouse controls
+            static Vector2f mouseLastPos{mousePos.x, mousePos.y};
+
+            if((mouseLastPos.x != mousePos.x)||(mouseLastPos.y != mousePos.y))
             {
-                state = Tstate::menu;
-                counter = 30;
-
-                ///save in file
-                fstream file;
-                file.open("save.txt",ios::out);
-
-                file<<matchDay<<endl;
-                file<<match1a<<endl;
-                file<<match1b<<endl;
-                file<<match2a<<endl;
-                file<<match2b<<endl;
-                file<<match3a<<endl;
-                file<<match3b<<endl;
-                file<<isPausing<<endl;
-                file<<inWhichMatchIsPlayer<<endl;
-                file<<currentOpponentName<<endl;
-                file<<characterInLeague.getName()<<endl;
-                file<<nameMatch1a<<endl;
-                file<<nameMatch1b<<endl;
-                file<<nameMatch2a<<endl;
-                file<<nameMatch2b<<endl;
-                file<<nameMatch3a<<endl;
-                file<<nameMatch3b<<endl;
-                file<<inWhichMatchIsPlayerGLOBAL<<endl;
-
-                for(int i=0; i<7; i++)
-                {
-                    file<<posInTable[i].name<<endl;
-                    file<<posInTable[i].numberOfPoints<<endl;
-                }
-
-                if(difficultyLevel == Tlevel::easy)file<<1<<endl;
-                else if(difficultyLevel == Tlevel::medium)file<<2<<endl;
-                else file<<3<<endl;
-
-
-                //with who I played
-
-
-                file.close();
-
-                for(int i=0; i<7; i++)
-                {
-                    chara[i].toFileWithWhoIplayed();
-                }
-
-                file.open("save.txt",ios::out | ios::app);
-
-                for(int i=0; i<7; i++)
-                {
-                    file<<table[i]<<endl;
-                }
-
-                file.close();
-
-                ///deleting value from variables
-                for(int i=0; i<7; i++)
-                {
-                    chara[i] = nothing;
-                }
-
-                sound.play();
-
-                continue;
+                if     (mouseEvent.isOnMouse(0,750,650,150, mousePos)) isSelected = 1;
+                else if(mouseEvent.isOnMouse(650,750,650,150, mousePos)) isSelected = 2;
+                else if(mouseEvent.isOnMouse(0,0,1300,650, mousePos)) isSelected = 0;
             }
-            else if((Keyboard::isKeyPressed(Keyboard::Enter))&&(!counter))
+
+            mouseLastPos = mousePos;
+
+            cout<<"is Selected: "<<isSelected<<endl;
+
+            if(!counter)
             {
-                if(isPausing == characterInLeague.getName())//while player is pausing in league
+                if( ( (Keyboard::isKeyPressed(Keyboard::Escape)) || ((isSelected == 2)&&(mouseEvent.left(event))) )
+                    || ( ((Keyboard::isKeyPressed(Keyboard::Enter))||(mouseEvent.left(event))) && (matchDay == 8) ) )
                 {
-                    setLeagueTable(nameOfPlayer1, nameOfPlayer2,
-                                   LI1nameT, LI2nameT, LI3nameT, LI4nameT, LI5nameT, LI6nameT, LI7nameT,
-                                   LI1pointsT, LI2pointsT, LI3pointsT, LI4pointsT, LI5pointsT, LI6pointsT, LI7pointsT);
-                    doNextMatches = true;
+                    state = Tstate::menu;
                     counter = 30;
+
+                    ///save in file
+                    fstream file;
+                    file.open("save.txt",ios::out);
+
+                    file<<matchDay<<endl;
+                    file<<match1a<<endl;
+                    file<<match1b<<endl;
+                    file<<match2a<<endl;
+                    file<<match2b<<endl;
+                    file<<match3a<<endl;
+                    file<<match3b<<endl;
+                    file<<isPausing<<endl;
+                    file<<inWhichMatchIsPlayer<<endl;
+                    file<<currentOpponentName<<endl;
+                    file<<characterInLeague.getName()<<endl;
+                    file<<nameMatch1a<<endl;
+                    file<<nameMatch1b<<endl;
+                    file<<nameMatch2a<<endl;
+                    file<<nameMatch2b<<endl;
+                    file<<nameMatch3a<<endl;
+                    file<<nameMatch3b<<endl;
+                    file<<inWhichMatchIsPlayerGLOBAL<<endl;
+
+                    for(int i=0; i<7; i++)
+                    {
+                        file<<posInTable[i].name<<endl;
+                        file<<posInTable[i].numberOfPoints<<endl;
+                    }
+
+                    if(difficultyLevel == Tlevel::easy)file<<1<<endl;
+                    else if(difficultyLevel == Tlevel::medium)file<<2<<endl;
+                    else file<<3<<endl;
+
+
+                    //with who I played
+
+
+                    file.close();
+
+                    for(int i=0; i<7; i++)
+                    {
+                        chara[i].toFileWithWhoIplayed();
+                    }
+
+                    file.open("save.txt",ios::out | ios::app);
+
+                    for(int i=0; i<7; i++)
+                    {
+                        file<<table[i]<<endl;
+                    }
+
+                    file.close();
+
+                    ///deleting value from variables
+                    for(int i=0; i<7; i++)
+                    {
+                        chara[i] = nothing;
+                    }
+
+                    sound.play();
+
                     continue;
                 }
-
-                if(showControlTip == true) state = Tstate::controlsTip;
-                else state = Tstate::game;
-
-                opponentInLeagueMode = currentOpponentName;
-                changeCharacterStatistics(4,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
-                                  characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
-                                  characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
-                                  characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
-                                  frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
-
-                if(controlIn1player == 2)
+                else if( (Keyboard::isKeyPressed(Keyboard::Enter)) || ((isSelected == 1)&&(mouseEvent.left(event))))
                 {
-                    paddle1Control = 2;
-                    paddle2Control = 0;
-                    nameOfPlayer2 = characterInLeague.getName();
-                    nameOfPlayer1 = currentOpponentName;
-                }
-                else
-                {
-                    paddle1Control = 0;
-                    paddle2Control = 1;
-                    nameOfPlayer1 = characterInLeague.getName();
-                    nameOfPlayer2 = currentOpponentName;
-                }
+                    if(isPausing == characterInLeague.getName())//while player is pausing in league
+                    {
+                        setLeagueTable(nameOfPlayer1, nameOfPlayer2,
+                                       LI1nameT, LI2nameT, LI3nameT, LI4nameT, LI5nameT, LI6nameT, LI7nameT,
+                                       LI1pointsT, LI2pointsT, LI3pointsT, LI4pointsT, LI5pointsT, LI6pointsT, LI7pointsT);
+                        doNextMatches = true;
+                        counter = 30;
+                        continue;
+                    }
 
-                if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
-                else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
+                    if(showControlTip == true) state = Tstate::controlsTip;
+                    else state = Tstate::game;
 
-                ball.setVelocity(10);
-                paddle1.rect.setPosition(Vector2f(10,400));
-                paddle2.rect.setPosition(Vector2f(1265,400));
-                score1 = 0; score2 = 0;
-                score1T.setString("0"); score2T.setString("0");
-                lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
-                lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
-                if(random(2))//1
-                {
-                    ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
-                    if(oneOr2Players == 2)matchStartT.setString("Player 1 will begin");
+                    opponentInLeagueMode = currentOpponentName;
+                    changeCharacterStatistics(4,player1S, player2S, gameLeftPicture, gameRightPicture, characterChoiseName1T, characterChoiseName2T, characterChoiseSpeed2T, characterChoiseSpeed3T,
+                                      characterChoisePower2T, characterChoisePower3T, characterChoiseSpeedUp2T, characterChoiseSpeedUp3T,
+                                      characterChoiseSpeedUpContainer2T, characterChoiseSpeedUpContainer3T,
+                                      characterChoiseIncrease2T, characterChoiseIncrease3T, characterChoiseIncreaseContainer2T, characterChoiseIncreaseContainer3T,
+                                      frog, elGato, kuszczak, gandalf, lennon, blackMan, alien);
+
+                    if(controlIn1player == 2)
+                    {
+                        paddle1Control = 2;
+                        paddle2Control = 0;
+                        nameOfPlayer2 = characterInLeague.getName();
+                        nameOfPlayer1 = currentOpponentName;
+                    }
                     else
                     {
-                        if(controlIn1player == 1)matchStartT.setString("Computer will begin");
-                        else matchStartT.setString("Player will begin");
+                        paddle1Control = 0;
+                        paddle2Control = 1;
+                        nameOfPlayer1 = characterInLeague.getName();
+                        nameOfPlayer2 = currentOpponentName;
                     }
-                }
-                else//2
-                {
-                    ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
-                    if(oneOr2Players == 2)matchStartT.setString("Player 2 will begin");
-                    else
+
+                    if(controlIn1player == 1){blackBox.setPosition(Vector2f(0,0)); blackBox2.setPosition(Vector2f(450,450));}
+                    else{blackBox.setPosition(Vector2f(850,0)); blackBox2.setPosition(Vector2f(700,550));}
+
+                    ball.setVelocity(10);
+                    paddle1.rect.setPosition(Vector2f(10,400));
+                    paddle2.rect.setPosition(Vector2f(1265,400));
+                    score1 = 0; score2 = 0;
+                    score1T.setString("0"); score2T.setString("0");
+                    lane.setIncrease1(144); lane.setIncrease2(144); lane.setSpeed1(144); lane.setSpeed2(144);
+                    lane.minusSpeed1(0); lane.minusSpeed2(0); lane.minusIncrease1(0); lane.minusIncrease2(0);
+                    if(random(2))//1
                     {
-                        if(controlIn1player == 1)matchStartT.setString("Player will begin");
-                        else matchStartT.setString("Computer will begin");
+                        ball.circle.setPosition(Vector2f(35, WINDOW_HEIGTH/2 - 20));
+                        if(oneOr2Players == 2)matchStartT.setString("Player 1 will begin");
+                        else
+                        {
+                            if(controlIn1player == 1)matchStartT.setString("Computer will begin");
+                            else matchStartT.setString("Player will begin");
+                        }
                     }
+                    else//2
+                    {
+                        ball.circle.setPosition(Vector2f(1225, WINDOW_HEIGTH/2 - 20));
+                        if(oneOr2Players == 2)matchStartT.setString("Player 2 will begin");
+                        else
+                        {
+                            if(controlIn1player == 1)matchStartT.setString("Player will begin");
+                            else matchStartT.setString("Computer will begin");
+                        }
+                    }
+
+                    setPaddlesSpeed(paddle1,paddle2,player1,player2);
+
+                    counter = 30;
+
+                    sound.play();
                 }
 
-                setPaddlesSpeed(paddle1,paddle2,player1,player2);
-
-                counter = 30;
-
-                sound.play();
             }
+            else counter--;
 
             window.draw(LIlevelT);
             window.draw(LItableT);
@@ -2326,9 +2384,6 @@ int main()
                     case 2: window.draw(LIsummaryT4);
                 }
             }
-
-            if(counter)counter--;
-
         }
         ///******************************LeagueInterface
 
