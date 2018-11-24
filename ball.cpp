@@ -1,15 +1,24 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "ball.h"
 using namespace sf;
 
 extern int random(int x);
+SoundBuffer pickUpPaddle;
+SoundBuffer pickUpWall;
+Sound pickUpPaddleS;
+Sound pickUpWallS;
 
 Ball::Ball()
 {
     circle.setRadius(20);
     circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
     circle.setFillColor(Color::Yellow);
+    pickUpPaddle.loadFromFile("pickUpPaddle.wav");
+    pickUpWall.loadFromFile("pickUpWall.wav");
+    pickUpPaddleS.setBuffer(pickUpPaddle);
+    pickUpWallS.setBuffer(pickUpWall);
 }
 
 void Ball::updateMovement()
@@ -78,8 +87,7 @@ void Ball::collision(int paddle1PosY, int paddle2PosY, bool isIncreasing1, bool 
             LeftRightVelocity = - LeftRightVelocity;
         }
 
-        static int pickups{};
-        std::cout<<"################################ pickups: "<<++pickups<<std::endl;
+        pickUpPaddleS.play();
     }
 
     if((godMode == 1)&&(circle.getPosition().x > 1225))
@@ -121,4 +129,23 @@ void Ball::setVelocity(float vel)
 {
     LeftRightVelocity = vel;
     UpDownVelocity = vel;
+}
+
+void Ball::wallSound()
+{
+    static bool previouslyWasUpWall{false};
+    static bool previouslyWasDownWall{false};
+
+    if((circle.getPosition().y <= 100 - UpDownVelocity)&&(!previouslyWasUpWall)){
+        pickUpWallS.play();
+        previouslyWasUpWall = true;
+    }
+
+    if((circle.getPosition().y + 40 >= WINDOW_HEIGTH - UpDownVelocity)&&(!previouslyWasDownWall)){
+        pickUpWallS.play();
+        previouslyWasDownWall = true;
+    }
+
+    if(UpDownVelocity < 0) previouslyWasDownWall = false;
+    else previouslyWasUpWall = false;
 }

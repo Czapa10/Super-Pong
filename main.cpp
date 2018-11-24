@@ -571,7 +571,9 @@ int main()
             getPoint(ball,score1T,score2T,matchStartT,matchWinT,paddle1,paddle2,counterMatchStart,counterMatchWin);
             ball.collision(paddle1.rect.getPosition().y, paddle2.rect.getPosition().y, paddle1.getIncrease(), paddle2.getIncrease(),
                            player1.getIncrease(), player2.getIncrease(), player1.getPower(), player2.getPower(), godMode);
+            ball.wallSound();
             ball.updateMovement();
+            ball.wallSound();
             paddle1.movement(paddle1Control);
             paddle2.movement(paddle2Control);
             }
