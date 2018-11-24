@@ -15,4 +15,5 @@ public:
     void increaseStop(int padNumber,float increaseSize);
     bool getIncrease();
     int getVelocity(){return velocity;}
+    void setSoundVolume(float volume);
 };

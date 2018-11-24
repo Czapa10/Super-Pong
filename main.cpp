@@ -509,7 +509,6 @@ int main()
                     x = lane.minusSpeed1(1);
                     thereIsSpeedUp = x;
                     counterSpeedUpBox1 = player1.getSpeedUpContainer();
-                    speedUpSoundS.play();
                 }
                 else counterSpeedUpBox1--;
 
@@ -541,7 +540,6 @@ int main()
                     x = lane.minusSpeed2(1);
                     thereIsSpeedUp = x;
                     counterSpeedUpBox2 = player2.getSpeedUpContainer();
-                    speedUpSoundS.play();
                 }
                 else counterSpeedUpBox2--;
 
@@ -1416,6 +1414,8 @@ int main()
                     if(!is5Selected) toSoundVolume = 0;
                     sound.setVolume(toSoundVolume * 2);
                     moveS.setVolume(toSoundVolume);
+                    ball.setSoundVolume(toSoundVolume * 3.5);
+                    paddle1.setSoundVolume(toSoundVolume * 3.5);
 
                     counter = 12;
                     break;

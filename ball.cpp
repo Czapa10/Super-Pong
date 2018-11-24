@@ -149,3 +149,8 @@ void Ball::wallSound()
     if(UpDownVelocity < 0) previouslyWasDownWall = false;
     else previouslyWasUpWall = false;
 }
+
+void Ball::setSoundVolume(float volume){
+    pickUpPaddleS.setVolume(volume * 2);
+    pickUpWallS.setVolume(volume * 2);
+}

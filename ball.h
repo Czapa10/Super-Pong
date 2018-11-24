@@ -18,4 +18,5 @@ public:
     void setVelocityLeftRight(float x){LeftRightVelocity = x;};
     void setVelocityUpDown(float x){UpDownVelocity = x;};
     void wallSound();
+    void setSoundVolume(float volume);
 };

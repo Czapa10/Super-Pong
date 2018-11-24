@@ -159,3 +159,8 @@ bool Paddle::getIncrease()
 {
     return isIncreasing;
 }
+
+void Paddle::setSoundVolume(float volume){
+    increaseStartS.setVolume(volume);
+    increaseStopS.setVolume(volume);
+}
