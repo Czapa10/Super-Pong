@@ -509,6 +509,7 @@ int main()
                     x = lane.minusSpeed1(1);
                     thereIsSpeedUp = x;
                     counterSpeedUpBox1 = player1.getSpeedUpContainer();
+                    speedUpSoundS.play();
                 }
                 else counterSpeedUpBox1--;
 
@@ -520,8 +521,7 @@ int main()
             if((((controlIn1player == 1)&&((BonusAI == 2)||(BonusAI == 3))) || ((Keyboard::isKeyPressed(Keyboard::D))&&((oneOr2Players == 2)||(controlIn1player == 2)))) && (!gamePause))
             {
                 bool x;
-                if(!counterIncreaseBox1)
-                {
+                if(!counterIncreaseBox1){
                     x = lane.minusIncrease1(1);
                     thereIsIncrease = x;
                     counterIncreaseBox1 = player1.getIncreaseContainer();
@@ -537,11 +537,11 @@ int main()
             if((((controlIn1player == 2)&&((BonusAI == 1)||(BonusAI == 3))) || ((Keyboard::isKeyPressed(Keyboard::Left))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
             {
                 bool x;
-                if(!counterSpeedUpBox2)
-                {
+                if(!counterSpeedUpBox2){
                     x = lane.minusSpeed2(1);
                     thereIsSpeedUp = x;
                     counterSpeedUpBox2 = player2.getSpeedUpContainer();
+                    speedUpSoundS.play();
                 }
                 else counterSpeedUpBox2--;
 
@@ -553,8 +553,7 @@ int main()
             if((((controlIn1player == 2)&&((BonusAI == 2)||(BonusAI == 3))) || ((Keyboard::isKeyPressed(Keyboard::Right))&&((oneOr2Players == 2)||(controlIn1player == 1)))) && (!gamePause))
             {
                 bool x;
-                if(!counterIncreaseBox2)
-                {
+                if(!counterIncreaseBox2){
                     x = lane.minusIncrease2(1);
                     thereIsIncrease = x;
                     counterIncreaseBox2 = player2.getIncreaseContainer();

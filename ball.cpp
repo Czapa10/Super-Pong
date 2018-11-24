@@ -5,16 +5,16 @@
 using namespace sf;
 
 extern int random(int x);
-SoundBuffer pickUpPaddle;
-SoundBuffer pickUpWall;
-Sound pickUpPaddleS;
-Sound pickUpWallS;
+
+SoundBuffer pickUpPaddle, pickUpWall;
+Sound pickUpPaddleS, pickUpWallS;
 
 Ball::Ball()
 {
     circle.setRadius(20);
     circle.setPosition(Vector2f(WINDOW_WIDTH/2 - 20, WINDOW_HEIGTH/2 - 20));
     circle.setFillColor(Color::Yellow);
+
     pickUpPaddle.loadFromFile("pickUpPaddle.wav");
     pickUpWall.loadFromFile("pickUpWall.wav");
     pickUpPaddleS.setBuffer(pickUpPaddle);

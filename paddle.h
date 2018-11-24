@@ -14,4 +14,5 @@ public:
     void increase(int padNumber,float increaseSize);
     void increaseStop(int padNumber,float increaseSize);
     bool getIncrease();
+    int getVelocity(){return velocity;}
 };

@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "paddle.h"
 #include <iostream>
 #include <cstdlib>
@@ -7,6 +8,9 @@
 #define DOWN rect.move(Vector2f(0,velocity));
 using namespace sf;
 
+SoundBuffer increaseStartB, increaseStopB;
+Sound increaseStartS, increaseStopS;
+
 Paddle::Paddle(int X,int Y,int vel)
 {
     velocity = vel;
@@ -14,6 +18,13 @@ Paddle::Paddle(int X,int Y,int vel)
     rect.setFillColor(Color::Green);
     rect.setSize(Vector2f(25,100));
     rect.setPosition(Vector2f(X,Y));
+
+    increaseStartB.loadFromFile("increaseStart.wav");
+    increaseStopB.loadFromFile("increaseStop.wav");
+    increaseStartS.setBuffer(increaseStartB);
+    increaseStopS.setBuffer(increaseStopB);
+    increaseStartS.setVolume(35.f);
+    increaseStopS.setVolume(45.f);
 }
 
 void Paddle::movement(int control)///1-arrows | 2-awsd | 0-AI
@@ -125,6 +136,8 @@ void Paddle::increase(int padNumber,float increaseSize)
         if(padNumber == 1)rect.setPosition(Vector2f(10, y - increaseSize * 10));
         if(padNumber == 2)rect.setPosition(Vector2f(1265, y - increaseSize * 10));
         rect.setSize(Vector2f(25,100 + increaseSize * 20));
+
+        increaseStartS.play();
     }
 }
 
@@ -137,6 +150,8 @@ void Paddle::increaseStop(int padNumber,float increaseSize)
         if(padNumber == 1)rect.setPosition(Vector2f(10, y + increaseSize * 10));
         if(padNumber == 2)rect.setPosition(Vector2f(1265, y + increaseSize * 10));
         rect.setSize(Vector2f(25,100));
+
+        increaseStopS.play();
     }
 }
 
