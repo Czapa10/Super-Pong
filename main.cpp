@@ -334,6 +334,7 @@ int main()
         {
             static int isSelected{1};
             static int counter{};
+            static bool isMouseOnNothing;
 
             window.draw(menuT1);
             window.draw(button1);
@@ -400,7 +401,7 @@ int main()
 
 
             ///choise next state logic
-            if( ((Keyboard::isKeyPressed(Keyboard::Enter)) || (mouseEvent.left(event))) && (!counter) )
+            if( ( (Keyboard::isKeyPressed(Keyboard::Enter)) || ((mouseEvent.left(event))&&(isMouseOnNothing==false)) ) && (!counter) )
             {
                 switch(isSelected)
                 {
@@ -2697,15 +2698,14 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
 
     static int isPointed{};
 
-    if((mousePos.x != lastMousePos.x)||(mousePos.y != lastMousePos.y))
-    {
-        if     (mouseEvent.isOnMouse(515, 275, 50,  50,  mousePos)) {isPointed = 1; cout<<"isPointed = 1"<<endl;}//player 1 left
-        else if(mouseEvent.isOnMouse(565, 245, 170, 120, mousePos)) {isPointed = 2; cout<<"isPointed = 2"<<endl;}//player 1 right
-        else if(mouseEvent.isOnMouse(960, 275, 50,  50,  mousePos)) {isPointed = 3; cout<<"isPointed = 3"<<endl;}//player 2 left
-        else if(mouseEvent.isOnMouse(1015,245, 170, 120, mousePos)) {isPointed = 4; cout<<"isPointed = 4"<<endl;}//player 2 right
-        //else {isPointed = 0; cout<<"isPointed = 0"<<endl;}//is on nothing
-        //else if(mouseEvent.isOnMouse(515, 245, 700, 120, mousePos) == false) {isPointed = 0; cout<<"isPointed = 0"<<endl;}//cursor is on nothing
+    if((mousePos.x != lastMousePos.x)||(mousePos.y != lastMousePos.y)){
+        if     (mouseEvent.isOnMouse(515, 245, 50,  350, mousePos)) {isPointed = 1; cout<<"isPointed = 1"<<endl;}//player 1 left
+        else if(mouseEvent.isOnMouse(565, 245, 170, 350, mousePos)) {isPointed = 2; cout<<"isPointed = 2"<<endl;}//player 1 right
+        else if(mouseEvent.isOnMouse(960, 245, 50,  350, mousePos)) {isPointed = 3; cout<<"isPointed = 3"<<endl;}//player 2 left
+        else if(mouseEvent.isOnMouse(1015,245, 170, 350, mousePos)) {isPointed = 4; cout<<"isPointed = 4"<<endl;}//player 2 right
+        else if(mouseEvent.isOnMouse(0,   700, 1300,200, mousePos)) {isPointed = 0; cout<<"isPointed = 0"<<endl;}//is on next or exit buttons
     }
+    //else isPointed = 0;
 
     lastMousePos = mousePos;
 
@@ -2721,28 +2721,28 @@ void changeCharacterStatistics(int additionalMode,Sprite& sprite1,Sprite& sprite
             if(player1 == 0) player1 = 6;
             else player1--;
             wasPressed = true;
-            counter1 = 12;
+            counter1 = 15;
             moveS.play();
             break;
         case 2:
             if(player1 == 6) player1 = 0;
             else player1++;
             wasPressed = true;
-            counter1 = 12;
+            counter1 = 15;
             moveS.play();
             break;
         case 3:
             if(player2 == 0) player2 = 6;
             else player2--;
             wasPressed = true;
-            counter1 = 12;
+            counter1 = 15;
             moveS.play();
             break;
         case 4:
             if(player2 == 6) player2 = 0;
             else player2++;
             wasPressed = true;
-            counter1 = 12;
+            counter1 = 15;
             moveS.play();
             break;
         }
