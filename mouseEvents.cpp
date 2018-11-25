@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include "mouseEvents.h"
-#include <iostream>
 using namespace sf;
 
 bool MouseEvents::isOnMouse(RectangleShape rect, Vector2f mousePos){

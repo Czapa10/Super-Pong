@@ -1,11 +1,10 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <fstream>
 #include <string>
 #include "character.h"
 
 Character::Character(float speed_, float power_, float speedUp_, float speedUpContainer_,
-                     float increase_, float increaseContainer_, std::string name_)
+                     float increase_, float increaseContainer_, string name_)
 {
     speed = speed_;
     power = power_;
@@ -41,15 +40,6 @@ void Character::setIplayedVs(string man)
     for(int i=0;i<6;++i)
     {
         if(withWhoPlayed[i]==""){withWhoPlayed[i] = man; break;}
-    }
-}
-
-void Character::showWithWhoIplayed()
-{
-    std::cout<<std::endl<<name<<" played with:"<<std::endl;
-    for(int i=0; i<6; i++)
-    {
-         if(withWhoPlayed[i] != "") std::cout<<withWhoPlayed[i]<<std::endl;
     }
 }
 
