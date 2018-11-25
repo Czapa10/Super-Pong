@@ -11,7 +11,6 @@
 #include "character.h"
 #include "mouseEvents.h"
 
-#define VERSION "BETA 0.9"
 #define BUTTON_SIZE Vector2f(300,100)
 using namespace sf;
 using namespace std;
@@ -74,7 +73,7 @@ int random(int x);
 
 int main()
 {
-    RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGTH), "Super Pong");
+    RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGTH), "Super Pong", Style::Resize);
     window.setFramerateLimit(100);
     window.setPosition(Vector2i(0,0));
 
@@ -98,7 +97,6 @@ int main()
     Text menuT3("Single match",font2,50); menuT3.setPosition(Vector2f(button2.getPosition().x + 5,button2.getPosition().y + 10));
     Text menuT4("Settings",font2,50); menuT4.setPosition(Vector2f(button3.getPosition().x + 60,button3.getPosition().y + 10));
     Text menuT5("Exit",font2,50); menuT5.setPosition(Vector2f(button4.getPosition().x + 95,button4.getPosition().y + 10));
-    Text versionT(VERSION,font2,40); versionT.setPosition(Vector2f(10,830));
     RectangleShape pauseResume(BUTTON_SIZE); pauseResume.setPosition(Vector2f(500,350)); pauseResume.setOutlineThickness(5); pauseResume.setFillColor(Color(45,188,14));
     RectangleShape pauseExit(BUTTON_SIZE); pauseExit.setPosition(Vector2f(500,550)); pauseExit.setOutlineThickness(5); pauseExit.setFillColor(Color::Red);
     Text pauseResumeT("RESUME",font2,70); pauseResumeT.setPosition(Vector2f(532,360));
@@ -346,7 +344,6 @@ int main()
             window.draw(menuT4);
             window.draw(menuT5);
             window.draw(circle);
-            window.draw(versionT);
 
             if(!counter){
                 if(Keyboard::isKeyPressed(Keyboard::Down)){
