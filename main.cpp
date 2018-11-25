@@ -77,6 +77,7 @@ int main()
 {
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGTH), "Super Pong");
     window.setFramerateLimit(100);
+    window.setPosition(Vector2i(0,0));
 
     srand(time(NULL));
 
@@ -275,6 +276,7 @@ int main()
     Sprite LIsummaryS3_2(gatoT); LIsummaryS3_2.setPosition(Vector2f(260,510)); LIsummaryS3_2.setScale(Vector2f(1.5,1.5));
     Sprite LIsummaryS3_3(gandalfT); LIsummaryS3_3.setPosition(Vector2f(490,510)); LIsummaryS3_3.setScale(Vector2f(1.5,1.5));
     Text exitT("Game was made by",font1,90); exitT.setPosition(Vector2f(100,200)); Text exitT2("GRZEGORZ BEDNORZ",font2,100); exitT2.setPosition(Vector2f(150,350)); exitT2.setFillColor(Color::Yellow);
+    Text exitT3("(no copyright) music was made by: \n- Kubbi - Up in My Jam (All of A Sudden) \n- Brenticus - Moar Progressive House",font1,37); exitT3.setPosition(Vector2f(40,700)); exitT3.setFillColor(Color::Cyan);
 
     ///loading sound and music
     SoundBuffer catSound; catSound.loadFromFile("cat.wav");
@@ -2452,11 +2454,13 @@ int main()
         ///state EXIT SCREEN******************************
         else if(state == Tstate::exitScreen)
         {
-            static int counter{200};
+            static int counter{450};
             counter--;
             window.draw(exitT);
             window.draw(exitT2);
-            if(counter < 0)window.close();
+            window.draw(exitT3);
+            if((counter < 0)||(((Keyboard::isKeyPressed(Keyboard::Enter))||(Keyboard::isKeyPressed(Keyboard::Escape)))&&(counter<410)))
+            window.close();
         }
         ///******************************state EXIT SCREEN
 
