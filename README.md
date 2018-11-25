@@ -20,8 +20,3 @@ In game you have to kinds of bonuses: Speed up and Increase.
 ![pause](https://user-images.githubusercontent.com/39434914/48516668-39dda200-e864-11e8-9d72-199755021385.png)
 ![character choise](https://user-images.githubusercontent.com/39434914/48516679-3f3aec80-e864-11e8-9160-ea3d5b1353e9.png)
 ![league interface](https://user-images.githubusercontent.com/39434914/48516686-43ffa080-e864-11e8-8ce0-e4eeb30c097f.png)
-
-# to do:
-
-- add music and sounds
-- fix AI on medium and hard level
