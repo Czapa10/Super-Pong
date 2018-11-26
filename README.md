@@ -1,6 +1,9 @@
 # SUPER PONG
 C++ and SFML sports game.
 
+# DOWNLOAD:
+https://gamejolt.com/games/super_pong/381382
+
 # introduction:
 
 After finishing my text game Word Fighter I wanted to make game with graphics.
